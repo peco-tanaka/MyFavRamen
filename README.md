@@ -15,43 +15,7 @@
 # アイデア
 - ショップ情報に「みんなのランキング」が載る
 -- 「〜さんの1位のメニュー！」
-
-# DB設計
-
-## usersテーブル
-column|type|options
-name, string, null: false
-email, string, null: false
-prefecture_id, integer, null: false
-
-
-### association
-has_many :favs
-has_many :
-belongs_to_active_hash :prefecture
-
-
-## shopsテーブル
-
-### association
-
-## rankingsテーブル
-
-### association
-
-## ranking_itemsテーブル
-
-### association
-
-## favsテーブル
-
-### association
-
-## visitsテーブル
-
-### association
-
-
-## followsテーブル
-
-### association
+- ジャンル選択について
+-- 何も選択していない状態で総合ランキングが映るように設計
+- 「食べた」ボタンの実装
+-- 店名の横に、１日１杯押せるボタンを作る
