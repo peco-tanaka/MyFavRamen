@@ -27,8 +27,7 @@ fi
 # Railsプロジェクト作成
 if [ ! -f "config/application.rb" ]; then
   echo "Railsプロジェクトを新規作成します..."
-  docker-compose run --no-deps web rails new . --force --database=postgresql --skip-bundle
-  
+  docker-compose run --no-deps web rails new . --force --database=postgresql
   # ファイルの所有権修正（Linux/macOSの場合）
   if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "darwin"* ]]; then
     echo "ファイルの所有権を修正しています..."
