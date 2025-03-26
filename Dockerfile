@@ -12,6 +12,7 @@ RUN apt-get update -qq && \
     imagemagick \
     libvips \
     npm \
+    libyaml-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && npm install -g n \
