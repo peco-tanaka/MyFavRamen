@@ -23,7 +23,7 @@ RUN apt-get update -qq && \
 WORKDIR /app
 
 # Copy gemfiles for dependency installation
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile ./
 
 # Install Ruby dependencies
 RUN bundle install
