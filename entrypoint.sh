@@ -1,29 +1,22 @@
 #!/bin/bash
 set -e
 
-# Remove a potentially pre-existing server.pid for Rails
+# Railsのサーバーpidファイルを事前に削除（存在する場合）
 rm -f /app/tmp/pids/server.pid
 
-# Install JavaScript dependencies if needed
-if [ -f package.json ] && [ ! -d node_modules ]; then
-  echo "Installing JavaScript dependencies..."
-  npm install
-fi
-
-# Wait for database to be ready
-echo "Waiting for database..."
+# データベースの準備ができるまで待機
 until nc -z -v -w30 db 5432; do
   echo "Waiting for database connection..."
   sleep 2
 done
 echo "Database is up and running!"
 
-# Setup database if it doesn't exist
+# データベースが存在しない場合にセットアップ
 if [[ $RAILS_ENV != "test" ]]; then
   echo "Setting up database..."
   bundle exec rails db:prepare 2>/dev/null || true
 fi
 
-# Then exec the container's main process (what's set as CMD in the Dockerfile)
+# コンテナのメインプロセスを実行（Dockerfileのcmdで設定されているもの）
 echo "Starting application..."
 exec "$@"
