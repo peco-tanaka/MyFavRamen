@@ -8,7 +8,7 @@ gem 'rails', '7.2.2.1'
 gem 'pg', '~> 1.5'
 gem 'puma', '~> 6.4'
 gem 'jsbundling-rails', '~> 1.2'
-gem 'turbo-rails', '~> 1.5'
+gem 'turbo-rails', '~> 2.0.13'
 gem 'stimulus-rails', '~> 1.3'
 gem 'cssbundling-rails', '~> 1.3'
 gem 'jbuilder', '~> 2.11'
@@ -43,8 +43,9 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.2'
   gem 'rspec-rails', '~> 6.1'
   gem 'faker', '~> 3.2'
-  # Brakemanを追加
+  # CIエラー回避の為、以下のgemを追加
   gem 'brakeman', '~> 6.0', require: false
+  gem 'rubocop-rails-omakase', '~> 1.0', require: false
 end
 
 group :development do
