@@ -6,3 +6,7 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 # Layout/SpaceInsideArrayLiteralBrackets:
 #   Enabled: false
+
+# gemfileのコメントを残す為に、以下の設定を追加しています。
+Bundler/OrderedGems:
+  Enabled: false
