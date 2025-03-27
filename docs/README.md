@@ -28,7 +28,7 @@
 - Docker Compose
 - Git
 
-### セットアップ手順
+### リポジトリを用意
 
 1. リポジトリをクローン
 ```bash
@@ -36,20 +36,7 @@ git clone [リポジトリURL]
 cd myfavramen
 ```
 
-2. セットアップスクリプトを実行
-```bash
-chmod +x setup.sh
-./setup.sh
-```
-
-このスクリプトは以下の処理を行います：
-- 環境変数設定ファイル(.env)の作成
-- Railsプロジェクトの新規作成
-- データベース設定の更新
-- Dockerイメージのビルドとコンテナの起動
-- 必要なRailsジェネレータの実行
-
-### 手動でセットアップする場合
+### セットアップ
 
 1. Dockerイメージをビルド
 ```bash
@@ -177,11 +164,15 @@ docker-compose exec web rails db:create
 docker-compose exec web rails db:migrate
 ```
 
-10. 必要なジェネレータを実行
+9. 必要なジェネレータを実行
 ```bash
 docker-compose exec web rails generate devise:install
+```
+
+10.Active Storageをインストール
+```bash
 docker-compose exec web rails active_storage:install
-docker-compose exec web rails active_storage:install
+docker-compose exec web rails db:migrate
 ```
 
 ## 開発
