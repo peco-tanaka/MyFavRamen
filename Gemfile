@@ -43,6 +43,8 @@ group :development, :test do
   gem 'factory_bot_rails', '~> 6.2'
   gem 'rspec-rails', '~> 6.1'
   gem 'faker', '~> 3.2'
+  # Brakemanを追加
+  gem 'brakeman', '~> 6.0', require: false
 end
 
 group :development do
