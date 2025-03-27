@@ -43,8 +43,8 @@ group :development, :test do
   gem "factory_bot_rails", "~> 6.2"
   gem "rspec-rails", "~> 6.1"
   gem "faker", "~> 3.2"
-  # CIエラー回避の為、以下のgemを追加
-  gem "brakeman", "~> 6.0", require: false
+  # CIエラー解消の為追加。脆弱性検知ツール、コード解析ツール
+  gem "brakeman", "~> 7.0.0", require: false
   gem "rubocop-rails-omakase", "~> 1.0", require: false
 end
 
