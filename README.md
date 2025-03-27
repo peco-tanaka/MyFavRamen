@@ -59,7 +59,7 @@ docker-compose build
 2. Railsプロジェクトを新規作成
 ```bash
 # 指定したバージョンの Rails でプロジェクトを新規作成（Docker ファイルを上書きしない）
-docker-compose run --no-deps web rails _7.1.5.1_ new . --force --database=postgresql --skip-bundle --css=bootstrap --skip-docker
+docker-compose run --no-deps web rails new . --force --database=postgresql --skip-bundle --css=bootstrap --skip-docker
 ```
 
 3. 環境変数ファイルをコピー

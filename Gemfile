@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.2.7'
 
 # コアライブラリ
-gem 'rails', '~> 7.1', '>= 7.1.5.1'
+gem 'rails', '7.2.2.1'
 gem 'pg', '~> 1.5'
 gem 'puma', '~> 6.4'
 gem 'jsbundling-rails', '~> 1.2'
