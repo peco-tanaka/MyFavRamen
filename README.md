@@ -53,13 +53,13 @@ chmod +x setup.sh
 
 1. Dockerイメージをビルド
 ```bash
-docker-compose build
+docker compose build
 ```
 
 2. Railsプロジェクトを新規作成
 ```bash
 # 指定したバージョンの Rails でプロジェクトを新規作成（Docker ファイルを上書きしない）
-docker-compose run --no-deps web rails new . --force --database=postgresql --skip-bundle --css=bootstrap --skip-docker
+docker compose run --no-deps web rails new . --force --database=postgresql --skip-bundle --css=bootstrap --skip-docker
 ```
 
 3. 環境変数ファイルをコピー
@@ -178,7 +178,7 @@ docker-compose exec web rails db:create
 docker-compose exec web rails db:migrate
 ```
 
-7. 必要なジェネレータを実行
+8. 必要なジェネレータを実行
 ```bash
 docker-compose exec web rails generate devise:install
 docker-compose exec web rails active_storage:install
