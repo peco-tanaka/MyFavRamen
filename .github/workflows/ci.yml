@@ -34,9 +34,8 @@ jobs:
         with:
           ruby-version: .ruby-version
           bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
+      - name: Check for importmap
+        run: if [ -f "bin/importmap" ]; then bin/importmap audit; else echo "Importmap not used, skipping audit"; fi
 
   lint:
     runs-on: ubuntu-latest
