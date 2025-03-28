@@ -8,4 +8,7 @@ Rails.application.routes.draw do
   resources :rankings, only: [:index]
   resources :users, only: [:show]
   root to: 'home#index'
+
+  # 開発環境でメール送信を行うための設定
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end
