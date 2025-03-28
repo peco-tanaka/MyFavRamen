@@ -4,6 +4,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     sessions: 'users/sessions'
   }
-  
+
+  resources :rankings, only: [:index, :show]
+  resources :users, only: [:show]
   root to: 'home#index'
 end
