@@ -5,7 +5,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   validates :nickname, presence: true
-  validates :prefecture_id, presence: true
 
   has_many :rankings
   has_many :ranking_items, through: :rankings
