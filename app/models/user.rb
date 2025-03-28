@@ -16,8 +16,10 @@ class User < ApplicationRecord
   has_many :passive_follows, class_name: "Follow", foreign_key: "followed_id"
   has_many :following, through: :active_follows, source: :followed
   has_many :followers, through: :passive_follows, source: :follower
-  belongs_to_active_hash :prefecture
+  # active_hash作成後にコメントアウトを外す
+  # belongs_to_active_hash :prefecture
 
+  # active_hash作成後にコメントアウトを外す
   # extend ActiveHash::Associations::ActiveRecordExtensions
   # belongs_to_active_hash :prefecture
 end
