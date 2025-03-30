@@ -10,3 +10,6 @@
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w[ admin.js admin.css ]
+
+Rails.application.config.assets.compile = false  # 本番環境で動的コンパイルを無効化
+Rails.application.config.assets.prefix = "/assets"  # アセットのプレフィックスパス

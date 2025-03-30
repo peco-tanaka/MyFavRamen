@@ -95,4 +95,13 @@ Rails.application.configure do
   #   authentication: 'plain',
   #   enable_starttls_auto: true
   # }
+  config.public_file_server.enabled = true
+
+  Rails.application.configure do
+    # 開発環境では動的コンパイルを有効にする（オプション）
+    config.assets.compile = true
+
+    # 必要に応じてデバッグ設定を追加
+    config.assets.debug = true
+  end
 end
