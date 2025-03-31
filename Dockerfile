@@ -25,6 +25,7 @@ WORKDIR /app
 
 # Copy gemfiles for dependency installation
 COPY Gemfile ./
+COPY Gemfile.lock ./
 
 # Install Ruby dependencies
 RUN bundle install
@@ -35,6 +36,11 @@ RUN if [ -f package.json ]; then npm install; fi
 
 # Copy the rest of the application
 COPY . .
+
+# アセットのプリコンパイル（JS、CSSビルド後に実行）
+RUN if [ -f package.json ]; then npm run build; fi
+RUN if [ -f package.json ]; then npm run build:css; fi
+RUN bundle exec rails assets:precompile RAILS_ENV=production
 
 # Start the main process
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
