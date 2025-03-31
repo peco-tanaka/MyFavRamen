@@ -1,0 +1,10 @@
+// public/manifest.json （最小限の内容）
+{
+  "name": "MyFavらぁめん",
+  "short_name": "MyFavらぁめん",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#ff6600",
+  "icons": []
+}
