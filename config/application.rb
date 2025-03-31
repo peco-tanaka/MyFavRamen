@@ -29,7 +29,7 @@ module App
     config.assets.paths = [
       Rails.root.join("app/assets/builds"),   # jsbundling/cssbundling の出力先
       Rails.root.join("app/assets/images"),   # 画像ファイル
-      Rails.root.join("app/assets/fonts"),    # フォントファイル（必要な場合）
+      Rails.root.join("app/assets/fonts")    # フォントファイル（必要な場合）
       # 他に必要なパスがあれば追加
     ]
   end
