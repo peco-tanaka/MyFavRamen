@@ -109,6 +109,4 @@ Rails.application.configure do
 
   # Render.comのホストを許可する
   config.hosts << "myfavramen.onrender.com"
-  # アセットのホスト設定（CDNを使用する場合）
-  # config.assets.host = "https://cdn.example.com"
 end
