@@ -13,3 +13,4 @@
 
 Rails.application.config.assets.compile = false  # 本番環境で動的コンパイルを無効化
 Rails.application.config.assets.prefix = "/assets"  # アセットのプレフィックスパス
+Rails.application.config.assets.paths << Rails.root.join("app/assets/builds")

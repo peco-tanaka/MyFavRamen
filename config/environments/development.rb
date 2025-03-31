@@ -97,11 +97,7 @@ Rails.application.configure do
   # }
   config.public_file_server.enabled = true
 
-  Rails.application.configure do
-    # 開発環境では動的コンパイルを有効にする（オプション）
-    config.assets.compile = true
-
-    # 必要に応じてデバッグ設定を追加
-    config.assets.debug = true
-  end
+  # config/environments/development.rb
+  config.assets.debug = true
+  config.assets.compile = true  # 開発環境での動的コンパイルを有効にする
 end

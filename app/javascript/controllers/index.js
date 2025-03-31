@@ -1,9 +1,7 @@
-import { application } from "./application"
+// controllers/index.js
+import { application } from "../application"
 
+// 現時点ではコントローラーがないため、
+// インポート文と登録コードは削除します
 
-
-// Eager load all controllers defined in the import map under controllers/**/*_controller
-
-import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
-
-eagerLoadControllersFrom("controllers", application)
+export { application }
