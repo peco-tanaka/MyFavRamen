@@ -103,14 +103,12 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
-  Rails.application.configure do
-    # 本番環境では動的コンパイルを無効にする
-    config.assets.compile = false
 
-    # アセットのホスト設定（CDNを使用する場合）
-    # config.assets.host = "https://cdn.example.com"
-  end
+  # 本番環境では動的コンパイルを無効にする
+  config.assets.compile = false
 
-  # Allow requests from the specified host
+  # Render.comのホストを許可する
   config.hosts << "myfavramen.onrender.com"
+  # アセットのホスト設定（CDNを使用する場合）
+  # config.assets.host = "https://cdn.example.com"
 end
