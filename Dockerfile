@@ -40,7 +40,8 @@ COPY . .
 # アセットのプリコンパイル（JS、CSSビルド後に実行）
 RUN if [ -f package.json ]; then npm run build; fi
 RUN if [ -f package.json ]; then npm run build:css; fi
-RUN bundle exec rails assets:precompile RAILS_ENV=production
+# ビルド時に使用するダミーキーを設定してコマンド実行
+RUN SECRET_KEY_BASE=temporary_dummy_key bundle exec rails assets:precompile RAILS_ENV=production
 
 # Start the main process
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
