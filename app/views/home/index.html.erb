@@ -1,4 +1,26 @@
-<h1>トップページです</h1>
-<%= link_to '新規登録', new_user_registration_path %>
-<%= link_to 'ログイン', new_user_session_path %>
-<%= link_to 'パスワードをお忘れの方', new_user_password_path %>
+<div class="container">
+  <div class="row">
+    <h1>MyFavらぁめん</h1>
+    <h2>自分だけのラーメンランキングを作ろう！</h2>
+    <p>MyFavらぁめんは、あなたのお気に入りの一杯をランキング形式で記録、共有ができるサービスです</p>
+    <%= link_to '新規登録', new_user_registration_path %>
+    <%= link_to 'ログイン', new_user_session_path %>
+    <%= link_to 'パスワードをお忘れの方', new_user_password_path %>
+  </div>
+  <div class="col-12 col-4">
+    <ul>
+      <li>
+        <h4>あなただけのランキング</h4>
+        <p>自分だけのラーメンランキング。Myランクを作ろう！</p>
+      </li>
+      <li>
+        <h4>食べた記録を残す</h4>
+        <p>感動した一杯を忘れない。あなたのラーメン巡礼の記録を残そう！</p>
+      </li>
+      <li>
+        <h4>ラーメンを通してゆるく繋がる</h4>
+        <p>ラーメン仲間のランキングをチェック！新たな一杯との出会いも？</p>
+      </li>
+    </ul>
+  </div>
+</div>
