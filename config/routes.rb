@@ -5,7 +5,12 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
 
-  resources :shops, only: [ :index, :show ]
+  resources :shops, only: [ :index, :show ] do
+    collection do
+      get :search
+    end
+  end
+
   resources :rankings, only: [ :index ]
   resources :users, only: [ :show ]
   root to: "home#index"
