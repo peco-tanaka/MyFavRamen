@@ -1,8 +1,10 @@
-// Bootstrapのインポート
-@import "bootstrap/scss/bootstrap";
-
-// カスタム変数の設定（例）
+// カスタム変数の上書き（Bootstrap変数の上書きはインポート前に行う必要があります）
 $primary: #fd7e14; // オレンジ（メインカラー）
 $body-bg: #fff;    // 白（基本背景色）
 
-// 必要に応じて他のスタイルを追加
+// Bootstrap、必要な変数をインポート
+@import "bootstrap/scss/bootstrap";
+@import 'bootstrap-icons/font/bootstrap-icons';
+
+// コンポーネントのインポート
+@import 'components/maps';
