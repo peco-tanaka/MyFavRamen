@@ -8,21 +8,18 @@
     <%= f.submit "検索", class: "btn btn-primary" %>
   </div>
 <% end %>
-<gmp-map
-  center="37.4220656,-122.0840897"
-  zoom="10"
-  map-id="DEMO_MAP_ID"
-  style="height: 400px"
-></gmp-map>
 
-<!--
-  The `defer` attribute causes the script to execute after the full HTML
-  document has been parsed. For non-blocking uses, avoiding race conditions,
-  and consistent behavior across browsers, consider loading using Promises. See
-  https://developers.google.com/maps/documentation/javascript/load-maps-js-api
-  for more information.
-  -->
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=maps&v=beta"
-  defer
-></script>
+<div data-controller="maps">
+  <div data-maps-target="map" id="map"></div>
+</div>
+
+
+
+<%# 公式ドキュメントのmap %>
+<%# <div id="map"></div> %>
+
+<%# <div data-controller="hello">
+  <input data-hello-target="name" type="text">
+  <button data-action="click->hello#greet">挨拶する</button>
+  <span data-hello-target="output"></span>
+</div> %>
