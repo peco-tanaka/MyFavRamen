@@ -6,5 +6,30 @@ $body-bg: #fff;    // 白（基本背景色）
 @import "bootstrap/scss/bootstrap";
 @import 'bootstrap-icons/font/bootstrap-icons';
 
-// コンポーネントのインポート
-@import 'components/maps';
+html, body {
+  height: 100%;
+}
+
+body > .container {
+  min-height: 100vh;
+}
+
+// application.bootstrap.scss
+#map {
+  width: 100% !important;
+  height: 50vh !important; // ビューポート高さの50%
+  min-height: 300px !important; // 最小高さは確保
+}
+
+// 大きい画面サイズでの調整
+@media (min-width: 768px) {
+  #map {
+    height: 60vh !important; // タブレット以上では少し大きく
+  }
+}
+
+@media (min-width: 992px) {
+  #map {
+    height: 70vh !important; // デスクトップではさらに大きく
+  }
+}
