@@ -1,25 +1,45 @@
-<h1>店舗検索画面です</h1>
-<%= form_with url: shops_path, local: true do |f| %>
-  <div class="form-group">
-    <%= f.label :keyword, "店舗名" %>
-    <%= f.text_field :keyword, class: "form-control" %>
-  </div>
-  <div class="form-group">
-    <%= f.submit "検索", class: "btn btn-primary" %>
-  </div>
-<% end %>
+<div class="container mt-2">
+  <%# 検索フォーム %>
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-6 mb-1">
+      <%= form_with url: shops_path, method: :get, local: true do |f| %>
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex">
+              <%= f.text_field :keyword, class: "form-control", placeholder: "店舗名", autofocus: true %>
+              <div class="ms-2">
+                <%= f.submit "検索", class: "btn btn-primary" %>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
 
-<div data-controller="maps">
-  <div data-maps-target="map" id="map"></div>
+    <%# 検索結果一覧表示 %>
+    <div class="col-12 col-md-8 col-lg-6 mb-1">
+      <% if @shops.present? %>
+        <div class="card">
+          <div class="card-body">
+            <p class="card-title">検索結果</p>
+            <div class="list-group">
+              <% @shops.each do |shop| %>
+                <%= link_to shop_path(shop), class: "list-group-item list-group-item-action" do %>
+                  <h5 class="mb-1"><%= shop.name %></h5>
+                  <p class="mb-1"><%= shop.address %></p>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% elsif @keyword.present? %>
+        <div class="alert alert-info mt-2">
+          <strong><%= @keyword %></strong> に一致する店舗は見つかりませんでした。
+        </div>
+      <% end %>
+    </div>
+    <%# Google Map表示 %>
+    <%= render "shared/google_map" %>
+  </div>
 </div>
-
-
-
-<%# 公式ドキュメントのmap %>
-<%# <div id="map"></div> %>
-
-<%# <div data-controller="hello">
-  <input data-hello-target="name" type="text">
-  <button data-action="click->hello#greet">挨拶する</button>
-  <span data-hello-target="output"></span>
-</div> %>

@@ -2,22 +2,20 @@ class ShopsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    if params[:keyword].present?
-      @shops = Shop.where('name LIKE ?', "%#{params[:keyword]}%")
-    else
-      @shops = Shop.all.limit(10)
-    end
+    @keyword = params[:keyword]
 
-    # この時点では Google API からの結果はまだなし
-    # JavaScript側で API 検索を行う
+    # キーワードが入力されている場合のみ検索を実行
+    if @keyword.present?
+      @shops = Shop.where('name LIKE ?', "%#{@keyword}%").limit(20)
+    else
+      @shops = []
+    end
   end
 
   def search
     @keyword = params[:keyword]
     @shops = find_shops_with_google_maps_api(@keyword)
-
-    # ここで Google Maps API を使ってショップを検索し、結果を @shops に格納します
-    # 例: @shops = GoogleMapsService.search_shops(@keyword)
+    render :index
   end
 
   def show

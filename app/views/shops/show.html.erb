@@ -1,0 +1,32 @@
+<div class="container mt-2">
+  <div class="card mb-2">
+    <div class="card-header">
+      <h2><%= @shop.name %></h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="mb-3">
+            <h4>店舗情報</h4>
+            <table class="table">
+              <tr>
+                <th>住所</th>
+                <td><%= @shop.address %></td>
+              </tr>
+              <tr>
+                <th>営業時間</th>
+                <td><%= @shop.business_hours %></td>
+              </tr>
+              <tr>
+                <th>電話番号</th>
+                <td><%= @shop.phone %></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <%= link_to '戻る', shops_path, class: 'btn btn-secondary' %>
+    </div>
+  </div>
+  <%= render "shared/google_map" %>
+</div>
