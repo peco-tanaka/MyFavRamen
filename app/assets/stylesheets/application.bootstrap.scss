@@ -14,7 +14,7 @@ body > .container {
   min-height: 100vh;
 }
 
-// application.bootstrap.scss
+// google_map
 #map {
   width: 100% !important;
   height: 50vh !important; // ビューポート高さの50%
@@ -32,4 +32,21 @@ body > .container {
   #map {
     height: 70vh !important; // デスクトップではさらに大きく
   }
+}
+
+// ローディング画面
+.loading-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  z-index: 10000; /* より高い値に */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* 下のマップ要素へのクリックを許可 */
 }
