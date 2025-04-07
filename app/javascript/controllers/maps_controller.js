@@ -126,6 +126,9 @@ export default class extends Controller {
             this.map.setCenter(currentPos);
             console.log("現在地を取得しました:", currentPos);
 
+            // 現在地にピン打ち
+            await this.addCurrentLocationMarker(currentPos);
+
             await this.searchNearbyRamenShops(currentPos)
           } catch (geoError) {
             console.warn("現在地の取得に失敗しました。デフォルト位置を使用します", geoError);
@@ -170,6 +173,41 @@ export default class extends Controller {
       console.error("マップの初期化中にエラーが発生しました", error)
       // 読み込み表示を非表示にする
       this.hideLoading()
+    }
+  }
+
+  // 現在地にピンを打つ
+  async addCurrentLocationMarker(position) {
+    try {
+      const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+
+      if (this.currentLocationMarker) {
+        this.currentLocationMarker.map = null;
+      }
+      // カスタムピンを作成（赤色）
+      const pinElement = new PinElement({
+        background: "#FF0000",  // 赤色
+        borderColor: "#CC0000", // 濃い赤
+        glyphColor: "#FFFFFF",  // 白色の文字
+        scale: 1.3,             // 少し大きめに
+      });
+      // 新しいマーカーを作成
+      this.currentLocationMarker = new AdvancedMarkerElement({
+        map: this.map,
+        position: position,
+        title: "現在地",
+        content: pinElement.element
+      });
+
+      // マーカーがクリックされた時の処理
+      this.currentLocationMarker.addListener("gmp-click", () => {
+        this.infoWindow.setContent("<div><strong>現在地</strong></div>")
+        this.infoWindow.open(this.map, this.currentLocationMarker);
+      });
+
+      console.log("現在地マーカーを設置しました", position);
+    } catch(error) {
+      console.error("現在地マーカーの作成中にエラーが発生しました", error)
     }
   }
 

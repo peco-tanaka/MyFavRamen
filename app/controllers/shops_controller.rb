@@ -1,29 +1,34 @@
 class ShopsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_shop, only: [:show]
 
   def index
     @keyword = params[:keyword]
 
     # キーワードが入力されている場合のみ検索を実行
     if @keyword.present?
+      # DBから検索
       @shops = Shop.where('name LIKE ?', "%#{@keyword}%").limit(20)
+      # 検索結果が０件の場合、Google Maps APIの検索結果を使用
+      @search_keyword = @keyword if @shops.empty?
     else
-      @shops = []
+      @shops = Shop.none
     end
   end
 
   def search
-    @keyword = params[:keyword]
-    @shops = find_shops_with_google_maps_api(@keyword)
-    render :index
+    render json: { status: 'success' }
   end
 
   def show
-    @shop = Shop.find(params[:id])
+    set_shop
   end
 
   private
 
+  def set_shop
+    @shop = Shop.find(params[:id])
+  end
 
   def find_shops_with_google_maps_api(keyword)
     # Use Google Maps API to find shops based on the keyword
