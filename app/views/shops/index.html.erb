@@ -1,12 +1,19 @@
-<div class="container mt-2">
+<!-- 追加: Stimulusコントローラーを接続し、検索キーワードを設定 -->
+<div class="container mt-2" data-controller="maps"
+    data-maps-keyword-value="<%= @search_keyword %>"
+    data-maps-has-db-results-value="<%= @has_db_results || false %>">
   <%# 検索フォーム %>
   <div class="row">
     <div class="col-12 col-md-8 col-lg-6 mb-1">
-      <%= form_with url: shops_path, method: :get, local: true do |f| %>
+      <!-- 追加: フォームにStimulusターゲットとアクションを追加 -->
+      <%= form_with url: shops_path, method: :get, local: true,
+                    data: { maps_target: "searchForm", action: "submit->maps#searchShops" } do |f| %>
         <div class="card">
           <div class="card-body">
             <div class="d-flex">
-              <%= f.text_field :keyword, class: "form-control", placeholder: "店舗名", autofocus: true %>
+              <!-- 追加: 入力フィールドにStimulusターゲットを追加 -->
+              <%= f.text_field :keyword, class: "form-control", placeholder: "店舗名",
+                                autofocus: true, data: { maps_target: "searchInput" } %>
               <div class="ms-2">
                 <%= f.submit "検索", class: "btn btn-primary" %>
               </div>
@@ -17,29 +24,42 @@
       <% end %>
     </div>
 
-    <%# 検索結果一覧表示 %>
-    <div class="col-12 col-md-8 col-lg-6 mb-1">
-      <% if @shops.present? %>
-        <div class="card">
-          <div class="card-body">
-            <p class="card-title">検索結果</p>
-            <div class="list-group">
-              <% @shops.each do |shop| %>
-                <%= link_to shop_path(shop), class: "list-group-item list-group-item-action" do %>
-                  <h5 class="mb-1"><%= shop.name %></h5>
-                  <p class="mb-1"><%= shop.address %></p>
-                <% end %>
+  <div class="col-12 col-md-8 col-lg-6 mb-1">
+    <div class="card">
+      <div class="card-body">
+        <p class="card-title small">検索結果</p>
+        <% if @shops.present? %>
+        <%# ここに両方の検索結果が入る %>
+          <div class="list-group" id="database-results">
+            <% @shops.each do |shop| %>
+              <%= link_to shop_path(shop), class: "list-group-item list-group-item-action" do %>
+                <h5 class="mb-1"><%= shop.name %></h5>
+                <p class="mb-1"><% shop.address %></p>
+                <span class="badge bg-primary">データベース登録済み</span>
               <% end %>
-            </div>
+            <% end %>
           </div>
+        <% end %>
+
+        <%# 検索結果を表示 %>
+        <div data-maps-target="searchResults"></div>
+
+        <%# 検索結果がない場合のメッセージ %>
+        <div data-maps-target="noResultsMessage" style="display: none;">
+          <p class="alert alert-info mt-2">検索結果がありませんでした</p>
         </div>
-      <% elsif @keyword.present? %>
-        <div class="alert alert-info mt-2">
-          <strong><%= @keyword %></strong> に一致する店舗は見つかりませんでした。
-        </div>
-      <% end %>
+      </div>
     </div>
+  </div>
+
     <%# Google Map表示 %>
     <%= render "shared/google_map" %>
+
+    <div data-maps-target="loading" class="loading-indicator" style="display: none">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">読み込み中...</span>
+      </div>
+    </div>
+
   </div>
 </div>

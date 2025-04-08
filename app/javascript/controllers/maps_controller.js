@@ -2,18 +2,25 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   HTMLから参照するための
-  static targets = ["map", "loading"]
+  static targets = ["map", "loading", "searchResults", "searchInput", "searchForm"]
 
   static values = {
     latitude: Number,
     longitude: Number,
-    shopName: String
+    shopName: String,
+    keyword: String,
+    hasDbResults: Boolean
   }
 
   connect() {
     if (this.hasMapTarget) {
       console.log("MapsController connected!")
       this.initMap()
+
+      // キーワードが設定されていて、DBに結果がない場合には自動検索
+      if (this.hasKeywordValue && this.keyWordValue && ! this.hasDbresultsValue) {
+        this.searchShops()
+      }
     }
   }
 
@@ -235,7 +242,7 @@ export default class extends Controller {
         includedPrimaryTypes: ["restaurant"], // 検索対象のタイプを設定
 
         // ④オプション： 最大結果数、言語設定
-        maxResultCount: 20,          // 最大結果数
+        maxResultCount: 15,          // 最大結果数
         languageCode: "ja"           // 言語コード
       };
 
@@ -245,7 +252,7 @@ export default class extends Controller {
         textQuery: "ラーメン",
         locationBias: location,
         fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount"],
-        maxResultCount: 20,
+        maxResultCount: 15,
         language: "ja"
       };
 
@@ -313,6 +320,172 @@ export default class extends Controller {
       }
     } catch(error) {
       console.error("マーカー表示中にエラーが発生しました", error)
+    }
+  }
+
+  // フォーム送信時に検索を実行するメソッド
+  async searchShops(event) {
+    if (event) event.preventDefault()
+
+    let keyword
+    if (this.hasSearchInputTarget) {
+      keyword = this.searchInputTarget.value.trim()
+    } else if (this.hasKeywordValue) {
+      keyword = this.keywordValue
+    }
+
+    if (!keyword) return
+
+    this.showLoading()
+    console.log("検索キーワード:", keyword)
+
+    // 検索結果を初期化
+    if (this.hasSearchResultsTarget) {
+      this.searchResultsTarget.innerHTML = ""
+    }
+
+    try {
+      // Places APIからテキスト検索関連のクラスをインポート
+      const { Place } = await google.maps.importLibrary("places")
+
+      // テキスト検索オプション
+      const textSearchOptions = {
+        textQuery: `${keyword} ラーメン`,
+        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount", "id"],
+        maxResultCount: 15,
+        language: "ja"
+      }
+
+      // テキスト検索を実行
+      const { places } = await Place.searchByText(textSearchOptions);
+      console.log("検索結果:", places);
+
+      if (places && places.length > 0) {
+        // 検索結果を地図上に表示
+        await this.displayRamenShops(places)
+
+        // 検索結果リストを表示
+        this.displaySearchResult(places)
+      } else {
+        console.log("検索結果がありませんでした")
+        // 空の結果を渡す
+        this.displaySearchResult([])
+      }
+    } catch(error) {
+      console.error("店舗検索中にエラーが発生しました", error)
+      // エラー時も空の結果を返す
+      this.displaySearchResult([])
+    } finally {
+      this.hideLoading()
+    }
+  }
+
+  // 検索結果リストを表示するメソッド
+  displaySearchResult(places) {
+    if (!this.hasSearchResultsTarget) return
+
+    // 検索結果がなければメッセージを表示
+    if(!places || places.length === 0 ) {
+      this.searchResultsTarget.innerHTML = ""
+      if (this.hasNoResultsMessageTarget && !this.hasDbResultsValue) {
+        this.hasNoResultsMessageTarget.style.display = "block"
+      }
+      return
+    }
+
+    // 検索結果があればメッセージを非表示
+    if (this.hasNoResultsMessageTarget) {
+      this.noResultsMessageTarget.style.display = 'none'
+    }
+
+    // 検索結果リストの作成
+    const listGroup = document.createElement("div")
+    listGroup.className = "list-group mt-2"
+    listGroup.id = "google-results"
+
+    places.forEach(place => {
+      const listItem = document.createElement("a")
+      listItem.className = "list-group-item list-group-item-action"
+      listItem.setAttribute("data-place-id", place.id)
+      listItem.setAttribute("data-action", "click->maps#selectPlace")
+
+      const title = document.createElement("h5")
+      title.className = "mb-1"
+      title.textContent = place.displayName || "名称不明"
+
+      const address = document.createElement("p")
+      address.className = "mb-1"
+      address.textContent = place.formattedAddress || "住所不明"
+
+      // Google検索結果であることを示すバッジ
+      const badge = document.createElement("span")
+      badge.className = "badge bg-warning"
+      badge.textContent = "Google Maps"
+
+      listItem.appendChild(title)
+      listItem.appendChild(address)
+      listItem.appendChild(badge)
+      listGroup.appendChild(listItem)
+    })
+    this.searchResultsTarget.innerHTML = ""
+    this.searchResultsTarget.appendChild(listGroup)
+  }
+
+  // 店舗を選択した時の処理
+  async selectPlace(event) {
+    event.preventDefault()
+
+    // クリックした要素から店舗IDを取得
+    const placeId = event.currentTarget.getAttribute("data-place-id")
+    console.log("選択された店舗ID:", placeId)
+
+    try {
+      this.showLoading()
+
+      // Places APIからPlaceクラスをインポート
+      const { Place } = await google.maps.importLibrary("places")
+
+      // Google Maps APIから詳細情報を取得
+      const place = new Place({
+        id: placeId,
+        requestedLanguage: "ja",
+      })
+
+      await place.fetchFields({
+        fields: ["displayName", "location", "formattedAddress", "nationalPhoneNumber", "rating", "businessStatus", "regularOpeningHours", "websiteURI"],
+      })
+
+      console.log("店舗詳細:", place)
+
+      // バックエンドに店舗情報を送信し、DBに保存またはリダイレクト
+      // fetch() でHTTPリクエストを送信
+      const response = await fetch('/shops/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector("[name='csrf-token']").content
+        },
+        body: JSON.stringify({
+          place_id: place.id,
+          name: place.displayName,
+          address: place.formattedAddress,
+          phone: place.nationalPhoneNumber,
+          latitude: place.location?.lat,
+          longitude: place.location?.lng,
+          business_hours: place.regularOpeningHours?.weekdayDescriptions?.join(', '),
+          website: place.websiteURI
+        })
+      })
+
+      const result = await response.json()
+
+      if (result.status === 'success' && result.redirect_url) {
+        window.location.href = result.redirect_url
+      }
+    } catch (error) {
+      console.error("店舗詳細の取得中にエラーが発生しました", error)
+    } finally {
+      this.hideLoading()
     }
   }
 }
