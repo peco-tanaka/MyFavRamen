@@ -4,11 +4,17 @@
 
 import { application } from "./application"
 
+import BaseMapController from "./base_map_controller"
+application.register("base-map", BaseMapController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
 import MapsController from "./maps_controller"
 application.register("maps", MapsController)
+
+import MarkerController from "./marker_controller"
+application.register("marker", MarkerController)
 
 import TestController from "./test_controller"
 application.register("test", TestController)
