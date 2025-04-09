@@ -6,7 +6,8 @@
           <div data-controller="maps"
               data-maps-latitude-value="<%= @shop.latitude %>"
               data-maps-longitude-value="<%= @shop.longitude %>"
-              data-maps-shop-name-value="<%= @shop.name %>">
+              data-maps-shop-name-value="<%= @shop.name %>"
+              data-maps-is-detail-page-value="true">
             <div style="position: relative;">  <!-- 相対位置の親コンテナ -->
               <div data-maps-target="map" id="map"></div>
               <div data-maps-target="loading" class="loading-indicator" style="display: none;">
@@ -18,7 +19,8 @@
             </div>
           </div>
         <% else %>
-          <div data-controller="maps">
+          <div data-controller="maps"
+              data-maps-is-detail-page-value="false">
             <div style="position: relative;">  <!-- 相対位置の親コンテナ -->
               <div data-maps-target="map" id="map"></div>
               <div data-maps-target="loading" class="loading-indicator" style="display: none;">

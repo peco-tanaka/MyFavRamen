@@ -68,7 +68,7 @@ class ShopsController < ApplicationController
 
   # ストロングパラメーター（フロントのデータ用）
   def place_params
-    params.permit(:place_id, :name, :address, :phone,:latitude, :longitude, :business_hours, :website
+    params.permit(:place_id, :name, :address, :phone, :latitude, :longitude, :business_hours, :website
     )
   end
 end

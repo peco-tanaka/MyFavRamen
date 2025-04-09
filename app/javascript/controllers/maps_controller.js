@@ -1,15 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  HTMLから参照するための
-  static targets = ["map", "loading", "searchResults", "searchInput", "searchForm"]
+  // HTMLから参照するための
+  static targets = ["map", "loading", "searchResults", "searchInput", "searchForm", "noResultsMessage"]
 
   static values = {
     latitude: Number,
     longitude: Number,
     shopName: String,
     keyword: String,
-    hasDbResults: Boolean
+    hasDbResults: Boolean,
+    isDetailPage: Boolean,
   }
 
   connect() {
@@ -17,8 +18,14 @@ export default class extends Controller {
       console.log("MapsController connected!")
       this.initMap()
 
-      // キーワードが設定されていて、DBに結果がない場合には自動検索
-      if (this.hasKeywordValue && this.keyWordValue && ! this.hasDbresultsValue) {
+      const isDetailPage = this.isDetailPageValue === true ||
+                           this.element.getAttribute('data-maps-is-detail-page-value') === 'true'
+      console.log("詳細画面判定:", isDetailPage)
+
+      this.initMap(isDetailPage)
+
+      // キーワードが設定されていて、DBに結果がない場合、詳細画面以外で自動検索を実行
+      if (!isDetailPage && this.hasKeywordValue && this.keyWordValue && ! this.hasDbResultsValue) {
         this.searchShops()
       }
     }
@@ -42,7 +49,7 @@ export default class extends Controller {
   }
 
   // マップを初期化するメソッド
-  async initMap() {
+  async initMap(isDetailPage = false) {
     try {
       // Maps, Markerライブラリを読み込む
       const { Map } = await google.maps.importLibrary("maps");
@@ -103,7 +110,15 @@ export default class extends Controller {
       const locationButton = document.createElement("button");
       locationButton.innerHTML = '<i class="bi bi-geo-alt"></i> 近くのお店を検索';
       locationButton.className = "btn btn-primary btn-sm rounded-5 m-2";
-      this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+
+      // 詳細画面ではボタンを表示しない
+      console.log("詳細画面判定（initMap内）:", isDetailPage)
+      if (!isDetailPage) {
+        this.map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+        console.log("「近くのお店を検索」ボタンを表示します");
+      } else {
+        console.log("詳細画面のため「近くのお店を検索」ボタンを非表示にします");
+      }
 
       // ボタンクリック時の挙動を定義
       locationButton.addEventListener("click", async () => {
@@ -161,12 +176,16 @@ export default class extends Controller {
 
           console.log("Places APIの初期化が完了しました");
 
-          if(this.hasLatitudeValue && this.hasLongitudeValue) {
-            await this.searchNearbyRamenShops({
-              // 店舗の位置を中心に検索
-              lat: this.latitudeValue,
-              lng: this.longitudeValue
-            })
+          if(!isDetailPage) {
+            if(this.hasLatitudeValue && this.hasLongitudeValue) {
+              await this.searchNearbyRamenShops({
+                // 店舗の位置を中心に検索
+                lat: this.latitudeValue,
+                lng: this.longitudeValue
+              })
+            } else {
+              await this.searchNearbyRamenShops(center);
+            }
           } else {
             // デフォルト位置を中心に検索
             await this.searchNearbyRamenShops(center);
@@ -230,7 +249,7 @@ export default class extends Controller {
       // 必須フィールドを含む検索オプションを定義
       const searchOptions = {
         // ①必須：取得したいフィールドを指定
-        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount"],
+        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount", "photos"],
 
         // 必須②：検索範囲を指定
         locationRestriction : {
@@ -251,7 +270,7 @@ export default class extends Controller {
       const textSearchOptions = {
         textQuery: "ラーメン",
         locationBias: location,
-        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount"],
+        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount", "photos"],
         maxResultCount: 15,
         language: "ja"
       };
@@ -261,10 +280,12 @@ export default class extends Controller {
       console.log("検索結果:", places);
 
       if (places && places.length > 0) {
-        // 検索結果を地図上に表示
+        // 検索結果を地図とリストに表示
         await this.displayRamenShops(places);
+        this.displaySearchResult(places)
       } else {
         console.log("検索結果がありませんでした");
+        this.displaySearchResult([]); // 空の結果を渡して表示を更新
       }
     } catch (error) {
       console.error("ラーメン店の検索中にエラーが発生しました", error);
@@ -273,6 +294,7 @@ export default class extends Controller {
     }
   }
 
+  // ラーメン店にピンをうつ
   async displayRamenShops(places) {
     try {
       // ①markerライブラリを読み込む
@@ -331,7 +353,7 @@ export default class extends Controller {
     if (this.hasSearchInputTarget) {
       keyword = this.searchInputTarget.value.trim()
     } else if (this.hasKeywordValue) {
-      keyword = this.keywordValue
+      keyword = this.keyWordValue
     }
 
     if (!keyword) return
@@ -351,7 +373,7 @@ export default class extends Controller {
       // テキスト検索オプション
       const textSearchOptions = {
         textQuery: `${keyword} ラーメン`,
-        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount", "id"],
+        fields: ["displayName", "location", "formattedAddress", "rating", "userRatingCount", "photos", "id"],
         maxResultCount: 15,
         language: "ja"
       }
@@ -382,15 +404,27 @@ export default class extends Controller {
 
   // 検索結果リストを表示するメソッド
   displaySearchResult(places) {
-    if (!this.hasSearchResultsTarget) return
+    // デバッグログの追加
+    console.log("displaySearchResult called with", places ? places.length : 0, "places");
+    console.log("searchResultsTarget exists:", this.hasSearchResultsTarget);
+
+    if (!this.hasSearchResultsTarget) {
+      console.warn("検索結果を表示する要素が見つかりません");
+      return;
+    }
+
+    // 検索結果コンテナを初期化
+    this.searchResultsTarget.innerHTML = "";
 
     // 検索結果がなければメッセージを表示
     if(!places || places.length === 0 ) {
-      this.searchResultsTarget.innerHTML = ""
-      if (this.hasNoResultsMessageTarget && !this.hasDbResultsValue) {
-        this.hasNoResultsMessageTarget.style.display = "block"
+      if (this.hasNoResultsMessageTarget) {
+        this.hasNoResultsMessageTarget.style.display = "block" // 変数名の修正
+      } else {
+      // メッセージ表示要素がない場合は直接結果コンテナに表示
+      this.searchResultsTarget.innerHTML = "<p class='text-center mt-3'>検索結果がありませんでした</p>";
       }
-      return
+      return;
     }
 
     // 検索結果があればメッセージを非表示
@@ -405,9 +439,30 @@ export default class extends Controller {
 
     places.forEach(place => {
       const listItem = document.createElement("a")
-      listItem.className = "list-group-item list-group-item-action"
+      // listItem.className = "list-group-item list-group-item-action"
+      listItem.className = "list-group-item list-group-item-action d-flex align-items-start";
       listItem.setAttribute("data-place-id", place.id)
       listItem.setAttribute("data-action", "click->maps#selectPlace")
+
+      // 写真表示部分
+      const photoDiv = document.createElement("div");
+      photoDiv.className = "flex-shrink-0 me-3" //画像用のコンテナ
+      if (place.photos && place.photos.length > 0) {
+        const photo = place.photos[0]; //最初の写真を使用
+        const img = document.createElement("img")
+        // getURI()で写真URLを取得。サイズを指定可能
+        img.src = photo.getURI({ maxWidth: 100, maxHeight: 100 });
+        img.alt = `${place.displayName || '店舗'}の写真`;
+        img.style.width = "80px"; // 表示サイズをCSSで調整 (例)
+        img.style.height = "80px";
+        img.style.objectFit = "cover"; // 画像のアスペクト比を保ちつつ表示
+        img.classList.add("rounded"); // 角丸にする (Bootstrap)
+        photoDiv.appendChild(img);
+      }
+
+      // 店舗情報部分
+      const infoDiv = document.createElement("div");
+      infoDiv.className = "flex-grow-1";
 
       const title = document.createElement("h5")
       title.className = "mb-1"
@@ -417,14 +472,27 @@ export default class extends Controller {
       address.className = "mb-1"
       address.textContent = place.formattedAddress || "住所不明"
 
+      // 評価 (任意)
+      const ratingP = document.createElement("p");
+      ratingP.className = "mb-1 small text-muted";
+      ratingP.textContent = `評価: ${place.rating || '－'} (${place.userRatingCount || 0}件)`;
+
       // Google検索結果であることを示すバッジ
       const badge = document.createElement("span")
       badge.className = "badge bg-warning"
       badge.textContent = "Google Maps"
 
-      listItem.appendChild(title)
-      listItem.appendChild(address)
-      listItem.appendChild(badge)
+      // 組み立て
+      infoDiv.appendChild(title)
+      infoDiv.appendChild(address)
+      infoDiv.appendChild(ratingP)
+      infoDiv.appendChild(badge)
+
+      // リストアイテムに写真と情報を追加
+      listItem.appendChild(photoDiv);
+      listItem.appendChild(infoDiv);
+      // ここまで店舗情報部分
+
       listGroup.appendChild(listItem)
     })
     this.searchResultsTarget.innerHTML = ""
@@ -455,7 +523,27 @@ export default class extends Controller {
         fields: ["displayName", "location", "formattedAddress", "nationalPhoneNumber", "rating", "businessStatus", "regularOpeningHours", "websiteURI"],
       })
 
+      console.log("場所の詳細情報:", place);
+      console.log("位置情報:", place.location);
+
+      // 位置情報の取得を確実にする
+      let latitude = null
+      let longitude = null
+
+      if (place.location) {
+        console.log("locationの型:", typeof place.location)
+        console.log("locationの中身:", JSON.stringify(place.location))
+      // 様々なパターンをチェック
+        if (typeof place.location.lat === 'number') {
+          latitude = place.location.lat
+          longitude = place.location.lng
+        } else if (typeof place.location.lat === 'function') {
+          latitude = place.location.lat()
+          longitude = place.location.lng()
+        }
+      }
       console.log("店舗詳細:", place)
+      console.log("送信する位置情報:", { latitude, longitude })
 
       // バックエンドに店舗情報を送信し、DBに保存またはリダイレクト
       // fetch() でHTTPリクエストを送信
@@ -470,8 +558,8 @@ export default class extends Controller {
           name: place.displayName,
           address: place.formattedAddress,
           phone: place.nationalPhoneNumber,
-          latitude: place.location?.lat,
-          longitude: place.location?.lng,
+          latitude: latitude,
+          longitude: longitude, // nullでも明示的に送信
           business_hours: place.regularOpeningHours?.weekdayDescriptions?.join(', '),
           website: place.websiteURI
         })
