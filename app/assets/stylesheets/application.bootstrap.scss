@@ -50,3 +50,30 @@ body > .container {
   justify-content: center;
   pointer-events: none; /* 下のマップ要素へのクリックを許可 */
 }
+
+// プロフィール画面
+@media (min-width: 992px) { /* Bootstrap lg breakpoint (992px) */
+  .sidebar-lg {
+    position: fixed; /* 左側に固定 */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1040; /* 必要に応じて調整 (navbarより手前など) */
+    /* Offcanvasの非表示スタイルを上書き */
+    transform: none !important;
+    visibility: visible !important;
+    border-right: 1px solid #dee2e6; /* 右側に境界線を追加 */
+    /* スクロールバーが必要な場合に備える */
+    overflow-y: auto;
+  }
+
+  .main-content {
+    margin-left: 280px; /* サイドバーの幅 (sidebar-lg の style="width: 280px;" と合わせる) */
+    width: calc(100% - 280px); /* 画面全体の幅からサイドバーの幅を引いた値を設定 */
+  }
+
+  /* スマホ用ヘッダーはPCでは完全に非表示にする */
+  .navbar.d-lg-none {
+      display: none !important;
+  }
+}
