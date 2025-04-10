@@ -77,3 +77,24 @@ body > .container {
       display: none !important;
   }
 }
+
+footer {
+  a {
+    color: #212529; // デフォルトテキストカラー
+    
+    &:active {
+      background-color: rgba($primary, 0.1);
+    }
+    
+    i {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// フッターがある場合のメインコンテンツの下部余白調整
+@media (max-width: 991.98px) { // lg未満
+  .main-content {
+    padding-bottom: 70px;
+  }
+}
