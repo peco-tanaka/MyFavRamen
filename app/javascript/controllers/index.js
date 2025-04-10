@@ -16,5 +16,11 @@ application.register("maps", MapsController)
 import MarkerController from "./marker_controller"
 application.register("marker", MarkerController)
 
+import ResultsController from "./results_controller"
+application.register("results", ResultsController)
+
+import SearchController from "./search_controller"
+application.register("search", SearchController)
+
 import TestController from "./test_controller"
 application.register("test", TestController)

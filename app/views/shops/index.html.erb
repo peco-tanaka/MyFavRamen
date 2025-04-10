@@ -1,13 +1,21 @@
 <!-- 追加: Stimulusコントローラーを接続し、検索キーワードを設定 -->
 <div class="container mt-2" data-controller="maps"
     data-maps-keyword-value="<%= @search_keyword %>"
-    data-maps-has-db-results-value="<%= @has_db_results || false %>">
+    data-maps-has-db-results-value="<%= @has_db_results || false %>"
+    <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
+      data-maps-latitude-value="<%= @shop.latitude %>"
+      data-maps-longitude-value="<%= @shop.longitude %>"
+      data-maps-shop-name-value="<%= @shop.name %>"
+      data-maps-is-detail-page-value="true"
+    <% else %>
+      data-maps-is-detail-page-value="false"
+    <% end %>>
   <%# 検索フォーム %>
   <div class="row">
     <div class="col-12 col-md-8 col-lg-6 mb-1">
       <!-- 追加: フォームにStimulusターゲットとアクションを追加 -->
       <%= form_with url: shops_path, method: :get, local: true,
-                    data: { maps_target: "searchForm", action: "submit->maps#searchShops" } do |f| %>
+                    data: { maps_target: "searchForm", action: "submit->maps#search" } do |f| %>
         <div class="card">
           <div class="card-body">
             <div class="d-flex">
@@ -51,8 +59,16 @@
     </div>
   </div>
 
-    <%# Google Map表示 %>
-    <%= render "shared/google_map" %>
+    <%# Google Map表示。検索画面と店舗詳細場面で分岐 %>
+    <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
+      <%= render "shared/google_map",
+            latitude: @shop.latitude,
+            longitude: @shop.longitude,
+            shop_name: @shop.name,
+            is_detail_page: true %>
+    <% else %>
+      <%= render "shared/google_map", is_detail_page: false %>
+    <% end %>
 
   </div>
 </div>
