@@ -99,3 +99,28 @@ footer {
     padding-bottom: 70px;
   }
 }
+
+// 全画面幅のヘッダー（PC用）
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 56px; // ヘッダーの高さを明示的に設定
+  z-index: 1050; // 高いz-indexでサイドバーより上に表示
+}
+
+// ヘッダーがある場合のレイアウト調整（PC用）
+@media (min-width: 992px) {
+  // サイドバーの位置調整
+  .sidebar-lg {
+    top: 56px; // ヘッダーの高さ分下げる
+    height: calc(100vh - 56px); // 画面の高さからヘッダーの高さを引く
+  }
+
+  // メインコンテンツの位置調整
+  .main-content {
+    margin-top: 56px; // ヘッダーの高さ分下げる
+  }
+}
