@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   }
 
     root to: "home#index"
-    post 'shops/search', to: 'shops#search'
+    post "shops/search", to: "shops#search"
 
   resources :shops, only: [ :index, :show ] do
     collection do

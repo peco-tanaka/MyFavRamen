@@ -65,4 +65,4 @@ end
 # アセットパイプライン設定
 gem "propshaft"
 
-gem 'pry-rails'
+gem "pry-rails"

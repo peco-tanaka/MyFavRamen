@@ -1,6 +1,6 @@
 class ShopsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_shop, only: [:show]
+  before_action :set_shop, only: [ :show ]
 
   def index
     @keyword = params[:keyword]
@@ -8,7 +8,7 @@ class ShopsController < ApplicationController
     # キーワードが入力且つボタンが押された場合のみ検索を実行
     if @keyword.present? && params[:commit].present?
       # DBから検索
-      @shops = Shop.where('name LIKE ?', "%#{@keyword}%").limit(15)
+      @shops = Shop.where("name LIKE ?", "%#{@keyword}%").limit(15)
       # 検索結果がDBに存在するか確認し、その真偽地を変数に格納
       @has_db_results = @shops.exists?
     else
@@ -27,7 +27,7 @@ class ShopsController < ApplicationController
 
       if existing_shop
         # 既存店舗が見つかった時は、そのページへリダイレクト
-        render json: { status: 'success', redirect_url: shop_path(existing_shop) }
+        render json: { status: "success", redirect_url: shop_path(existing_shop) }
       else
         # 新しい店舗レコードを作成
         shop = Shop.new(
@@ -41,18 +41,18 @@ class ShopsController < ApplicationController
         )
         if shop.save
           # 保存成功時は新店舗の詳細ページURLを返す
-          render json: { status: 'success', redirect_url: shop_path(shop) }
+          render json: { status: "success", redirect_url: shop_path(shop) }
         else
           # 保存失敗時はエラーメッセージを返す
-          render json: { status: 'error', errors: shop.errors.full_messages }, status:unprocessable_entity
+          render json: { status: "error", errors: shop.errors.full_messages }, status: unprocessable_entity
         end
       end
     rescue ActionController::ParameterMissing => e
       # パラメータがない場合はJson形式でエラーを返す
-      render json: { status: 'error', message: e.message }, status: :bad_request
+      render json: { status: "error", message: e.message }, status: :bad_request
     rescue => e
       # その他のエラー時もJson形式で返す
-      render json: { status: 'error', message: e.message }, status: :internal_server_error
+      render json: { status: "error", message: e.message }, status: :internal_server_error
     end
   end
 
