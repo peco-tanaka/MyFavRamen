@@ -1,8 +1,52 @@
-// Bootstrapのインポート
-@import "bootstrap/scss/bootstrap";
-
-// カスタム変数の設定（例）
+// カスタム変数の上書き（Bootstrap変数の上書きはインポート前に行う必要があります）
 $primary: #fd7e14; // オレンジ（メインカラー）
 $body-bg: #fff;    // 白（基本背景色）
 
-// 必要に応じて他のスタイルを追加
+// Bootstrap、必要な変数をインポート
+@import "bootstrap/scss/bootstrap";
+@import 'bootstrap-icons/font/bootstrap-icons';
+
+html, body {
+  height: 100%;
+}
+
+body > .container {
+  min-height: 100vh;
+}
+
+// google_map
+#map {
+  width: 100% !important;
+  height: 50vh !important; // ビューポート高さの50%
+  min-height: 300px !important; // 最小高さは確保
+}
+
+// 大きい画面サイズでの調整
+@media (min-width: 768px) {
+  #map {
+    height: 60vh !important; // タブレット以上では少し大きく
+  }
+}
+
+@media (min-width: 992px) {
+  #map {
+    height: 70vh !important; // デスクトップではさらに大きく
+  }
+}
+
+// ローディング画面
+.loading-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  z-index: 10000; /* より高い値に */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* 下のマップ要素へのクリックを許可 */
+}

@@ -1,0 +1,40 @@
+<div class="container mt-2" data-controller="maps"
+      data-maps-latitude-value="<%= @shop.latitude || 0 %>"
+      data-maps-longitude-value="<%= @shop.longitude || 0 %>"
+      data-maps-shop-name-value="<%= @shop.name %>"
+      data-maps-is-detail-page-value="true">
+  <div class="container mt-2">
+    <div class="card mb-2">
+      <div class="card-header">
+        <h2><%= @shop.name %></h2>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="mb-3">
+              <h4>店舗情報</h4>
+              <table class="table">
+                <tr>
+                  <th style="small">住所</th>
+                  <td><%= format_address(@shop.address) %></td>
+                </tr>
+                <tr>
+                  <tr>
+                    <th style="small">営業時間</th>
+                    <td><%= format_business_hours(@shop.business_hours) %></td>
+                  </tr>
+                </tr>
+                <tr>
+                  <th style="small">tel</th>
+                  <td><%= @shop.phone %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <%= link_to '戻る', shops_path, class: 'btn btn-secondary' %>
+      </div>
+    </div>
+    <%= render "shared/google_map" %>
+  </div>
+</div>

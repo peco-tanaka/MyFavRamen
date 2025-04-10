@@ -1,11 +1,10 @@
 // Entry point for the build script in your package.json
-import { Application } from "@hotwired/stimulus"
 import "@hotwired/turbo-rails"
 import * as bootstrap from "bootstrap"
 import Sortable from "sortablejs"
+import "./controllers"
 
-// Stimulusアプリケーションを開始
-const application = Application.start()
+console.log("Hello from application.js!")
 
 // 必要に応じてSortableをグローバルに公開
 window.Sortable = Sortable
@@ -18,9 +17,3 @@ window.Sortable = Sortable
 //     return new bootstrap.Toast(toastEl)
 //   })
 // })
-
-// controllersディレクトリからコントローラーをインポート
-import "./controllers"
-
-// アプリケーションをエクスポート（他のファイルで使用可能に）
-export { application }

@@ -1,0 +1,72 @@
+<div class="container mt-2" data-controller="maps"
+    data-maps-keyword-value="<%= @search_keyword %>"
+    data-maps-has-db-results-value="<%= @has_db_results || false %>"
+    <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
+      data-maps-latitude-value="<%= @shop.latitude %>"
+      data-maps-longitude-value="<%= @shop.longitude %>"
+      data-maps-shop-name-value="<%= @shop.name %>"
+      data-maps-is-detail-page-value="true"
+    <% else %>
+      data-maps-is-detail-page-value="false"
+    <% end %>>
+  
+  <div class="row">
+    <!-- 検索フォーム - 左側 -->
+    <div class="col-12 col-md-6 mb-3">
+      <%= form_with url: shops_path, method: :get, local: true,
+                    data: { maps_target: "searchForm", action: "submit->maps#search" } do |f| %>
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex">
+              <%= f.text_field :keyword, class: "form-control", placeholder: "店舗名",
+                                autofocus: true, data: { maps_target: "searchInput" } %>
+              <div class="ms-2">
+                <%= f.submit "検索", class: "btn btn-primary" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- 検索結果 - 左側（フォームの下） -->
+      <div class="card mt-3">
+        <div class="card-body">
+          <p class="card-title small">検索結果</p>
+          <% if @shops.present? %>
+            <div class="list-group" id="database-results">
+              <% @shops.each do |shop| %>
+                <%= link_to shop_path(shop), class: "list-group-item list-group-item-action" do %>
+                  <h5 class="mb-1"><%= shop.name %></h5>
+                  <p class="mb-1"><%= shop.address %></p>
+                  <span class="badge bg-primary">データベース登録済み</span>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div data-maps-target="searchResults"></div>
+          <div data-maps-target="noResultsMessage" style="display: none;">
+            <p class="alert alert-info mt-2">検索結果がありませんでした</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Map - 右側 -->
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body p-0">
+          <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
+            <%= render "shared/google_map",
+                  latitude: @shop.latitude,
+                  longitude: @shop.longitude,
+                  shop_name: @shop.name,
+                  is_detail_page: true %>
+          <% else %>
+            <%= render "shared/google_map", is_detail_page: false %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

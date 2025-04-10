@@ -20,8 +20,10 @@ gem "devise", "~> 4.9"
 gem "devise-i18n", "~> 1.12"
 
 # 外部API連携
-gem "faraday", "~> 2.8"
-gem "googleauth", "~> 1.8"
+gem "geocoder"
+gem "faraday"
+gem "faraday_middleware"
+
 
 # 画像アップロード
 gem "aws-sdk-s3", "~> 1.136", require: false
@@ -44,7 +46,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.1"
   gem "faker", "~> 3.2"
   # CIエラー解消の為追加。脆弱性検知ツール、コード解析ツール
-  gem "brakeman", "~> 7.0.0", require: false
+  gem "brakeman", "~> 7.0.2", require: false
   gem "rubocop-rails-omakase", "~> 1.0", require: false
 end
 
@@ -62,3 +64,5 @@ end
 
 # アセットパイプライン設定
 gem "propshaft"
+
+gem "pry-rails"
