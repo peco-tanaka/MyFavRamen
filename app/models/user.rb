@@ -1,10 +1,8 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  extend ActiveHash::Associations::ActiveRecordExtensions
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-
-  validates :nickname, presence: true
 
   has_many :rankings
   has_many :ranking_items, through: :rankings
@@ -15,10 +13,9 @@ class User < ApplicationRecord
   has_many :passive_follows, class_name: "Follow", foreign_key: "followed_id"
   has_many :following, through: :active_follows, source: :followed
   has_many :followers, through: :passive_follows, source: :follower
-  # active_hash作成後にコメントアウトを外す
-  # belongs_to_active_hash :prefecture
+  belongs_to_active_hash :prefecture
 
-  # active_hash作成後にコメントアウトを外す
-  # extend ActiveHash::Associations::ActiveRecordExtensions
-  # belongs_to_active_hash :prefecture
+  validates :nickname, presence: true
+  validates :prefecture_id, numericality: { other_than: 0, message: "can't be blank" }
+
 end
