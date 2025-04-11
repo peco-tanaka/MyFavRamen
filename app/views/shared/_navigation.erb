@@ -1,21 +1,13 @@
 <%# Offcanvas ナビゲーション (スマホ: ドロワー / PC: サイドバー) %>
 <%# PC表示時の固定用に sidebar-lg クラスを追加 %>
-<div class="offcanvas-lg offcanvas-start text-bg-light sidebar-lg " tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+<div class="offcanvas-lg offcanvas-end text-bg-light sidebar-lg " tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
   <div class="offcanvas-header d-lg-none">
     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">メニュー</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasNavbar" aria-label="Close"></button>
   </div>
-  <div class="offcanvas-body d-flex flex-column p-3">
-    <%# PC表示時のヘッダー代わり (ホームへのリンク) %>
-    <div class="d-none d-lg-block mb-3">
-      <%= link_to root_path, class: "navbar-brand fs-4", style: "color: #fd7e14;" do %>
-      <i class="bi bi-house-door-fill me-2"></i>MyFavRamen
-      <% end %>
-    </div>
-    <hr class="d-none d-lg-block">
+  <div class="offcanvas-body d-flex flex-column p-2">
     <%# ナビゲーションメニュー %>
     <nav class="nav nav-pills flex-column">
-      <h6 class="nav-link disabled">ナビゲーション</h6>
       <%= link_to edit_user_path(current_user), class: "nav-link link-dark" do %>
         <i class="bi bi-pencil-square me-2"></i> プロフィール編集
       <% end %>
@@ -32,10 +24,12 @@
 <%# スマホ用header %>
 <nav class="navbar navbar-expand-lg sticky-top d-lg-none shadow-sm mb-3" style="background-color: #fd7e14 !important;">
   <div class="container-fluid">
-    <a class="navbar-brand text-white" href="#">
-      <i class="bi bi-house-door-fill me-2"></i>App Home
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+    <%= link_to root_path, class: "navbar-brand text-white d-flex align-items-center" do %>
+      <div class="mobile-logo-container">
+        <span class="mobile-logo-my">My</span><span class="mobile-logo-fav">Fav</span><span class="mobile-logo-ramen">らぁめん</span>
+      </div>
+    <% end %>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>

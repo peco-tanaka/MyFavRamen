@@ -8,6 +8,8 @@ $body-bg: #fff;    // 白（基本背景色）
 
 html, body {
   height: 100%;
+  margin: 0; // ブラウザデフォルトのマージンをリセット
+  padding: 0; // ブラウザデフォルトのパディングをリセット
 }
 
 body > .container {
@@ -57,28 +59,30 @@ body > .container {
 
   /* --- ヘッダーの高さを変数で定義 --- */
   :root {
-    --header-height-lg: 89px; /* ヘッダーの高さ */
+    --header-height-lg: 100px; /* ヘッダーの高さ + 5px */
   }
 
   .sidebar-lg {
     position: fixed; /* 左側に固定 */
-    top: 0;
+    top: var(--header-height-lg);
     left: 0;
-    height: calc(100vh - var(--header-height-lg)); /* ビューポート高さから 89px 引いた高さ */
+    width: 280px;
+    height: calc(100vh - var(--header-height-lg)); /* ヘッダーの高さを引いた分だけ */
     bottom: 0;
-    z-index: 1040; /* 必要に応じて調整 (navbarより手前など) */
+    z-index: 1041; /* 必要に応じて調整 (navbarより手前など) */
     /* Offcanvasの非表示スタイルを上書き */
     transform: none !important;
     visibility: visible !important;
     border-right: 1px solid #dee2e6; /* 右側に境界線を追加 */
     /* スクロールバーが必要な場合に備える */
     overflow-y: auto;
-    width: 280px;
   }
 
   .main-content {
     margin-left: 280px; /* サイドバーの幅 (sidebar-lg の style="width: 280px;" と合わせる) */
-    padding-top: var(--header-height-lg); /* 上部に 89px のパディングを追加 */
+    width: calc(100% - 280px); /* サイドバーの幅を引いた分だけ広げる */
+    min-height: calc(100vh - var(--header-height-lg)); /* ← --header-height-lg (100px) を参照しているか確認 */
+    padding-top: var(--header-height-lg); /* 上部に 100px のパディングを追加 */
   }
 
   /* スマホ用ヘッダーはPCでは完全に非表示にする */
@@ -109,3 +113,68 @@ footer {
   }
 }
 
+/* ロゴスタイル */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-my {
+  font-size: 1.8rem;
+  color: #fd7e14;
+}
+
+.logo-fav {
+  font-size: 1.8rem;
+  color: #fd7e14;
+  font-style: italic;
+}
+
+.logo-ramen {
+  font-size: 1.8rem;
+  color: #333;
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+}
+
+.logo-icon {
+  font-size: 2.2rem;
+  color: #fd7e14;
+  margin-top: 5px;
+}
+
+/* スマホ用ロゴスタイル */
+.mobile-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-logo-my, .mobile-logo-fav {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.mobile-logo-fav {
+  font-style: italic;
+}
+
+.mobile-logo-ramen {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: white;
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+}
