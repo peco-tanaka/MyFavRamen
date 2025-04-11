@@ -1,9 +1,14 @@
-<div class="container mt-2" data-controller="maps"
+<%# PC用ヘッダー %>
+<%= render 'shared/header_for_pc' %>
+
+<%= render 'shared/navigation' %>
+
+<div class="container main-content" data-controller="maps"
       data-maps-latitude-value="<%= @shop.latitude || 0 %>"
       data-maps-longitude-value="<%= @shop.longitude || 0 %>"
       data-maps-shop-name-value="<%= @shop.name %>"
       data-maps-is-detail-page-value="true">
-  <div class="container mt-2">
+  <div class="container">
     <div class="card mb-2">
       <div class="card-header">
         <h2><%= @shop.name %></h2>
@@ -38,3 +43,4 @@
     <%= render "shared/google_map" %>
   </div>
 </div>
+<%= render 'shared/footer' %>

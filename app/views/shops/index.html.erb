@@ -1,4 +1,9 @@
-<div class="container mt-2" data-controller="maps"
+<%# PC用ヘッダー %>
+<%= render 'shared/header_for_pc' %>
+
+<%= render 'shared/navigation' %>
+
+<div class="container main-content" data-controller="maps"
     data-maps-keyword-value="<%= @search_keyword %>"
     data-maps-has-db-results-value="<%= @has_db_results || false %>"
     <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
@@ -70,3 +75,4 @@
     </div>
   </div>
 </div>
+<%= render 'shared/footer' %>
