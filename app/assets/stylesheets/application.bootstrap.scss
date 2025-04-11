@@ -51,12 +51,20 @@ body > .container {
   pointer-events: none; /* 下のマップ要素へのクリックを許可 */
 }
 
-// プロフィール画面
+// サイズ毎のスタイル
+// ナビゲーションバー
 @media (min-width: 992px) { /* Bootstrap lg breakpoint (992px) */
+
+  /* --- ヘッダーの高さを変数で定義 --- */
+  :root {
+    --header-height-lg: 89px; /* ヘッダーの高さ */
+  }
+
   .sidebar-lg {
     position: fixed; /* 左側に固定 */
     top: 0;
     left: 0;
+    height: calc(100vh - var(--header-height-lg)); /* ビューポート高さから 89px 引いた高さ */
     bottom: 0;
     z-index: 1040; /* 必要に応じて調整 (navbarより手前など) */
     /* Offcanvasの非表示スタイルを上書き */
@@ -65,11 +73,12 @@ body > .container {
     border-right: 1px solid #dee2e6; /* 右側に境界線を追加 */
     /* スクロールバーが必要な場合に備える */
     overflow-y: auto;
+    width: 280px;
   }
 
   .main-content {
     margin-left: 280px; /* サイドバーの幅 (sidebar-lg の style="width: 280px;" と合わせる) */
-    width: calc(100% - 280px); /* 画面全体の幅からサイドバーの幅を引いた値を設定 */
+    padding-top: var(--header-height-lg); /* 上部に 89px のパディングを追加 */
   }
 
   /* スマホ用ヘッダーはPCでは完全に非表示にする */
@@ -100,27 +109,3 @@ footer {
   }
 }
 
-// 全画面幅のヘッダー（PC用）
-.main-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 56px; // ヘッダーの高さを明示的に設定
-  z-index: 1050; // 高いz-indexでサイドバーより上に表示
-}
-
-// // ヘッダーがある場合のレイアウト調整（PC用）
-// @media (min-width: 992px) {
-//   // サイドバーの位置調整
-//   .sidebar-lg {
-//     top: 56px; // ヘッダーの高さ分下げる
-//     height: calc(100vh - 56px); // 画面の高さからヘッダーの高さを引く
-//   }
-
-//   // メインコンテンツの位置調整
-//   .main-content {
-//     margin-top: 56px; // ヘッダーの高さ分下げる
-//   }
-// }

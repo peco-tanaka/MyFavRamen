@@ -1,27 +1,20 @@
-<%# app/views/shared/_header.html.erb %>
-
-<header class="d-none d-lg-block py-2 border-bottom bg-white shadow-sm w-100 fixed-top">
+<header class="d-none d-lg-block py-3 border-bottom bg-white shadow-sm w-100 fixed-top">
   <div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <%= link_to "MyFavRamen", rankings_path(current_user), class: "fs-4 text-decoration-none", style: "color: #fd7e14;" %>
-      </div>
-      <div>
-        <nav class="nav">
-          <%= link_to rankings_path(current_user), class: "nav-link text-dark mx-2" do %>
-            <i class="bi bi-trophy" style="color: #fd7e14;"></i> Myランキング
-          <% end %>
-          <%= link_to "#", class: "nav-link text-dark mx-2" do %>
-            <i class="bi bi-list-ol" style="color: #fd7e14;"></i> ランキング
-          <% end %>          <%= link_to shops_path, class: "nav-link text-dark mx-2" do %>
-            <i class="bi bi-search" style="color: #fd7e14;"></i> 探す
-          <% end %>
-          <%= link_to user_path(current_user), class: "nav-link text-dark mx-2" do %>
-            <i class="bi bi-person" style="color: #fd7e14;"></i> プロフィール
-          <% end %>
-        </nav>
-      </div>
+    <div class="d-flex justify-content-end align-items-center">
+      <nav class="nav">
+        <%= link_to rankings_path(current_user), class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-trophy" style="color: #fd7e14;"></i> Myランキング
+        <% end %>
+        <%= link_to "#", class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-list-ol" style="color: #fd7e14;"></i> ランキング
+        <% end %>
+        <%= link_to shops_path, class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-search" style="color: #fd7e14;"></i> 探す
+        <% end %>
+        <%= link_to user_path(current_user), class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-person" style="color: #fd7e14;"></i> プロフィール
+        <% end %>
+      </nav>
     </div>
   </div>
 </header>
-

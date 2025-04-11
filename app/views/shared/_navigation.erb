@@ -1,6 +1,6 @@
 <%# Offcanvas ナビゲーション (スマホ: ドロワー / PC: サイドバー) %>
 <%# PC表示時の固定用に sidebar-lg クラスを追加 %>
-<div class="offcanvas-lg offcanvas-start text-bg-light sidebar-lg" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="width: 280px;">
+<div class="offcanvas-lg offcanvas-start text-bg-light sidebar-lg " tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
   <div class="offcanvas-header d-lg-none">
     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">メニュー</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasNavbar" aria-label="Close"></button>
@@ -8,9 +8,9 @@
   <div class="offcanvas-body d-flex flex-column p-3">
     <%# PC表示時のヘッダー代わり (ホームへのリンク) %>
     <div class="d-none d-lg-block mb-3">
-      <a class="navbar-brand fs-4" href="#" style="color: #fd7e14;">
-        <i class="bi bi-house-door-fill me-2"></i>App Home
-      </a>
+      <%= link_to root_path, class: "navbar-brand fs-4", style: "color: #fd7e14;" do %>
+      <i class="bi bi-house-door-fill me-2"></i>MyFavRamen
+      <% end %>
     </div>
     <hr class="d-none d-lg-block">
     <%# ナビゲーションメニュー %>
