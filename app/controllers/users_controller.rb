@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: [:show, :edit, :update]
-  before_action :set_user, only: [:show, :edit, :update]
+  before_action :authenticate_user!, only: [ :show, :edit, :update ]
+  before_action :set_user, only: [ :show, :edit, :update ]
 
   def show
   end
@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
   def update
     # デフォルト画像を使用する場合の処理
-    if params[:user][:use_default] == 'true'
+    if params[:user][:use_default] == "true"
       # 画像を削除
       @user.avatar.purge if @user.avatar.attached?
 
@@ -19,7 +19,7 @@ class UsersController < ApplicationController
 
       # 更新処理
       if @user.update(user_params)
-        redirect_to @user, notice: 'デフォルト画像が設定されました'
+        redirect_to @user, notice: "デフォルト画像が設定されました"
       else
         render :edit
       end
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
 
     # 画像選択する場合の更新処理
     if @user.update(user_params)
-      redirect_to @user, notice: 'プロフィール画像が更新されました'
+      redirect_to @user, notice: "プロフィール画像が更新されました"
     else
       render :edit
     end
@@ -43,5 +43,4 @@ class UsersController < ApplicationController
   def set_user
     @user = User.find(params[:id])
   end
-
 end
