@@ -2,54 +2,14 @@
 <% content_for :title, "プロフィール" %>
 
 <%# PC表示用ヘッダー %>
-<%= render 'shared/header_for_pc' %>
+<%# <%= render 'shared/header_for_pc' %>
 
 <%# ヘッダー (スマホ表示時のみ) %>
-<nav class="navbar navbar-expand-lg sticky-top d-lg-none shadow-sm mb-3" style="background-color: #fd7e14 !important;">
-  <div class="container-fluid">
-    <a class="navbar-brand text-white" href="#">
-      <i class="bi bi-house-door-fill me-2"></i>App Home
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </div>
-</nav>
+<%= render "/shared/header_for_phone" %>
 
-<%# Offcanvas ナビゲーション (スマホ: ドロワー / PC: サイドバー) %>
-<%# PC表示時の固定用に sidebar-lg クラスを追加 %>
-<div class="offcanvas-lg offcanvas-start text-bg-light sidebar-lg" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="width: 280px;">
-  <div class="offcanvas-header d-lg-none">
-    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">メニュー</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasNavbar" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body d-flex flex-column p-3">
-    <%# PC表示時のヘッダー代わり (ホームへのリンク) %>
-    <div class="d-none d-lg-block mb-3">
-       <a class="navbar-brand fs-4" href="#" style="color: #fd7e14;">
-         <i class="bi bi-house-door-fill me-2"></i>App Home
-       </a>
-    </div>
-    <hr class="d-none d-lg-block">
-    <%# ナビゲーションメニュー %>
-    <nav class="nav nav-pills flex-column">
-      <h6 class="nav-link disabled">ナビゲーション</h6>
-      <a class="nav-link link-dark" href="#">
-        <i class="bi bi-pencil-square me-2"></i> プロフィール編集
-      </a>
-      <a class="nav-link link-danger" href="#" data-turbo-method="delete" data-turbo-confirm="ログアウトしますか？">
-        <i class="bi bi-box-arrow-right me-2"></i> ログアウト
-      </a>
-      <a class="nav-link link-danger" href="#" data-turbo-method="delete" data-turbo-confirm="本当に退会しますか？この操作は取り消せません。">
-        <i class="bi bi-trash me-2"></i> 退会
-      </a>
-    </nav>
-    <div class="mt-auto d-none d-lg-block">
-      <hr>
-      <small class="text-muted">© Your App Name</small>
-    </div>
-  </div>
-</div>
+
+<%# サイドバー（PC用） %>
+<%= render "/shared/sidebar" %>
 
 <%# メインコンテンツ %>
 <div class="container-fluid main-content">
@@ -59,10 +19,11 @@
     <div class="card mb-4 shadow-sm">
       <div class="card-body d-flex align-items-center">
         <div class="me-3">
-          <%= image_tag "https://via.placeholder.com/100", alt: "プロフィール画像", class: "rounded-circle img-thumbnail", style: "width: 80px; height: 80px;" %>
+          <%= image_tag "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhjLD96Pg2IsGkK9Qwfk1ELp5l5HGBnt8oLEgtTlQk5UGHAW9Psxg72Gu3Kqea6wvI0N-f5f24w4FXE7aSEAFmj20sLenwzUYUOqXP9kzjy1U46C3fPj3bxMZHZb24p48WZg6oxsrlA93rJ/s800/food_character_ra-men.png",
+              alt: "プロフィール画像", class: "rounded-circle img-thumbnail", style: "width: 80px; height: 80px;" %>
         </div>
         <div>
-          <h5 class="card-title mb-0">ユーザーニックネーム</h5>
+          <h5 class="card-title mb-0"><%= current_user.nickname %></h5>
         </div>
       </div>
     </div>
