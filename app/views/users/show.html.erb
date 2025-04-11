@@ -18,7 +18,7 @@
     <div class="card mb-4 shadow-sm">
       <div class="card-body d-flex align-items-center">
         <div class="me-3">
-          <%= image_tag "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhjLD96Pg2IsGkK9Qwfk1ELp5l5HGBnt8oLEgtTlQk5UGHAW9Psxg72Gu3Kqea6wvI0N-f5f24w4FXE7aSEAFmj20sLenwzUYUOqXP9kzjy1U46C3fPj3bxMZHZb24p48WZg6oxsrlA93rJ/s800/food_character_ra-men.png",
+          <%= image_tag current_user.avatar.present? ? current_user.avatar : "default_profile.png",
               alt: "プロフィール画像", class: "rounded-circle img-thumbnail", style: "width: 80px; height: 80px;" %>
         </div>
         <div>

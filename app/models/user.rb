@@ -15,7 +15,9 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_follows, source: :follower
   belongs_to_active_hash :prefecture
 
+  has_one_attached :avatar
+
   validates :nickname, presence: true
-  validates :prefecture_id, numericality: { other_than: 0, message: "can't be blank" }
+  validates :prefecture_id, presence: true, inclusion: { in: Prefecture.all.map(&:id), message: "を選択してください" }
 
 end

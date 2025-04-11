@@ -23,13 +23,25 @@
           <%# プロフィール画像 %>
           <div class="mb-4 text-center">
             <div class="mb-3">
-              <%= image_tag current_user.avatar.present? ? current_user.avatar : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhjLD96Pg2IsGkK9Qwfk1ELp5l5HGBnt8oLEgtTlQk5UGHAW9Psxg72Gu3Kqea6wvI0N-f5f24w4FXE7aSEAFmj20sLenwzUYUOqXP9kzjy1U46C3fPj3bxMZHZb24p48WZg6oxsrlA93rJ/s800/food_character_ra-men.png",
+              <%= image_tag current_user.avatar.present? ? current_user.avatar : "default_profile.png",
                   class: "rounded-circle img-thumbnail", style: "width: 150px; height: 150px;" %>
             </div>
-            <div class="mb-3">
-              <%= f.file_field :avatar, class: "form-control", accept: "image/*" %>
+
+            <div class="mb-3 d-flex justify-content-center gap-2">
+              <div>
+                <%= f.file_field :avatar, class: "form-control", accept: "image/*" %>
+              </div>
+
+              <div>
+                <%= f.hidden_field :use_default, value: false, id: "use_default_field" %>
+                <%= button_tag "デフォルト画像を使用", type: "button", class: "btn btn-outline-secondary",
+                    onclick: "document.getElementById('use_default_field').value = 'true'; this.form.submit();" %>
+              </div>
+
             </div>
           </div>
+          
+          <hr class="text-secondary opacity-25 my-4">
 
           <%# ニックネーム %>
           <div class="mb-3">
@@ -50,10 +62,76 @@
           </div>
 
           <%# 更新ボタン %>
-          <div class="text-center">
+          <div class="text-end">
             <%= f.submit "更新する", class: "btn btn-primary", style: "background-color: #fd7e14; border-color: #fd7e14;" %>
           </div>
         <% end %>
+      </div>
+    </div>
+
+    <%# セキュリティ設定カード %>
+    <div class="card mt-4 mb-4">
+      <div class="card-header" style="background-color: #fd7e14; color: white;">
+        <h6 class="mb-0">セキュリティ設定</h6>
+      </div>
+      <div class="card-body">
+        <%# d-gridクラスを削除し、text-endクラスを追加して右寄せにする %>
+        <div class="text-end">
+          <%= link_to edit_user_registration_path, class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-lock-fill me-2"></i>パスワードを変更する
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# 退会セクション - より控えめなデザイン %>
+    <div class="card mt-4 mb-4">
+      <div class="card-header bg-light text-secondary">
+        <h6 class="mb-0">アカウント管理（今後実装予定）</h6>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">
+          アカウントを削除すると、プロフィール情報、お気に入り、ランキングなどのすべてのデータが完全に削除され、復旧できなくなります。
+        </p>
+        <div class="text-end">
+          <%= link_to "#", class: "btn btn-sm btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#deleteAccountModal" } do %>
+            <i class="bi bi-trash me-1"></i>アカウント削除（未実装です）
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%# 退会確認用モーダル %>
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title" id="deleteAccountModalLabel">アカウント削除の確認</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <strong>この操作は取り消すことができません。</strong>
+            </div>
+            <p>
+              アカウントを削除すると以下のデータが完全に削除されます：
+            </p>
+            <ul class="text-muted">
+              <li>プロフィール情報</li>
+              <li>お気に入り登録したラーメン店</li>
+              <li>作成したランキング</li>
+              <li>フォロー/フォロワー関係</li>
+            </ul>
+            <p class="mb-0">本当に退会しますか？</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+            <%= link_to "#", class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "最終確認：アカウントを完全に削除しますか？" } do %>
+              アカウントを削除する
+            <% end %>
+          </div>
+        </div>
       </div>
     </div>
   </main>
