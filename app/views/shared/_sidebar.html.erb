@@ -16,15 +16,15 @@
     <%# ナビゲーションメニュー %>
     <nav class="nav nav-pills flex-column">
       <h6 class="nav-link disabled">ナビゲーション</h6>
-      <a class="nav-link link-dark" href="#">
+      <%= link_to edit_user_path, class: "nav-link link-dark" do %>
         <i class="bi bi-pencil-square me-2"></i> プロフィール編集
-      </a>
-      <a class="nav-link link-danger" href="#" data-turbo-method="delete" data-turbo-confirm="ログアウトしますか？">
+      <% end %>
+      <%= link_to destroy_user_session_path, class: "nav-link link-danger", data: { turbo_method: :delete, turbo_confirm: "ログアウトしますか？" } do %>
         <i class="bi bi-box-arrow-right me-2"></i> ログアウト
-      </a>
-      <a class="nav-link link-danger" href="#" data-turbo-method="delete" data-turbo-confirm="本当に退会しますか？この操作は取り消せません。">
+      <% end %>
+      <%= link_to "#", class: "nav-link link-danger", data: { turbo_method: :delete, turbo_confirm: "本当に退会しますか？この操作は取り消せません（*退会機能は今後実装予定です）" } do %>
         <i class="bi bi-trash me-2"></i> 退会
-      </a>
+      <% end %>
     </nav>
     <div class="mt-auto d-none d-lg-block">
       <hr>
