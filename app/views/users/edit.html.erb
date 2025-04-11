@@ -1,0 +1,63 @@
+<%# ページタイトルを設定 %>
+<% content_for :title, "プロフィール編集" %>
+
+<%# PC表示用ヘッダー %>
+<%# <%= render 'shared/header_for_pc' %>
+
+<%# ヘッダー (スマホ表示時のみ) %>
+<%= render "/shared/header_for_phone" %>
+
+
+<%# サイドバー（PC用） %>
+<%= render "/shared/sidebar" %>
+
+<%# メインコンテンツ %>
+<div class="container-fluid main-content">
+  <main class="p-3">
+    <div class="card shadow-sm">
+      <div class="card-header" style="background-color: #fd7e14; color: white;">
+        <h5 class="mb-0">プロフィール編集</h5>
+      </div>
+      <div class="card-body">
+        <%= form_with(model: current_user, local: true) do |f| %>
+          <%# プロフィール画像 %>
+          <div class="mb-4 text-center">
+            <div class="mb-3">
+              <%= image_tag current_user.avatar.present? ? current_user.avatar : "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhjLD96Pg2IsGkK9Qwfk1ELp5l5HGBnt8oLEgtTlQk5UGHAW9Psxg72Gu3Kqea6wvI0N-f5f24w4FXE7aSEAFmj20sLenwzUYUOqXP9kzjy1U46C3fPj3bxMZHZb24p48WZg6oxsrlA93rJ/s800/food_character_ra-men.png",
+                  class: "rounded-circle img-thumbnail", style: "width: 150px; height: 150px;" %>
+            </div>
+            <div class="mb-3">
+              <%= f.file_field :avatar, class: "form-control", accept: "image/*" %>
+            </div>
+          </div>
+
+          <%# ニックネーム %>
+          <div class="mb-3">
+            <%= f.label :nickname, "ニックネーム", class: "form-label" %>
+            <%= f.text_field :nickname, class: "form-control" %>
+          </div>
+
+          <%# メールアドレス %>
+          <div class="mb-3">
+            <%= f.label :email, "メールアドレス", class: "form-label" %>
+            <%= f.email_field :email, class: "form-control" %>
+          </div>
+
+          <%# 地域 %>
+          <div class="mb-4">
+            <%= f.label :prefecture_id, "地域", class: "form-label" %>
+            <%= f.collection_select :prefecture_id, Prefecture.all, :id, :name, {prompt: "選択してください"}, {class: "form-select"} %>
+          </div>
+
+          <%# 更新ボタン %>
+          <div class="text-center">
+            <%= f.submit "更新する", class: "btn btn-primary", style: "background-color: #fd7e14; border-color: #fd7e14;" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </main>
+</div>
+
+<%# フッター %>
+<%= render 'shared/footer' %>
