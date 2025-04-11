@@ -1,6 +1,8 @@
 <%# PC用ヘッダー %>
 <%= render 'shared/header_for_pc' %>
 
+<%= render 'shared/navigation' %>
+
 <div class="container mt-2" data-controller="maps"
     data-maps-keyword-value="<%= @search_keyword %>"
     data-maps-has-db-results-value="<%= @has_db_results || false %>"
