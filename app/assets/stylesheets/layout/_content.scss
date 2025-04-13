@@ -1,0 +1,16 @@
+// app/assets/stylesheets/layout/_content.scss
+@media (min-width: 992px) {
+  .main-content {
+    margin-left: 280px; /* サイドバーの幅 (sidebar-lg の style="width: 280px;" と合わせる) */
+    width: calc(100% - 280px); /* サイドバーの幅を引いた分だけ広げる */
+    min-height: calc(100vh - var(--header-height-lg)); /* ← --header-height-lg (100px) を参照しているか確認 */
+    padding-top: var(--header-height-lg); /* 上部に 100px のパディングを追加 */
+  }
+}
+
+// フッターがある場合のメインコンテンツの下部余白調整
+@media (max-width: 991.98px) { // lg未満
+  .main-content {
+    padding-bottom: 70px;
+  }
+}

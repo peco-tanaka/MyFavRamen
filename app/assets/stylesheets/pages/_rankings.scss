@@ -1,0 +1,104 @@
+/* メインカラーの設定 */
+:root {
+  --main-color: #ff9900;
+  --bg-color: #ffffff;
+}
+
+body {
+  background-color: var(--bg-color);
+}
+
+/* タブスタイル */
+.nav-pills .nav-link.active {
+  background-color: var(--main-color);
+}
+
+.nav-pills .nav-link {
+  color: var(--main-color);
+}
+
+/* 縦タブのスタイル調整 */
+.genre-tabs-container .nav-link {
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+/* カードのホバーエフェクト */
+.rank-1:hover, .rank-2:hover, .rank-3:hover, .rank-4:hover, .rank-5:hover {
+  transform: translateY(-3px);
+  transition: transform 0.2s;
+}
+
+/* オレンジボタン */
+.btn-orange {
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+  color: white;
+}
+
+.btn-orange:hover {
+  background-color: #e08800;
+  border-color: #e08800;
+  color: white;
+}
+
+/* プレースホルダー画像用スタイル */
+.placeholder-img {
+  border-top-left-radius: calc(0.375rem - 1px);
+  border-top-right-radius: calc(0.375rem - 1px);
+}
+
+/* カードサイズの適切化 */
+.card-body {
+  padding: 0.75rem;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 767.98px) {
+  /* 各ランクのプレースホルダー画像の高さ調整 */
+  .rank-1 .placeholder-img {
+    height: 150px !important;
+  }
+  
+  .rank-2 .placeholder-img,
+  .rank-3 .placeholder-img {
+    height: 100px !important;
+  }
+  
+  .rank-4 .placeholder-img,
+  .rank-5 .placeholder-img {
+    height: 80px !important;
+  }
+  
+  .card-title {
+    font-size: 1rem;
+  }
+  
+  /* モバイル表示時のタブスタイル調整 */
+  .genre-tabs-container {
+    margin-bottom: 20px;
+  }
+  
+  .genre-tabs-container .nav-pills {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+  }
+  
+  .genre-tabs-container .nav-item {
+    flex: 0 0 auto;
+    margin-right: 10px;
+    margin-bottom: 0 !important;
+  }
+  
+  .genre-tabs-container .nav-link {
+    padding: 5px 15px;
+  }
+  
+  /* モバイル表示時のカラム順序変更 */
+  .col-md-3 {
+    order: -1;
+  }
+}

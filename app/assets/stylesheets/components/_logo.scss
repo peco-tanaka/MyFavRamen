@@ -1,0 +1,65 @@
+/* ロゴスタイル */
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-text {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-my {
+  font-size: 1.8rem;
+  color: #fd7e14;
+}
+
+.logo-fav {
+  font-size: 1.8rem;
+  color: #fd7e14;
+  font-style: italic;
+}
+
+.logo-ramen {
+  font-size: 1.8rem;
+  color: #333;
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+}
+
+.logo-icon {
+  font-size: 2.2rem;
+  color: #fd7e14;
+  margin-top: 5px;
+}
+
+/* スマホ用ロゴスタイル */
+.mobile-logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-logo-my, .mobile-logo-fav {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.mobile-logo-fav {
+  font-style: italic;
+}
+
+.mobile-logo-ramen {
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: white;
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+}

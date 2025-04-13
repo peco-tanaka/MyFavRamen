@@ -1,0 +1,14 @@
+// app/assets/stylesheets/layout/_footer.scss
+footer {
+  a {
+    color: #212529; // デフォルトテキストカラー
+
+    &:active {
+      background-color: rgba($primary, 0.1);
+    }
+
+    i {
+      font-size: 1.25rem;
+    }
+  }
+}
