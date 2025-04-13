@@ -6,8 +6,8 @@ class Ranking < ApplicationRecord
   extend ActiveHash::Associations::ActiveRecordExtensions
   belongs_to_active_hash :genre
 
-  validate :user_id, presence: true
-  validate :genre_id, presence: true
+  validates :user_id, presence: true
+  validates :genre_id, presence: true
   # 後で実装
   # validates :is_public, inclusion: { in: [true, false] }
 
