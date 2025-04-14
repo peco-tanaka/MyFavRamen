@@ -51,6 +51,8 @@ group :development, :test do
 end
 
 group :development do
+  # N+1検知ツール
+  gem "bullet"
   gem "web-console", "~> 4.2"
   gem "rubocop", "~> 1.59", require: false
   gem "rubocop-rails", "~> 2.23", require: false
@@ -66,3 +68,4 @@ end
 gem "propshaft"
 
 gem "pry-rails"
+
