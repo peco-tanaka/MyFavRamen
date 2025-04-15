@@ -1,180 +1,24 @@
-// カスタム変数の上書き（Bootstrap変数の上書きはインポート前に行う必要があります）
-$primary: #fd7e14; // オレンジ（メインカラー）
-$body-bg: #fff;    // 白（基本背景色）
+// app/assets/stylesheets/application.bootstrap.scss
 
-// Bootstrap、必要な変数をインポート
+// 1. 変数のインポート（最初に読み込む）
+@import "base/variables";
+
+// 2. Bootstrap本体のインポート
 @import "bootstrap/scss/bootstrap";
 @import 'bootstrap-icons/font/bootstrap-icons';
 
-html, body {
-  height: 100%;
-  margin: 0; // ブラウザデフォルトのマージンをリセット
-  padding: 0; // ブラウザデフォルトのパディングをリセット
-}
+// 3. ベースのスタイルをインポート
+@import "base/reset";
+@import "base/typography";
 
-body > .container {
-  min-height: 100vh;
-}
+// 4. レイアウト関連のスタイルをインポート
+@import "layout/sidebar";
+@import "layout/content";
+@import "layout/footer";
 
-// google_map
-#map {
-  width: 100% !important;
-  height: 50vh !important; // ビューポート高さの50%
-  min-height: 300px !important; // 最小高さは確保
-}
+// 5. コンポーネントのスタイルをインポート
+@import "components/logo";
 
-// 大きい画面サイズでの調整
-@media (min-width: 768px) {
-  #map {
-    height: 60vh !important; // タブレット以上では少し大きく
-  }
-}
-
-@media (min-width: 992px) {
-  #map {
-    height: 70vh !important; // デスクトップではさらに大きく
-  }
-}
-
-// ローディング画面
-.loading-indicator {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
-  z-index: 10000; /* より高い値に */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none; /* 下のマップ要素へのクリックを許可 */
-}
-
-// サイズ毎のスタイル
-// ナビゲーションバー
-@media (min-width: 992px) { /* Bootstrap lg breakpoint (992px) */
-
-  /* --- ヘッダーの高さを変数で定義 --- */
-  :root {
-    --header-height-lg: 100px; /* ヘッダーの高さ + 5px */
-  }
-
-  .sidebar-lg {
-    position: fixed; /* 左側に固定 */
-    top: var(--header-height-lg);
-    left: 0;
-    width: 280px;
-    height: calc(100vh - var(--header-height-lg)); /* ヘッダーの高さを引いた分だけ */
-    bottom: 0;
-    z-index: 1041; /* 必要に応じて調整 (navbarより手前など) */
-    /* Offcanvasの非表示スタイルを上書き */
-    transform: none !important;
-    visibility: visible !important;
-    border-right: 1px solid #dee2e6; /* 右側に境界線を追加 */
-    /* スクロールバーが必要な場合に備える */
-    overflow-y: auto;
-  }
-
-  .main-content {
-    margin-left: 280px; /* サイドバーの幅 (sidebar-lg の style="width: 280px;" と合わせる) */
-    width: calc(100% - 280px); /* サイドバーの幅を引いた分だけ広げる */
-    min-height: calc(100vh - var(--header-height-lg)); /* ← --header-height-lg (100px) を参照しているか確認 */
-    padding-top: var(--header-height-lg); /* 上部に 100px のパディングを追加 */
-  }
-
-  /* スマホ用ヘッダーはPCでは完全に非表示にする */
-  .navbar.d-lg-none {
-      display: none !important;
-  }
-}
-
-// フッター
-footer {
-  a {
-    color: #212529; // デフォルトテキストカラー
-
-    &:active {
-      background-color: rgba($primary, 0.1);
-    }
-
-    i {
-      font-size: 1.25rem;
-    }
-  }
-}
-
-// フッターがある場合のメインコンテンツの下部余白調整
-@media (max-width: 991.98px) { // lg未満
-  .main-content {
-    padding-bottom: 70px;
-  }
-}
-
-/* ロゴスタイル */
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  transition: transform 0.3s ease;
-}
-
-.logo-container:hover {
-  transform: scale(1.05);
-}
-
-.logo-text {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-}
-
-.logo-my {
-  font-size: 1.8rem;
-  color: #fd7e14;
-}
-
-.logo-fav {
-  font-size: 1.8rem;
-  color: #fd7e14;
-  font-style: italic;
-}
-
-.logo-ramen {
-  font-size: 1.8rem;
-  color: #333;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
-}
-
-.logo-icon {
-  font-size: 2.2rem;
-  color: #fd7e14;
-  margin-top: 5px;
-}
-
-/* スマホ用ロゴスタイル */
-.mobile-logo-container {
-  display: flex;
-  align-items: center;
-}
-
-.mobile-logo-my, .mobile-logo-fav {
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: white;
-}
-
-.mobile-logo-fav {
-  font-style: italic;
-}
-
-.mobile-logo-ramen {
-  font-weight: bold;
-  font-size: 1.3rem;
-  color: white;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
-}
+// 6. ページ固有のスタイルをインポート
+@import "pages/rankings";
+@import "pages/maps";

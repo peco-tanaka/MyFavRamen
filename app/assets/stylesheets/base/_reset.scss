@@ -1,0 +1,9 @@
+html, body {
+  height: 100%;
+  margin: 0; // ブラウザデフォルトのマージンをリセット
+  padding: 0; // ブラウザデフォルトのパディングをリセット
+}
+
+body > .container {
+  min-height: 100vh;
+}

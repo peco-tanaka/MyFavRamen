@@ -1,0 +1,303 @@
+<%= render 'shared/header_for_pc' %>
+<%= render 'shared/navigation' %>
+
+<div class="container-fluid main-content text-center">
+
+  <div class="row">
+    <!-- メインのランキングコンテンツエリア（左側） -->
+    <div class="col-md-8">
+      <div class="logo-container">
+        <div class="logo-text">
+          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.name %>らぁめん</span>
+        </div>
+      </div>
+
+      <!-- ランキングカード表示エリア -->
+      <div id="sortable-ranking-items" class="ranking-items-list">
+        <%# ラーメンの存在を確認 %>
+        <% if @ranking_items.any? %>
+
+          <!-- 1位 - 最大サイズのカード -->
+          <% if first_item = @ranking_items.find_by(position: 1) %>
+            <div class="card mb-3 border-0 shadow-sm rank-1">
+              <div class="position-relative">
+                <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold">1st</span>
+                <!-- 画像の代わりにプレースホルダー -->
+                <% if first_item.photo.attached? %>
+                  <%= image_tag first_item.photo, class: "card-img-top", style: "height: 160px; object-fit: cover;" %>
+                <% else %>
+                  <div class="placeholder-img position-relative" style="height: 160px; background-color: #f8f9fa;">
+                    <div class="position-absolute top-50 start-50 translate-middle text-muted">
+                      <i class="bi bi-image fs-1"></i>
+                      <p class="mb-0">ラーメン写真</p>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="card-body py-2 text-center bg-light">
+                <h4 class="card-title mb-1"><%= first_item.shop.name %></h4>
+                <p class="card-text text-muted small mb-2"><%= first_item.menu_name %></p>
+                <% if first_item.comment.present? %>
+                  <div class="comment-box bg-white p-2 rounded border">
+                    <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>コメントが表示されます</p>
+                  </div>
+                <% end %>
+                <div class="mt-2">
+                  <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= first_item.id %>">
+                    <i class="bi bi-pencil-fill"></i> 編集
+                  </button>
+                    <%= link_to ranking_ranking_item_path(@ranking, first_item), method: :delete, 
+                        data: { confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
+                        class: "btn btn-sm btn-outline-danger" do %>
+                    <i class="bi bi-trash-fill"></i> 削除
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- 2位と3位のアイテム（中カード） -->
+          <div class="row g-3 mb-3">
+            <% [2, 3].each do |position| %>
+              <% if item = @ranking_items.find_by(position: position) %>
+                <div class="col-6">
+                  <div class="card h-100 border-0 shadow-sm rank-<%= position %> ranking-item" data-id="<%= item.id %>">
+                    <div class="position-relative">
+                      <span class="position-absolute top-0 start-0 bg-<%= position == 2 ? 'secondary' : 'danger' %> text-white p-1 fs-6 rounded-end fw-bold"><%= position %>nd</span>
+                      <% if item.photo.attached? %>
+                        <%= image_tag item.photo, class: "card-img-top", style: "height: 120px; object-fit: cover;" %>
+                      <% else %>
+                        <div class="placeholder-img position-relative" style="height: 120px; background-color: #f8f9fa;">
+                          <div class="position-absolute top-50 start-50 translate-middle text-muted">
+                            <i class="bi bi-image fs-2"></i>
+                            <p class="mb-0 small">ラーメン写真</p>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="card-body py-2 text-center bg-light">
+                      <h5 class="card-title mb-1"><%= item.shop.name %></h5>
+                      <p class="card-text text-muted small mb-2"><%= item.menu_name %></p>
+                      <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= item.id %>">
+                          <i class="bi bi-pencil-fill"></i> 編集
+                        </button>
+                          <%= link_to ranking_ranking_item_path(@ranking, first_item), 
+                              data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
+                              class: "btn btn-sm btn-outline-danger" do %>
+                          <i class="bi bi-trash-fill"></i> 削除
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+            
+          <!-- 4位以降のアイテム（標準カード） -->
+          <% @ranking_items.where("position > 3").order(:position).each do |item| %>
+            <div class="card mb-2 border-0 shadow-sm ranking-item" data-id="<%= item.id %>">
+              <div class="card-body p-2">
+                <div class="row align-items-center">
+                  <div class="col-1 text-center">
+                    <span class="position-number fw-bold fs-5"><%= item.position %></span>
+                  </div>
+                  <div class="col-7">
+                    <h5 class="card-title mb-0"><%= item.shop.name %></h5>
+                    <p class="card-text small text-muted mb-0"><%= item.menu_name %></p>
+                  </div>
+                  <div class="col-4 text-end">
+                    <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= item.id %>">
+                      <i class="bi bi-pencil-fill"></i> 編集
+                    </button>
+                      <%= link_to ranking_ranking_item_path(@ranking, first_item), 
+                          data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
+                          class: "btn btn-sm btn-outline-danger" do %>
+                      <i class="bi bi-trash-fill"></i> 削除
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <!-- 空のランキングメッセージ（以前と同じ） -->
+          <div class="empty-ranking-message text-center p-4 bg-light rounded mb-3">
+            <i class="bi bi-emoji-smile fs-1 text-muted"></i>
+            <h5 class="mt-2">まだお店が登録されていません</h5>
+            <p class="text-muted">右側の「ラーメンを追加」ボタンから<br>お気に入りのラーメンを追加しましょう！</p>
+          </div>
+        <% end %>
+
+        <!-- 新規追加アイテム（最初は非表示、Javascriptで追加）-->
+        <div id="new-items-container"></div>
+      </div>
+
+      <div class="text-center mt-4">
+        <%= link_to "編集完了", ranking_path(@ranking), class: "btn btn-lg btn-orange rounded-pill px-4" %>
+      </div>
+    </div>
+
+    <!-- サイドメニュー -->
+    <div class="col-md-4">
+      <!-- ジャンル選択タブエリア（右側） -->
+      <div class="genre-tabs-container sticky-top" style="top: 10px;">
+        <div class="card border-0">
+          <div class="card-header bg-white">
+            <h5 class="mb-0 fw-bold text-dark">ジャンル</h5>
+          </div>
+          <div class="card-body p-2">
+            <div class="d-flex flex-wrap justify-content-center gap-2" id="rankingTabs" role="tablist">
+              <% @genres.each do |genre| %>
+                <%= link_to edit_ranking_path(@ranking, genre_id: genre.id),
+                    class: "btn #{@current_genre&.id == genre.id ? 'btn-danger' : 'btn-outline-secondary'} px-2 py-1 rounded-pill btn-sm" do %>
+                  <%= genre.name %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- アイテム追加ボタン -->
+      <div class="card shadow-sm mb-4 bg-warning">
+        <div class="card-body text-center p-4">
+          <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill w-100">
+            <i class="bi bi-plus-circle-fill me-2"></i> ラーメンを追加
+          </button>
+        </div>
+      </div>
+
+      <!-- 編集のヒント -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h3 class="mb-0">編集のヒント</h3>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <i class="bi bi-plus-circle-fill text-orange me-2"></i>
+              上の「ラーメンを追加」ボタンから新しいお店を追加できます。
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-arrow-down-up text-orange me-2"></i>
+              ランキングはドラッグ＆ドロップで並べ替えることができます。
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-pencil-fill text-orange me-2"></i>
+              各店舗の「編集」ボタンからコメントや写真を追加できます。（コメントは1位のみ）
+            </li>
+            <li class="list-group-item">
+              <i class="bi bi-search text-orange me-2"></i>
+              店舗検索では、地図から選択するか手動で情報を入力できます。
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="rankingTabContent">
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+      <!-- タブコンテンツは空にしておき、JavaScriptで操作 -->
+    </div>
+    <div class="tab-pane fade" id="shoyu" role="tabpanel" aria-labelledby="shoyu-tab"></div>
+    <div class="tab-pane fade" id="miso" role="tabpanel" aria-labelledby="miso-tab"></div>
+    <div class="tab-pane fade" id="tonkotsu" role="tabpanel" aria-labelledby="tonkotsu-tab"></div>
+  </div>
+</div>
+
+<%= render "shared/footer" %>
+
+<!-- 店舗検索モーダル -->
+<div class="modal fade" id="shop-search-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ラーメン店を選択</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- 検索フォーム -->
+        <div class="search-form mb-3">
+          <div class="input-group">
+            <input type="text" id="shop-search-input" class="form-control" placeholder="ラーメン店を検索...">
+            <button class="btn btn-orange" id="shop-search-btn" type="button">
+              <i class="bi bi-search"></i> 検索
+            </button>
+          </div>
+          <div class="form-text">店舗名や地域名で検索できます</div>
+        </div>
+        
+        <!-- Googleマップ表示エリア -->
+        <div id="map-container" class="mb-3" style="height: 300px; border-radius: 8px;"></div>
+        
+        <!-- 検索結果表示エリア -->
+        <div id="search-results" class="search-results mb-3">
+          <h5 class="mb-2">検索結果</h5>
+          <div class="search-results-container"></div>
+        </div>
+        
+        <!-- 手動登録リンク -->
+        <div class="manual-register text-center">
+          <p>お店が見つからない場合は、<a href="#" id="manual-register-link">手動で情報を入力</a>することもできます。</p>
+        </div>
+        
+        <!-- 手動入力フォーム（最初は非表示） -->
+        <div id="manual-register-form" class="manual-register-form" style="display:none;">
+          <h5 class="border-top pt-3 mt-3 mb-3">店舗情報を入力</h5>
+          <div class="mb-3">
+            <label for="manual-shop-name" class="form-label">店舗名 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="manual-shop-name" required>
+          </div>
+          <div class="mb-3">
+            <label for="manual-shop-address" class="form-label">住所 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="manual-shop-address" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-orange" id="select-shop-btn">選択して次へ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- メニュー名入力モーダル -->
+<div class="modal fade" id="menu-input-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">メニュー名を入力</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="menu-name-input" class="form-label">メニュー名 <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="menu-name-input" placeholder="例：特製醤油ラーメン" required>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-orange" id="add-menu-btn">追加する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 編集用モーダル -->
+<div class="modal fade" id="edit-item-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ランキング項目の編集</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="edit-item-form-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
