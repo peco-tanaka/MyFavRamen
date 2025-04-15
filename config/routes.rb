@@ -22,8 +22,7 @@ Rails.application.routes.draw do
     # ランキングアイテムのネスト
     resources :ranking_items, only: [:create, :update, :destroy] do
       collection do
-        # ランキングアイテムの並び替え
-        patch :sort
+        patch :sort  # ランキングアイテムの並び替え用
       end
     end
   end
