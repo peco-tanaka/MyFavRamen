@@ -1,7 +1,7 @@
 /* ロゴスタイル */
 .logo-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* 変更: 縦並びから横並びに */
   align-items: center;
   padding: 10px;
   transition: transform 0.3s ease;
@@ -15,19 +15,21 @@
   font-weight: bold;
   margin-bottom: 5px;
   display: flex;
-  flex-direction: column; /* 追加: 子要素を縦に配置 */
+  flex-direction: row; /* 変更: 子要素を横に配置 */
   align-items: center;
 }
 
 .logo-my {
   font-size: 1.8rem;
   color: #fd7e14;
+  margin-right: 2px; /* 追加: 右側に少しスペースを作る */
 }
 
 .logo-fav {
   font-size: 1.8rem;
   color: #fd7e14;
   font-style: italic;
+  margin-right: 2px; /* 追加: 右側に少しスペースを作る */
 }
 
 .logo-ramen {
