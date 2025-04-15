@@ -17,10 +17,10 @@ Rails.application.routes.draw do
   resources :rankings, only: [ :index, :show, :edit, :update ] do
     collection do
       # ジャンル別のランキング表示用（as： でパスヘルパーに名前をつける）
-      get 'genre/:genre_id', to: 'rankings#genre', as: 'genre'
+      get "genre/:genre_id", to: "rankings#genre", as: "genre"
     end
     # ランキングアイテムのネスト
-    resources :ranking_items, only: [:create, :update, :destroy] do
+    resources :ranking_items, only: [ :create, :update, :destroy ] do
       collection do
         patch :sort  # ランキングアイテムの並び替え用
       end
@@ -28,9 +28,9 @@ Rails.application.routes.draw do
   end
 
   # 他ユーザのランキングを閲覧するためのルート
-  resources :public_rankings, only: [ :show] do
+  resources :public_rankings, only: [ :show ] do
     collection do
-      get 'user/:user_id/genre/:genre_id', to: 'public_rankings#show', as: 'user_genre'
+      get "user/:user_id/genre/:genre_id", to: "public_rankings#show", as: "user_genre"
     end
   end
 
