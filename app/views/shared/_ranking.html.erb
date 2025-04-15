@@ -3,6 +3,11 @@
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
     <div class="col-md-8">
+      <div class="logo-container">
+        <div class="logo-text">
+          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.name %>らぁめん</span>
+        </div>
+      </div>
       <%# ランキングアイテムの存在を確認 %>
       <% if @ranking_items && @ranking_items.any? %>
         <!-- ランキングカード表示エリア -->
@@ -137,21 +142,7 @@
       <div class="genre-tabs-container sticky-top" style="top: 10px;">
         <div class="card border-0">
           <div class="card-header bg-white">
-            <% if @current_genre.id == 1 %>
-              <div class="logo-container">
-                <div class="logo-text">
-                  <span class="logo-my">My</span><span class="logo-fav">Fav</span>
-                </div>
-                <div><span class="logo-ramen">らぁめん</span></div>
-              </div>
-            <% else %>
-              <div class="logo-container">
-                <div class="logo-text">
-                  <span class="logo-my">My</span><span class="logo-fav">Fav</span>
-                </div>
-                <div><span class="logo-ramen"><%= @current_genre.name %>らぁめん</span></div>
-              </div>
-            <% end %>
+            <h5 class="mb-0 fw-bold text-dark">ジャンル</h5>
           </div>
           <div class="card-body p-2">
             <div class="d-flex flex-wrap justify-content-center gap-2" id="rankingTabs" role="tablist">
