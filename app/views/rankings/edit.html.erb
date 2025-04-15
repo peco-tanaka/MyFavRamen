@@ -8,112 +8,67 @@
     <div class="col-md-8">
       <div class="logo-container">
         <div class="logo-text">
-          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.name %>らぁめん</span>
+          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.name %>らぁめん  ランキング</span>
         </div>
       </div>
 
-      <!-- ランキングカード表示エリア -->
-      <div id="sortable-ranking-items" class="ranking-items-list">
-        <%# ラーメンの存在を確認 %>
+      <!-- ランキング編集の説明 -->
+      <div class="alert alert-info mb-3">
+        <i class="bi bi-info-circle me-2"></i>
+        ドラッグ＆ドロップで項目を並べ替えることができます。順序を変更すると自動的に保存されます。
+      </div>
+
+      <!-- ランキングカード表示エリア - すべて同じサイズのカードに統一 -->
+      <div id="sortable-ranking-items" class="ranking-items-list"
+            data-controller="ranking-sort"
+            data-ranking-sort-target="container"
+            data-ranking-id="<%= @ranking.id %>">
         <% if @ranking_items.any? %>
-
-          <!-- 1位 - 最大サイズのカード -->
-          <% if first_item = @ranking_items.find_by(position: 1) %>
-            <div class="card mb-3 border-0 shadow-sm rank-1">
-              <div class="position-relative">
-                <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold">1st</span>
-                <!-- 画像の代わりにプレースホルダー -->
-                <% if first_item.photo.attached? %>
-                  <%= image_tag first_item.photo, class: "card-img-top", style: "height: 160px; object-fit: cover;" %>
-                <% else %>
-                  <div class="placeholder-img position-relative" style="height: 160px; background-color: #f8f9fa;">
-                    <div class="position-absolute top-50 start-50 translate-middle text-muted">
-                      <i class="bi bi-image fs-1"></i>
-                      <p class="mb-0">ラーメン写真</p>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-              <div class="card-body py-2 text-center bg-light">
-                <h4 class="card-title mb-1"><%= first_item.shop.name %></h4>
-                <p class="card-text text-muted small mb-2"><%= first_item.menu_name %></p>
-                <% if first_item.comment.present? %>
-                  <div class="comment-box bg-white p-2 rounded border">
-                    <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>コメントが表示されます</p>
-                  </div>
-                <% end %>
-                <div class="mt-2">
-                  <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= first_item.id %>">
-                    <i class="bi bi-pencil-fill"></i> 編集
-                  </button>
-                    <%= link_to ranking_ranking_item_path(@ranking, first_item), method: :delete, 
-                        data: { confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
-                        class: "btn btn-sm btn-outline-danger" do %>
-                    <i class="bi bi-trash-fill"></i> 削除
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          <% end %>
-
-          <!-- 2位と3位のアイテム（中カード） -->
-          <div class="row g-3 mb-3">
-            <% [2, 3].each do |position| %>
-              <% if item = @ranking_items.find_by(position: position) %>
-                <div class="col-6">
-                  <div class="card h-100 border-0 shadow-sm rank-<%= position %> ranking-item" data-id="<%= item.id %>">
-                    <div class="position-relative">
-                      <span class="position-absolute top-0 start-0 bg-<%= position == 2 ? 'secondary' : 'danger' %> text-white p-1 fs-6 rounded-end fw-bold"><%= position %>nd</span>
-                      <% if item.photo.attached? %>
-                        <%= image_tag item.photo, class: "card-img-top", style: "height: 120px; object-fit: cover;" %>
-                      <% else %>
-                        <div class="placeholder-img position-relative" style="height: 120px; background-color: #f8f9fa;">
-                          <div class="position-absolute top-50 start-50 translate-middle text-muted">
-                            <i class="bi bi-image fs-2"></i>
-                            <p class="mb-0 small">ラーメン写真</p>
-                          </div>
-                        </div>
-                      <% end %>
-                    </div>
-                    <div class="card-body py-2 text-center bg-light">
-                      <h5 class="card-title mb-1"><%= item.shop.name %></h5>
-                      <p class="card-text text-muted small mb-2"><%= item.menu_name %></p>
-                      <div>
-                        <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= item.id %>">
-                          <i class="bi bi-pencil-fill"></i> 編集
-                        </button>
-                          <%= link_to ranking_ranking_item_path(@ranking, first_item), 
-                              data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
-                              class: "btn btn-sm btn-outline-danger" do %>
-                          <i class="bi bi-trash-fill"></i> 削除
-                        <% end %>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
-            
-          <!-- 4位以降のアイテム（標準カード） -->
-          <% @ranking_items.where("position > 3").order(:position).each do |item| %>
-            <div class="card mb-2 border-0 shadow-sm ranking-item" data-id="<%= item.id %>">
+          <% @ranking_items.order(:position).each do |item| %>
+            <div class="card mb-2 border-0 shadow-sm ranking-item"
+                  data-ranking-sort-target="item"
+                  data-id="<%= item.id %>">
               <div class="card-body p-2">
                 <div class="row align-items-center">
                   <div class="col-1 text-center">
-                    <span class="position-number fw-bold fs-5"><%= item.position %></span>
+                    <!-- ランク表示 -->
+                    <span class="position-number fw-bold fs-5 <%= item.position <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][item.position-1] : '' %>"><%= item.position %></span>
                   </div>
-                  <div class="col-7">
+
+                  <div class="col-2">
+                    <!-- 画像プレビュー（小さいサイズで統一） -->
+                    <% if item.photo.attached? %>
+                      <%= image_tag item.photo, class: "img-thumbnail", style: "width: 70px; height: 70px; object-fit: cover;" %>
+                    <% else %>
+                      <div class="placeholder-img d-flex align-items-center justify-content-center"
+                            style="width: 70px; height: 70px; background-color: #f8f9fa; border-radius: 0.25rem;">
+                        <i class="bi bi-image text-muted"></i>
+                      </div>
+                    <% end %>
+                  </div>
+
+                  <div class="col-5 text-start">
+                    <!-- 店舗・メニュー情報 -->
                     <h5 class="card-title mb-0"><%= item.shop.name %></h5>
                     <p class="card-text small text-muted mb-0"><%= item.menu_name %></p>
+
+                    <!-- 1位のみコメントがある場合はその表示 -->
+                    <% if item.position == 1 && item.comment.present? %>
+                      <p class="small mb-0 text-truncate">
+                        <i class="bi bi-chat-quote-fill text-warning me-1"></i>
+                        <%= truncate(item.comment, length: 30) %>
+                      </p>
+                    <% end %>
                   </div>
+
                   <div class="col-4 text-end">
+                    <!-- 操作ボタン -->
                     <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= item.id %>">
                       <i class="bi bi-pencil-fill"></i> 編集
                     </button>
-                      <%= link_to ranking_ranking_item_path(@ranking, first_item), 
-                          data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
-                          class: "btn btn-sm btn-outline-danger" do %>
+                    <%= link_to ranking_ranking_item_path(@ranking, item), 
+                        data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
+                        class: "btn btn-sm btn-outline-danger" do %>
                       <i class="bi bi-trash-fill"></i> 削除
                     <% end %>
                   </div>
@@ -161,13 +116,9 @@
       </div>
 
       <!-- アイテム追加ボタン -->
-      <div class="card shadow-sm mb-4 bg-warning">
-        <div class="card-body text-center p-4">
-          <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill w-100">
-            <i class="bi bi-plus-circle-fill me-2"></i> ラーメンを追加
-          </button>
-        </div>
-      </div>
+      <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill m-5">
+        <i class="bi bi-plus-circle-fill me-2"></i> ラーメンを追加
+      </button>
 
       <!-- 編集のヒント -->
       <div class="card shadow-sm mb-4">
@@ -263,6 +214,16 @@
       </div>
     </div>
   </div>
+</div>
+
+<div id="sortable-ranking-items" data-controller="ranking-sort" data-ranking-sort-target="container">
+  <% @ranking_items.order(:position).each do |item| %>
+    <div class="card mb-2 border shadow-sm" data-ranking-sort-target="item" data-id="<%= item.id %>">
+      <div class="card-body">
+        <h5><%= item.position %>. <%= item.shop.name %> - <%= item.menu_name %></h5>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <!-- メニュー名入力モーダル -->
