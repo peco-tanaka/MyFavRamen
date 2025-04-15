@@ -54,7 +54,7 @@ group :development do
   # N+1検知ツール
   gem "bullet"
   gem "web-console", "~> 4.2"
-  gem "rubocop", "~> 1.59", require: false
+  gem "rubocop", "~> 1.75", require: false
   gem "rubocop-rails", "~> 2.23", require: false
   gem "letter_opener_web", "~> 2.0"
 end
