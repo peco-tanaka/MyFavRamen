@@ -1,8 +1,8 @@
 class RankingsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_ranking, only: [:show, :edit, :update]
-  before_action :set_genres, only: [:index, :show, :genre, :edit]
-  before_action :ensure_ranking_created, only: [:index]
+  before_action :set_ranking, only: [ :show, :edit, :update ]
+  before_action :set_genres, only: [ :index, :show, :genre, :edit ]
+  before_action :ensure_ranking_created, only: [ :index ]
 
   def index
     @rankings = current_user.rankings
@@ -41,15 +41,15 @@ class RankingsController < ApplicationController
 
   def edit
     @ranking_items = @ranking.ranking_items.includes(:shop).order(:position)
-    
+
     # URLからのgenre_idパラメータがある場合は、そのジャンルを@current_genreとして設定
     if params[:genre_id].present?
       @current_genre = Genre.find_by(id: params[:genre_id])
     end
-    
+
     # genre_idパラメータがないか、該当するジャンルが見つからない場合は@ranking.genreを使用
     @current_genre ||= @ranking.genre
-    
+
     @shops = Shop.all
   end
 
@@ -88,5 +88,4 @@ class RankingsController < ApplicationController
       flash[:notice] = "全てのジャンルのランキングが作成されました。お店を追加してランキングを作りましょう！"
     end
   end
-
 end

@@ -11,6 +11,5 @@ class RankingItem < ApplicationRecord
   validates :position, uniqueness: { scope: :ranking_id, message: "同じランキング内での順位は一意である必要があります" }
 
   # 同じランキング内で同じ店舗の同じメニューは登録できないこと
-  validates :menu_name, uniqueness: { scope: [:ranking_id, :shop_id], message: "同じランキング内で同じ店舗の同じメニューは登録できません" }
+  validates :menu_name, uniqueness: { scope: [ :ranking_id, :shop_id ], message: "同じランキング内で同じ店舗の同じメニューは登録できません" }
 end
-

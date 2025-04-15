@@ -1,7 +1,7 @@
 class RankingItemsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_ranking
-  before_action :set_ranking_item, only: [:update, :destroy]
+  before_action :set_ranking_item, only: [ :update, :destroy ]
 
   def create
     @ranking_item = @ranking.ranking_items.build(ranking_item_params)
@@ -15,7 +15,7 @@ class RankingItemsController < ApplicationController
 
     respond_to do |format|
       if @ranking_item.save
-        format.html { redirected_to edit_ranking_path(@ranking), notice: "ラーメンをランキングに追加しました"}
+        format.html { redirected_to edit_ranking_path(@ranking), notice: "ラーメンをランキングに追加しました" }
         format.json { render json: @ranking_item, status: :created }
       else
         format.html { redirect_to edit_ranking_path(@ranking), alert: @ranking_item.errors.full_messages.join(", ") }
