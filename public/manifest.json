@@ -1,10 +1,23 @@
-// public/manifest.json （最小限の内容）
 {
   "name": "MyFavらぁめん",
-  "short_name": "MyFavらぁめん",
-  "start_url": "/",
-  "display": "browser",
-  "background_color": "#ffffff",
+  "short_name": "MyFav",
+  "description": "ラーメンランキング作成アプリ",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
   "theme_color": "#ff6600",
-  "icons": []
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/assets/images/default_profile.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/default_profile.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
