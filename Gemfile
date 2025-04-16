@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.2.7"
 
 # コアライブラリ
-gem "rails", "7.2.2.1"
+gem "rails", "8.0.2"
 gem "pg", "~> 1.5"
 gem "puma", "~> 6.4"
 gem "jsbundling-rails", "~> 1.2"
@@ -35,7 +35,7 @@ gem "kaminari", "~> 1.2"
 gem "ransack", "~> 4.1"
 
 # 日本語化
-gem "rails-i18n", "~> 7.0"
+gem "rails-i18n", "~> 8.0"
 
 # ActiveHash (都道府県や固定データの管理)
 gem "active_hash", "~> 3.2"
