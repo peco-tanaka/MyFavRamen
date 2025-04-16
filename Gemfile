@@ -43,7 +43,7 @@ gem "active_hash", "~> 3.2"
 group :development, :test do
   gem "debug", "~> 1.9", platforms: %i[mri mingw x64_mingw]
   gem "factory_bot_rails", "~> 6.2"
-  gem "rspec-rails", "~> 6.1"
+  gem "rspec-rails", "~> 7.1"
   gem "faker", "~> 3.2"
   # CIエラー解消の為追加。脆弱性検知ツール、コード解析ツール
   gem "brakeman", "~> 7.0.2", require: false
