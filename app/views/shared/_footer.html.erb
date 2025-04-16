@@ -1,29 +1,32 @@
+<!-- フォントの読み込み -->
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500&display=swap" rel="stylesheet">
+
 <!-- モバイル用フッターナビゲーション -->
 <footer class="fixed-bottom d-lg-none bg-white border-top shadow-sm">
   <div class="container-fluid">
     <div class="row text-center py-2">
       <div class="col-3">
         <%= link_to "#", class: "text-decoration-none d-flex flex-column align-items-center" do %>
-          <i class="bi bi-list-ol" style="color: #fd7e14; font-size: 1.5rem;"></i>
-          <span class="small text-dark">ランキング</span>
+          <i class="bi bi-list-ol" style="color: #fd7e14; font-size: 1.2rem;"></i>
+          <span class="small text-dark" style="font-size: 0.65rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">ランキング</span>
         <% end %>
       </div>
       <div class="col-3">
         <%= link_to rankings_path(current_user), class: "text-decoration-none d-flex flex-column align-items-center" do %>
-          <i class="bi bi-trophy" style="color: #fd7e14; font-size: 1.5rem;"></i>
-          <span class="small text-dark">Myランキング</span>
+          <i class="bi bi-trophy" style="color: #fd7e14; font-size: 1.2rem;"></i>
+          <span class="small text-dark" style="font-size: 0.65rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">Myランキング</span>
         <% end %>
       </div>
       <div class="col-3">
         <%= link_to shops_path, class: "text-decoration-none d-flex flex-column align-items-center" do %>
-          <i class="bi bi-search" style="color: #fd7e14; font-size: 1.5rem;"></i>
-          <span class="small text-dark">探す</span>
+          <i class="bi bi-search" style="color: #fd7e14; font-size: 1.2rem;"></i>
+          <span class="small text-dark" style="font-size: 0.65rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">探す</span>
         <% end %>
       </div>
       <div class="col-3">
         <%= link_to user_path(current_user), class: "text-decoration-none d-flex flex-column align-items-center" do %>
-          <i class="bi bi-person" style="color: #fd7e14; font-size: 1.5rem;"></i>
-          <span class="small text-dark">プロフィール</span>
+          <i class="bi bi-person" style="color: #fd7e14; font-size: 1.2rem;"></i>
+          <span class="small text-dark" style="font-size: 0.65rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">プロフィール</span>
         <% end %>
       </div>
     </div>
@@ -33,6 +36,6 @@
 <!-- PC用フッター（最小限のコンテンツ） -->
 <footer class="mt-5 py-3 border-top d-none d-lg-block text-center">
   <div class="container">
-    <p class="text-muted mb-0">&copy; <%= Date.current.year %> MyFavらぁめん - あなただけのラーメンランキングを作成しよう</p>
+    <p class="text-muted mb-0" style="font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 400;">&copy; <%= Date.current.year %> MyFavらぁめん - あなただけのラーメンランキングを作成しよう</p>
   </div>
 </footer>
