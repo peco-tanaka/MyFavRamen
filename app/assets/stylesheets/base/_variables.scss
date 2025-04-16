@@ -1,3 +1,4 @@
 // カスタム変数の上書き（Bootstrap変数の上書き）
-$primary: #fd7e14; // オレンジ（メインカラー）
-$body-bg: #fff;    // 白（基本背景色）
+$primary-color: #fd7e14; // オレンジ（メインカラー）
+$primary: #fd7e14;       // Bootstrap変数の上書き
+$body-bg: #fff;          // 白（基本背景色）

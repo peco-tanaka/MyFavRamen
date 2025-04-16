@@ -8,6 +8,6 @@ class CreateRankings < ActiveRecord::Migration[7.2]
       t.timestamps
     end
     # ユーザーとジャンルの組み合わせでユニーク制約を追加
-    add_index :rankings, [:user_id, :genre_id], unique: true
+    add_index :rankings, [ :user_id, :genre_id ], unique: true
   end
 end

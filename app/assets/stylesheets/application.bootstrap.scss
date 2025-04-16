@@ -9,7 +9,6 @@
 
 // 3. ベースのスタイルをインポート
 @import "base/reset";
-@import "base/typography";
 
 // 4. レイアウト関連のスタイルをインポート
 @import "layout/sidebar";
@@ -21,4 +20,4 @@
 
 // 6. ページ固有のスタイルをインポート
 @import "pages/rankings";
-@import "pages/maps";
+@import "pages/map";

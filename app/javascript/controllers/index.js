@@ -16,6 +16,9 @@ application.register("maps", MapsController)
 import MarkerController from "./marker_controller"
 application.register("marker", MarkerController)
 
+import RankingSortController from "./ranking_sort_controller"
+application.register("ranking-sort", RankingSortController)
+
 import ResultsController from "./results_controller"
 application.register("results", ResultsController)
 
