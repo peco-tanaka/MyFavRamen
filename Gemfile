@@ -68,4 +68,3 @@ end
 gem "propshaft"
 
 gem "pry-rails"
-
