@@ -9,8 +9,8 @@ class RankingItemsController < ApplicationController
     @ranking_item = @ranking.ranking_items.build(ranking_item_params)
 
     # 2 .Photo のattach 処理
-    if (params[:ranking_item].present? && params[:ranking_item][:photo].present? &&
-        params[:ranking_item][:photo].respond_to?(:tempfile)) # アップロードされたファイルか簡易チェック
+    if params[:ranking_item].present? && params[:ranking_item][:photo].present? &&
+        params[:ranking_item][:photo].respond_to?(:tempfile) # アップロードされたファイルか簡易チェック
       @ranking_item.photo.attach(params[:ranking_item][:photo])
     end
 
@@ -48,10 +48,10 @@ class RankingItemsController < ApplicationController
 
   def edit
     respond_to do |format|
-    # AJAXリクエストの場合はレイアウトなしでレンダリング
+      # AJAXリクエストの場合はレイアウトなしでレンダリング
       format.html {
         if request.xhr?
-          render partial: 'shared/form', locals: { ranking: @ranking, ranking_item: @ranking_item }, layout: false
+          render partial: "shared/form", locals: { ranking: @ranking, ranking_item: @ranking_item }, layout: false
         else
           # 通常のHTMLリクエストの場合は標準のレイアウトを使用
           render :edit
