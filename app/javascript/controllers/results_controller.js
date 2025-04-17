@@ -91,18 +91,17 @@ export default class extends Controller {
 
   // 検索結果アイテムの生成
   _createResultItem(place) {
-    const listItem = document.createElement("a");
-    listItem.href = "#";
+    // リストアイテムの作成
+    const listItem = document.createElement("button");
+    listItem.type = "button";
 
     // 共通クラス設定
-    listItem.className = "list-group-item list-group-item-action d-flex align-items-start";
+    listItem.className = "list-group-item list-group-item-action d-flex align-items-start text-start w-100";
 
     // データ属性とアクション設定
     if (this.isSimpleMode) {
       // 簡易モード用の設定
-      listItem.dataset.shopId = place.id;
-      listItem.dataset.shopName = place.displayName || "名称不明";
-      listItem.dataset.shopAddress = place.formattedAddress || "住所情報なし";
+      listItem.dataset.placeId = place.id;
       listItem.dataset.action = "click->ranking-item#selectMapShop";
     } else {
       // 通常モード用の設定
@@ -120,6 +119,7 @@ export default class extends Controller {
     listItem.appendChild(photoDiv);
     listItem.appendChild(infoDiv);
 
+    // 作成したリストアイテム要素（button）を返す
     return listItem;
   }
 

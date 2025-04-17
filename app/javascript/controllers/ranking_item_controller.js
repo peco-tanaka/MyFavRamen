@@ -96,23 +96,30 @@ export default class extends Controller {
   // 店舗選択ボタンをクリックしたときの処理
   // data-action="click->ranking-item#selectShop"で呼び出し
   selectShop() {
-    // 選択された店舗情報を取得
-    this.selectedShop = this.getSelectedShopData();
+    // 1. 選択された店舗情報を取得（手動入力なので is_manual: true が含まれる）
+    this.manualData = this.getSelectedShopData();
 
-    if (!this.selectedShop || !this.selectedShop.is_manual) {
-      if (!this.selectedShop && this.hasManualFormTarget && this.manualFormTarget.style.display !== 'none') {
-        // 手動フォームが表示されていて、店舗名が空の場合のアラート
-        alert("店舗名を入力してください");
-      } else {
-        // 予期せぬケース用
-        console.warn("手動入力フォームが無効な状態で selectShop が呼び出されました。");
-      }
-     return; // 処理を中断
+    // 店舗名が入力されているかチェック
+    if (!manualData || !manualData.name) {
+      alert("店舗名を入力してください");
+      return; // 処理を中断
     }
 
-    // 店舗検索モーダルを閉じてメニュー入力モーダルを開く
-    this.shopSearchModal.hide()
-    this.menuInputModal.show()
+    // 2. ★ サーバー通信は行わず、this.selectedShop に情報を格納 ★
+    this.selectedShop = {
+      id: null,                  // Google Place ID はない
+      name: manualData.name,
+      address: manualData.address,
+      is_manual: true,           // ★ 手動入力なので true ★
+      dbId: null                   // ★ DB ID はないので null ★
+    };
+    console.log("手動入力店舗選択完了:", this.selectedShop);
+
+    // 3. モーダル遷移 & UI調整
+    this.manualFormTarget.style.display = 'none'; // 手動フォーム自体を隠す
+    this.menuInputModal.show();
+    this.menuNameInputTarget.focus();
+    this.updateSelectButtonState(); // ボタン状態を更新
   }
 
   // 「選択して次へ」ボタンの状態を更新するメソッド
@@ -194,87 +201,170 @@ export default class extends Controller {
   }
 
   // 検索結果から店舗を選択
-  selectMapShop(event) {
+  async selectMapShop(event) {
     event.preventDefault()
+    const selectedButton = event.currentTarget // クリックされた要素を保存
 
+    // ★ dataset から placeId を取得 (dataset.shopId ではなく placeId に変更)
+    const placeId = selectedButton.dataset.placeId;
+
+    if (!placeId) {
+      console.error("Place IDが取得できませんでした。HTMLの data-place-id 属性を確認してください。")
+      alert("店舗情報の取得に失敗しました")
+      return;
+    }
+
+    // 手動入力フォームが表示されていれば隠す
     if (this.hasManualFormTarget && this.manualFormTarget.style.display !== 'none') {
       this.manualFormTarget.style.display = 'none'
       this.updateSelectButtonStatus();  // ボタン状態を更新
     }
 
-    // 選択された店舗の情報を取得
-    const selectedItem = event.currentTarget  // クリックされた要素を保存
-    const shopId = selectedItem.dataset.shopId
-    const shopName = selectedItem.dataset.shopName
-    const shopAddress = selectedItem.dataset.shopAddress
+    // 視覚的な選択状態表示 (変更なし)
+    this.searchResultsTarget.querySelectorAll('.list-group-item').forEach(item => item.classList.remove('active'));
+    selectedButton.classList.add('active');
 
-    // 選択状態を視覚的に表示
-    this.searchResultsTarget.querySelectorAll('.list-group-item').forEach(item => {
-      item.classList.remove('active')
-    })
-    selectedItem.classList.add('active')
+    this.showSavingIndicator("店舗情報を登録中...");  // 保存中インジケーターを流用
 
-    // 選択された店舗情報を selectedShop に直接セット
-    this.selectedShop = {
-      id: shopId,          // Google Place ID
-      name: shopName,
-      address: shopAddress,
-      is_manual: false     // 地図からの選択なので false
-    };
+    try {
+      // 1.Places APIを読み込んで選択した店舗の詳細情報を取得
+      console.log(`Place ID: ${placeId} の詳細情報を取得します...`);
+      const { Place } = await MapsHelper.loadMapsLibrary("places")
+      const placeDetails = new Place({ id: placeId, requestedLanguage: "ja" });
 
-    // すぐにモーダルを遷移
-    this.shopSearchModal.hide();
-    this.menuInputModal.show();
+      // ShopController#search に必要なフィールドを最低限指定
+      await placeDetails.fetchFields({
+        fields: ["displayName", "formattedAddress", "photos", "location"]
+      });
+      console.log("Google Place 詳細取得成功", placeDetails);
+
+      // 2.バックエンド（/shop/search）に情報を送信して、Shop IDを取得
+      console.log("サーバーに店舗情報を送信し、Shop IDを取得します...");
+      const csrfToken = this.getCSRFToken() // CSRFトークンを取得
+      if (!csrfToken) {
+        throw new Error("CSRFトークンが取得できませんでした。ページをリロードしてください。")
+      }
+
+      const response = await fetch('/shops/search', {   //POSTリクエスト
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // リクエスト: JSON形式
+          'Accept': 'application/json',       // レスポンス: JSON形式
+          'X-CSRF-Token': csrfToken           // CSRFトークンをヘッダーに追加
+        },
+        // 送信するデータ (place_id, name, address は ShopController が期待するキー)
+        body: JSON.stringify({
+          place_id: placeId,
+          name: placeDetails.displayName,
+          address: placeDetails.formattedAddress
+        })
+      });
+
+      // レスポンスをJSONとして解析
+      const result = await response.json();
+      console.log("サーバーからの応答:", result);
+
+      // ★ レスポンスをチェック
+      // response.ok は HTTPステータスが 200-299 かどうか
+      // result.status は Rails側で設定した 'success' かどうか
+      // result.shop_id が存在するかどうか
+      if (!response.ok || result.status !== 'success' || !result.shop_id) {
+        // エラーメッセージを組み立てて例外をスロー
+        const errorDetail = result.message || result.errors?.join(', ') || `サーバーエラー (${response.status})`;
+        throw new Error(`店舗情報の登録に失敗しました: ${errorDetail}`);
+      }
+
+      // 3.成功した場合、this.selectedShopに必要な情報を格納
+      this.selectedShop = {
+        id: placeId,          // Google Place ID（placeId）
+        name: placeDetails.displayName,
+        address: placeDetails.formattedAddress,
+        is_manual: false,    // 地図からの選択なので false
+        dbId: result.shop_id // ★★★ 取得したDB上のShop IDを設定 ★★★
+      }
+      console.log("店舗選択とDB登録/検索が完了:", this.selectedShop);
+
+      // 4.店舗検索モーダルを閉じてメニュー入力モーダルを開いて入力欄にフォーカスを当てる
+      this.shopSearchModal.hide()
+      this.menuInputModal.show()
+      this.menuNameInputTarget.focus();
+
+    } catch (error) {
+      console.error("店舗情報の取得中にエラーが発生しました", error)
+      alert(`エラーが発生しました: ${error.message}`); // ユーザーにエラーを通知
+      // エラーが起きたら選択状態を解除する
+      selectedButton.classList.remove('active');
+      this.selectedShop = null; // 選択情報もリセット
+    } finally {
+      // ★ ローディング表示を非表示にする
+      this.hideSavingIndicator();
+    }
   }
 
   // メニュー追加処理
   // data-action="click->ranking-item#addMenu"で呼び出される
   addMenu() {
-    const menuName = this.menuNameInputTarget.value
+    // メニュー名を取得
+    const menuName = this.menuNameInputTarget.value.trim()
+    if (!menuName) { alert("メニュー名を入力してください。"); return; }
+    if (!this.selectedShop) { alert("店舗が選択されていません。"); return; } // selectedShop 自体の存在をチェック
 
-    if (!menuName) {
-      alert("メニュー名を入力してください。")
-      return
-    }
+    // ★ is_manual フラグを見て送信データを構築 ★
+    let rankingItemData = {}; // 送信データを格納するオブジェクト
 
-    if (!this.selectedShop) {
-      alert("店舗が選択されていません。")
-      return
-    }
-
-    // サーバーに送信するデータを準備
-    const data = {
-      ranking_item: {
-        menu_name: menuName,
-        // Google Places APIから取得した場合
-        google_place_id: this.selectedShop.id || null,
-        shop_name: this.selectedShop.name,
-        shop_address: this.selectedShop.address,
-        shop_id: this.selectedShop.dbId || null  // データベース上のIDがあれば使用
-      }
-    }
-
-    // 手動入力の場合は店舗情報も送信
     if (this.selectedShop.is_manual) {
-      data.ranking_item.is_manual = true
+      // --- 手動入力の場合 ---
+      // 店舗名が設定されているか確認 (getSelectedShopDataでチェック済みのはずだが念のため)
+      if (!this.selectedShop.name) { alert("手動入力の店舗名が設定されていません。"); return; }
+      rankingItemData = {
+        menu_name: menuName,
+        is_manual: true,                 // ★ 手動フラグを送信 ★
+        manual_shop_name: this.selectedShop.name, // ★ 手動店舗名を送信 ★
+        manual_shop_address: this.selectedShop.address || '' // ★ 手動住所を送信 ★
+        // shop_id は含めない
+        // comment, photo など他の共通属性は必要なら追加
+      };
+    } else {
+      // --- 地図検索の場合 ---
+      // dbId が存在するか (サーバー通信が成功したか) 確認
+      if (!this.selectedShop.dbId) { alert("店舗IDが取得できていません。店舗を選択し直してください。"); return; }
+      rankingItemData = {
+        shop_id: this.selectedShop.dbId, // ★ DBのShop IDを送信 ★
+        menu_name: menuName,
+        is_manual: false                // ★ false を送信 (または省略可) ★
+        // comment, photo など他の共通属性は必要なら追加
+      };
     }
 
-    // 次のステップで実装するサーバー送信処理
+    // 最終的なデータ構造
+    const data = { ranking_item: rankingItemData };
+    console.log("ランキングアイテム保存データ:", data);
+
+    // サーバーにデータを送信
     this.saveRankingItem(data)
 
-    // モーダルを閉じる
     this.menuInputModal.hide()
+
+    // 入力欄や選択状態をクリア
+    this.menuNameInputTarget.value = '';
   }
 
   // サーバーにデータを送信するメソッド
   async saveRankingItem(data) {
+    this.showSavingIndicator("ランキングに保存中...");
     try {
       // 保存中の表示
       this.showSavingIndicator()
 
       // ランキングIDと保存先URLを取得
       const rankingId = this.rankingIdValue
-      const url = this.urlValue
+      const baseUrl = this.urlValue
+
+      // ★★★ リクエストURLの末尾に ".json" を追加 ★★★
+      const url = baseUrl.endsWith('/') ? `${baseUrl.slice(0, -1)}.json` : `${baseUrl}.json`;
+      // もしくは単純に: const url = `${this.urlValue}.json`; でも通常はOK
+
+      console.log("Requesting URL:", url); // デバッグ用にURLを確認
 
       // フェッチAPIを使ってPOSTリクエストを送信
       const response = await fetch(url, {
@@ -286,6 +376,7 @@ export default class extends Controller {
         body: JSON.stringify(data)
       })
 
+      // baseUrlだとJSONレスポンスが返ってこないので、.jsonをつける必要があった
       if (!response.ok) {
         throw new Error(`サーバーエラー： ${response.status}`)
       }
@@ -439,23 +530,26 @@ export default class extends Controller {
       event.preventDefault()
       this.handleEditFormSubmit(event, itemId)
     })
+    console.log("編集フォームの送信イベントを設定しました")
   }
 
   // 編集フォームの送信処理
-  async handleEditFormSubmit(event, itemId) {
+  async handleEditFormSubmit(event) {
     event.preventDefault()
 
     // フォームデータの取得
-    const form = event.targets
+    const form = event.currentTarget
     const formData = new FormData(form)
+
+    const itemId = form.dataset.rankingItemId
 
     try {
       // 保存中の表示
       this.showSavingIndicator()
 
-      // サーバーにデータを送信
-      const response = await fetch(`/rankings/${this.rankingIdValue}/ranking_items/${itemId}`, {
-        method: 'PATCH',
+      // サーバーにデータを送信（form_withで生成されたURLを使用）
+      const response = await fetch(form.action, {
+        method: form.method,
         headers: {
           'X-CSRF-Token': this.getCSRFToken(),
           'Accept': 'application/json'
@@ -476,7 +570,7 @@ export default class extends Controller {
       // 保存エラー時の処理
       this.handleEditError(error)
     } finally {
-      this.hideSavingIndicator
+      this.hideSavingIndicator()
     }
   }
 

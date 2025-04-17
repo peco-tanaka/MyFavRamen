@@ -18,21 +18,4 @@ class RankingItem < ApplicationRecord
 
   # 同じランキング内で同じ店舗の同じメニューは登録できないこと
   validates :menu_name, uniqueness: { scope: [ :ranking_id, :shop_id ], message: "同じランキング内で同じ店舗の同じメニューは登録できません" }
-
-  
-  def shop_or_manual_name_presence
-    if is_manual?
-      # 手動入力の場合: manual_shop_name が空ならエラー
-      if manual_shop_name.blank?
-        errors.add(:manual_shop_name, "（手動入力の店舗名）を入力してください")
-      end
-    else
-      # 地図検索の場合: shop_id が空 (nil) ならエラー
-      if shop_id.blank?
-        errors.add(:shop_id, "（地図検索の店舗）を選択してください")
-        # errors.add(:base, "店舗を選択してください（地図検索）") のようにしても良い
-      end
-    end
-  end
-
 end
