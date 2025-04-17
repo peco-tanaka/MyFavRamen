@@ -4,6 +4,9 @@ import * as bootstrap from "bootstrap"
 import Sortable from "sortablejs"
 import "./controllers"
 
+// PWA対応のためのServiceWorker登録
+import "./pwa"
+
 console.log("Hello from application.js!")
 
 // 必要に応じてSortableをグローバルに公開

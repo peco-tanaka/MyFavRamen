@@ -1,7 +1,10 @@
 <%= render 'shared/header_for_pc' %>
 <%= render 'shared/navigation' %>
 
-<div class="container-fluid main-content text-center">
+<div class="container-fluid main-content text-center"
+      data-controller="ranking-item"
+      data-ranking-item-ranking-id-value="<%= @ranking.id %>"
+      data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>">  <!-- ランキングアイテムを保存する為のidとURLをranking_itemコントローラーに渡す -->
 
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
@@ -66,7 +69,7 @@
                     <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= item.id %>">
                       <i class="bi bi-pencil-fill"></i> 編集
                     </button>
-                    <%= link_to ranking_ranking_item_path(@ranking, item), 
+                    <%= link_to ranking_ranking_item_path(@ranking, item),
                         data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
                         class: "btn btn-sm btn-outline-danger" do %>
                       <i class="bi bi-trash-fill"></i> 削除
@@ -86,7 +89,7 @@
         <% end %>
 
         <!-- 新規追加アイテム（最初は非表示、Javascriptで追加）-->
-        <div id="new-items-container"></div>
+        <div id="new-items-container" data-ranking-item-target="newItemsContainer"></div>
       </div>
 
       <div class="text-center mt-4">
@@ -116,7 +119,8 @@
       </div>
 
       <!-- アイテム追加ボタン -->
-      <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill m-5">
+      <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill m-5"
+              data-action="click->ranking-item#openShopSearchModal">
         <i class="bi bi-plus-circle-fill me-2"></i> ラーメンを追加
       </button>
 
@@ -157,108 +161,99 @@
     <div class="tab-pane fade" id="miso" role="tabpanel" aria-labelledby="miso-tab"></div>
     <div class="tab-pane fade" id="tonkotsu" role="tabpanel" aria-labelledby="tonkotsu-tab"></div>
   </div>
+
+    <!-- 店舗検索モーダル -->
+  <div class="modal fade" id="shop-search-modal" tabindex="-1" aria-hidden="true"
+        data-ranking-item-target="shopSearchModal">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">ラーメン店を選択</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- 検索フォーム -->
+          <div class="search-form mb-3">
+            <div class="input-group">
+              <input type="text" id="shop-search-input" class="form-control" placeholder="ラーメン店を検索..."
+                      data-ranking-item-target="searchInput">
+              <button class="btn btn-orange" id="shop-search-btn" type="button"
+                      data-action="click->ranking-item#searchShops">
+                <i class="bi bi-search"></i> 検索
+              </button>
+            </div>
+            <div class="form-text">店舗名や地域名で検索できます</div>
+          </div>
+
+          <!-- 検索結果表示エリア -->
+          <div id="search-results" class="search-results mb-3" data-ranking-item-target="searchResults">
+            <h5 class="mb-2">検索結果</h5>
+            <div class="search-results-container"></div>
+          </div>
+
+          <!-- 手動登録リンク -->
+          <div class="manual-register text-center">
+            <p>お店が見つからない場合は、<a href="#" id="manual-register-link" data-action="click->ranking-item#toggleManualForm">手動で情報を入力</a>することもできます。</p>
+          </div>
+
+          <!-- 手動入力フォーム（最初は非表示） -->
+          <div id="manual-register-form" class="manual-register-form" style="display:none;" data-ranking-item-target="manualForm">
+            <h5 class="border-top pt-3 mt-3 mb-3">店舗情報を入力</h5>
+            <div class="mb-3">
+              <label for="manual-shop-name" class="form-label">店舗名 <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="manual-shop-name" data-ranking-item-target="manualShopName" required>
+            </div>
+            <div class="mb-3">
+              <label for="manual-shop-address" class="form-label">住所 <small class="text-muted">(任意)</small></label>
+              <input type="text" class="form-control" id="manual-shop-address" data-ranking-item-target="manualShopAddress">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+          <button type="button" class="btn btn-orange" id="select-shop-btn" data-action="click->ranking-item#selectShop">選択して次へ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- メニュー名入力モーダル -->
+  <div class="modal fade" id="menu-input-modal" tabindex="-1" aria-hidden="true" data-ranking-item-target="menuInputModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">メニュー名を入力</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="menu-name-input" class="form-label">メニュー名 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="menu-name-input" data-ranking-item-target="menuNameInput" placeholder="例：特製醤油ラーメン" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+          <button type="button" class="btn btn-orange" id="add-menu-btn" data-action="click->ranking-item#addMenu">追加する</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 編集用モーダル -->
+  <div class="modal fade" id="edit-item-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">ランキング項目の編集</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="edit-item-form-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 <%= render "shared/footer" %>
-
-<!-- 店舗検索モーダル -->
-<div class="modal fade" id="shop-search-modal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">ラーメン店を選択</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- 検索フォーム -->
-        <div class="search-form mb-3">
-          <div class="input-group">
-            <input type="text" id="shop-search-input" class="form-control" placeholder="ラーメン店を検索...">
-            <button class="btn btn-orange" id="shop-search-btn" type="button">
-              <i class="bi bi-search"></i> 検索
-            </button>
-          </div>
-          <div class="form-text">店舗名や地域名で検索できます</div>
-        </div>
-        
-        <!-- Googleマップ表示エリア -->
-        <div id="map-container" class="mb-3" style="height: 300px; border-radius: 8px;"></div>
-        
-        <!-- 検索結果表示エリア -->
-        <div id="search-results" class="search-results mb-3">
-          <h5 class="mb-2">検索結果</h5>
-          <div class="search-results-container"></div>
-        </div>
-        
-        <!-- 手動登録リンク -->
-        <div class="manual-register text-center">
-          <p>お店が見つからない場合は、<a href="#" id="manual-register-link">手動で情報を入力</a>することもできます。</p>
-        </div>
-        
-        <!-- 手動入力フォーム（最初は非表示） -->
-        <div id="manual-register-form" class="manual-register-form" style="display:none;">
-          <h5 class="border-top pt-3 mt-3 mb-3">店舗情報を入力</h5>
-          <div class="mb-3">
-            <label for="manual-shop-name" class="form-label">店舗名 <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="manual-shop-name" required>
-          </div>
-          <div class="mb-3">
-            <label for="manual-shop-address" class="form-label">住所 <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="manual-shop-address" required>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-orange" id="select-shop-btn">選択して次へ</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="sortable-ranking-items" data-controller="ranking-sort" data-ranking-sort-target="container">
-  <% @ranking_items.order(:position).each do |item| %>
-    <div class="card mb-2 border shadow-sm" data-ranking-sort-target="item" data-id="<%= item.id %>">
-      <div class="card-body">
-        <h5><%= item.position %>. <%= item.shop.name %> - <%= item.menu_name %></h5>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<!-- メニュー名入力モーダル -->
-<div class="modal fade" id="menu-input-modal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">メニュー名を入力</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="menu-name-input" class="form-label">メニュー名 <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="menu-name-input" placeholder="例：特製醤油ラーメン" required>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-orange" id="add-menu-btn">追加する</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 編集用モーダル -->
-<div class="modal fade" id="edit-item-modal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">ランキング項目の編集</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div id="edit-item-form-container"></div>
-      </div>
-    </div>
-  </div>
-</div>

@@ -12,10 +12,17 @@
 
     <%= yield :head %>
 
+    <!-- PWA関連メタタグ -->
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="MyFavらぁめん">
+    <link rel="apple-touch-icon" href="/images/icon.png">
+    <meta name="theme-color" content="#ff6600">
+
+    <link rel="icon" href="/images/icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/images/icon.png" type="image/png">
+
     <%= stylesheet_link_tag "application", data: { "turbo-track": "reload" } %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>

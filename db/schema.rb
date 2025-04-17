@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_12_055550) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_17_175226) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_12_055550) do
     t.string "menu_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_manual", default: false, null: false
+    t.string "manual_shop_name"
+    t.string "manual_shop_address"
     t.index ["ranking_id", "position"], name: "index_ranking_items_on_ranking_id_and_position", unique: true
     t.index ["ranking_id", "shop_id", "menu_name"], name: "index_ranking_items_on_ranking_id_and_shop_id_and_menu_name", unique: true
     t.index ["ranking_id"], name: "index_ranking_items_on_ranking_id"
@@ -68,7 +71,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_12_055550) do
 
   create_table "shops", force: :cascade do |t|
     t.string "name", null: false
-    t.string "address", null: false
+    t.string "address"
     t.float "latitude"
     t.float "longitude"
     t.string "business_hours"
@@ -76,6 +79,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_12_055550) do
     t.string "website"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "google_place_id"
+    t.index ["google_place_id"], name: "index_shops_on_google_place_id"
   end
 
   create_table "users", force: :cascade do |t|

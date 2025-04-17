@@ -1,0 +1,61 @@
+<%# JSから呼び出す %>
+<%= form_with(model: [ranking, ranking_item],
+              local: false,
+              html: {
+                class: "ranking-item-form",
+                data: {
+                  action: "submit->ranking-item#handleEditFormSubmit",
+                  ranking_item_id: ranking_item.id
+                }
+              }) do |form| %>
+
+  <% if ranking_item.errors.any? %>
+    <div class="alert alert-danger">
+      <h5><%= pluralize(ranking_item.errors.count, "error") %> 保存できませんでした:</h5>
+      <ul>
+        <% ranking_item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <%= form.label :menu_name, "メニュー名", class: "form-label" %>
+        <%= form.text_field :menu_name, class: "form-control", required: true %>
+      </div>
+
+      <% if ranking_item.position == 1 %>
+        <div class="form-group mb-3">
+          <%= form.label :comment, "コメント（1位のみ）", class: "form-label" %>
+          <%= form.text_area :comment, class: "form-control", rows: 3 %>
+          <div class="form-text">1位のラーメンに一言コメントをどうぞ</div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group mb-3">
+        <%= form.label :photo, "ラーメン写真", class: "form-label" %>
+        <div class="mb-2">
+          <% if ranking_item.photo.attached? %>
+            <%= image_tag ranking_item.photo, class: "img-thumbnail", style: "max-height: 150px;" %>
+          <% else %>
+            <div class="border p-3 text-center bg-light">
+              <i class="bi bi-image text-muted fs-1"></i>
+              <p class="mb-0 text-muted">写真がありません</p>
+            </div>
+          <% end %>
+        </div>
+        <%= form.file_field :photo, class: "form-control", accept: "image/*" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-end">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+    <%= form.submit "保存する", class: "btn btn-orange" %>
+  </div>
+<% end %>

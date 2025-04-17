@@ -57,43 +57,45 @@ export default class extends Controller {
   }
 
   // サーバーに順序の変更を送信するメソッド
-  saveNewOrder() {
-    // データの準備
-    const rankingId = this.element.dataset.rankingId
-    const itemPositions = {}
+  async saveNewOrder() {
+    try {
+      // データの準備
+      const rankingId = this.element.dataset.rankingId
+      const itemPositions = {}
 
-    // 各アイテムのIDと新しい位置を取得
-    this.itemTargets.forEach((item, index) => {
-      const itemId = item.dataset.id
-      // 1-index のポジションを設定
-      const position = index + 1
-      itemPositions[itemId] = position
-    })
+      // 各アイテムのIDと新しい位置を取得
+      this.itemTargets.forEach((item, index) => {
+        const itemId = item.dataset.id
+        // 1-index のポジションを設定
+        const position = index + 1
+        itemPositions[itemId] = position
+      })
 
-    console.log("Saving new order:", itemPositions )
+      console.log("Saving new order:", itemPositions )
 
-    // サーバーにデータを送信
-    fetch(`/rankings/${rankingId}/ranking_items/sort`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
-      },
-      body: JSON.stringify({ item_position: itemPositions })
-    })
-    .then(response => {
+      // サーバーにデータを送信
+      const response = await fetch(`/rankings/${rankingId}/ranking_items/sort`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ item_position: itemPositions })
+      })
+
       if (response.ok) {
         console.log("順序の保存に成功しました")
         // ユーザーに通知
         this.showNotification("順序が保存されました", "success")
       } else {
         console.error("順序の保存に失敗しました")
+        const errorText = await response.text()
+        console.error("エラーが発生しました:", "error")
       }
-    })
-    .catch(error => {
-      console.error("エラーが発生しました:", "error")
+    } catch (error) {
+      console.error("順序の保存中にエラーが発生しました:", error)
       // ユーザーに通知
       this.showNotification("エラーが発生しました", "error")
-    })
+    }
   }
 }

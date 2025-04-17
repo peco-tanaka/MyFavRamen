@@ -219,15 +219,9 @@ export default class extends Controller {
 
     console.log("Search method called, searchController:", this.searchController);
 
-    // searchController の存在チェック（呼び出し前に行う方が安全）
+    // searchController の存在チェック
     if (!this.searchController) {
       console.error("検索コントローラーが初期化されていません。");
-      // 必要であればここで初期化を試みるか、エラーメッセージを表示
-      // await this.initializeControllers(); // ここで初期化するかどうかは設計次第
-      // if (!this.searchController) {
-      //   console.error("検索コントローラーの再初期化に失敗しました。");
-      //   return;
-      // }
       return; // シンプルに中断する場合
     }
 
@@ -240,7 +234,7 @@ export default class extends Controller {
       "data属性": this.element.getAttribute('data-maps-keyword-value')
     });
 
-    // キーワードが空の場合はここで処理を中断しても良い
+    // キーワードが空の場合はここで処理を中断
     if (!keyword) {
       console.log("検索キーワードが入力されていません。");
       // alert("検索キーワードを入力してください。"); // ユーザーへの通知
@@ -361,7 +355,6 @@ export default class extends Controller {
       console.error("店舗詳細の取得またはサーバー送信中にエラーが発生しました", error);
       alert(`店舗情報の取得中にエラーが発生しました: ${error.message || error}`); // エラー内容を通知
     } finally {
-      // ★★★ hideLoading の呼び出しを修正 (タイポ修正) ★★★
       this.hideLoading(); // 元コードの this.hideLoading を this.hideLoading() に修正
     }
   }
