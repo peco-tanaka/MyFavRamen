@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       get "genre/:genre_id", to: "rankings#genre", as: "genre"
     end
     # ランキングアイテムのネスト
-    resources :ranking_items, only: [ :create, :update, :destroy ] do
+    resources :ranking_items, only: [ :create, :update, :destroy, :edit ] do
       collection do
         patch :sort  # ランキングアイテムの並び替え用
       end

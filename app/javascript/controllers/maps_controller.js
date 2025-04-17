@@ -361,7 +361,6 @@ export default class extends Controller {
       console.error("店舗詳細の取得またはサーバー送信中にエラーが発生しました", error);
       alert(`店舗情報の取得中にエラーが発生しました: ${error.message || error}`); // エラー内容を通知
     } finally {
-      // ★★★ hideLoading の呼び出しを修正 (タイポ修正) ★★★
       this.hideLoading(); // 元コードの this.hideLoading を this.hideLoading() に修正
     }
   }

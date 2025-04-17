@@ -1,7 +1,7 @@
 class RankingItemsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_ranking
-  before_action :set_ranking_item, only: [ :update, :destroy ]
+  before_action :set_ranking_item, only: [ :update, :destroy, :edit ]
 
   def create
     @ranking_item = @ranking.ranking_items.build(ranking_item_params)
@@ -15,12 +15,28 @@ class RankingItemsController < ApplicationController
 
     respond_to do |format|
       if @ranking_item.save
-        format.html { redirected_to edit_ranking_path(@ranking), notice: "ラーメンをランキングに追加しました" }
+        format.html { redirect_to edit_ranking_path(@ranking), notice: "ラーメンをランキングに追加しました" }
         format.json { render json: @ranking_item, status: :created }
       else
         format.html { redirect_to edit_ranking_path(@ranking), alert: @ranking_item.errors.full_messages.join(", ") }
         format.json { render json: { errors: @ranking_item.errors.full_messages }, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def edit
+    binding.pry
+    respond_to do |format|
+    # AJAXリクエストの場合はレイアウトなしでレンダリング
+      format.html {
+        if request.xhr?
+          render partial: 'form', locals: { ranking: @ranking, ranking_item: @ranking_item }, layout: false
+        else
+          # 通常のHTMLリクエストの場合は標準のレイアウトを使用
+          render :edit
+        end
+      }
+      format.json { render json: @ranking_item }
     end
   end
 
@@ -53,13 +69,17 @@ class RankingItemsController < ApplicationController
   end
 
   def sort
-    # フロントエンドのドラッグ＆ドロップ操作の結果をデータベースに反映
-    params[:item_position].each do |id, position|
-      @ranking.ranking_items.find(id).update(position: position)
+    # トランザクションを使用して、全ての更新が成功した場合のみコミット
+    ActiveRecord::Base.transaction do
+      params[:item_position].each do |id, position|
+        @ranking.ranking_items.find(id).update!(position: position) # 「!」を追加してエラー時に例外を発生
+      end
     end
-
-    # HTTPステータスコード200（成功）のみをレスポンスとして返す
     head :ok
+  rescue ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid => e
+    # エラー時の処理
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
   end
 
 
@@ -74,6 +94,6 @@ class RankingItemsController < ApplicationController
   end
 
   def ranking_item_params
-    params.require(:ranking_item).permit(:shop_id, :menu_name, :position, :comment)
+    params.require(:ranking_item).permit(:shop_id, :menu_name, :position, :comment, :photo)
   end
 end
