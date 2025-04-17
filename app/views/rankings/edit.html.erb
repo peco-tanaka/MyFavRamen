@@ -178,27 +178,24 @@
               <input type="text" id="shop-search-input" class="form-control" placeholder="ラーメン店を検索..."
                       data-ranking-item-target="searchInput">
               <button class="btn btn-orange" id="shop-search-btn" type="button"
-                      data-action="click->ranking_item#searchShops">
+                      data-action="click->ranking-item#searchShops">
                 <i class="bi bi-search"></i> 検索
               </button>
             </div>
             <div class="form-text">店舗名や地域名で検索できます</div>
           </div>
-          
-          <!-- Googleマップ表示エリア -->
-          <div id="map-container" class="mb-3" style="height: 300px; border-radius: 8px;"></div>
-          
+
           <!-- 検索結果表示エリア -->
           <div id="search-results" class="search-results mb-3" data-ranking-item-target="searchResults">
             <h5 class="mb-2">検索結果</h5>
             <div class="search-results-container"></div>
           </div>
-          
+
           <!-- 手動登録リンク -->
           <div class="manual-register text-center">
             <p>お店が見つからない場合は、<a href="#" id="manual-register-link" data-action="click->ranking-item#toggleManualForm">手動で情報を入力</a>することもできます。</p>
           </div>
-          
+
           <!-- 手動入力フォーム（最初は非表示） -->
           <div id="manual-register-form" class="manual-register-form" style="display:none;" data-ranking-item-target="manualForm">
             <h5 class="border-top pt-3 mt-3 mb-3">店舗情報を入力</h5>
