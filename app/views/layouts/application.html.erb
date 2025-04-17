@@ -17,11 +17,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="MyFavらぁめん">
-    <link rel="apple-touch-icon" href="<%= asset_path('icon.png') %>">
+    <link rel="apple-touch-icon" href="/images/icon.png">
     <meta name="theme-color" content="#ff6600">
 
-    <%= favicon_link_tag asset_path('icon.png'), rel: 'icon', type: 'image/png' %>
-    <%= favicon_link_tag asset_path('icon.png'), rel: 'apple-touch-icon', type: 'image/png' %>
+    <link rel="icon" href="/images/icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="/images/icon.png" type="image/png">
+
     <%= stylesheet_link_tag "application", data: { "turbo-track": "reload" } %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
