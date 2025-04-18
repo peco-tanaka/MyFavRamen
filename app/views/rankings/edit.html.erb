@@ -11,7 +11,7 @@
     <div class="col-md-8">
       <div class="logo-container">
         <div class="logo-text">
-          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.name %>らぁめん  ランキング</span>
+          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
         </div>
       </div>
 
@@ -52,7 +52,13 @@
 
                   <div class="col-5 text-start">
                     <!-- 店舗・メニュー情報 -->
-                    <h5 class="card-title mb-0"><%= item.shop.name %></h5>
+                    <h5 class="card-title mb-0">
+                      <% if item.is_manual? %>
+                        <span class="badge bg-secondary ms-1" style="font-size: 0.7em;">手動</span>
+                      <% elsif item.shop.present? %>
+                        <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
+                      <% end %>
+                    </h5>
                     <p class="card-text small text-muted mb-0"><%= item.menu_name %></p>
 
                     <!-- 1位のみコメントがある場合はその表示 -->
@@ -145,7 +151,7 @@
             </li>
             <li class="list-group-item">
               <i class="bi bi-search text-orange me-2"></i>
-              店舗検索では、地図から選択するか手動で情報を入力できます。
+              店舗検索では、google mapから検索するか手動で情報を入力できます。
             </li>
           </ul>
         </div>
@@ -194,6 +200,7 @@
           <!-- 手動登録リンク -->
           <div class="manual-register text-center">
             <p>お店が見つからない場合は、<a href="#" id="manual-register-link" data-action="click->ranking-item#toggleManualForm">手動で情報を入力</a>することもできます。</p>
+            <p class="text-muted small fst-italic"><i class="bi bi-info-circle-fill me-1"></i>手動登録の場合にはお気に入り機能・訪問履歴機能は使用できません</p>
           </div>
 
           <!-- 手動入力フォーム（最初は非表示） -->

@@ -5,7 +5,8 @@ class Genre < ActiveHash::Base
     { id: 3, name: "豚骨" },
     { id: 4, name: "味噌" },
     { id: 5, name: "塩" },
-    { id: 6, name: "その他" }
+    { id: 6, name: "つけ麺" },
+    { id: 7, name: "特殊" }
   ]
 
   include ActiveHash::Associations
