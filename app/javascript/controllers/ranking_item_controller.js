@@ -690,16 +690,7 @@ export default class extends Controller {
 
   // 保存成功時の処理
   handleSaveSuccess(result) {
-    // 成功メッセージを表示
-    const successMessage = document.createElement('div')
-    successMessage.className = 'alert alert-success alert-dismissible fade show'
-    successMessage.innerHTML = `
-      <strong>成功!</strong> 「${result.shop_name}: ${result.menu_name}」をランキングに追加しました。
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
-    document.querySelector('.main-content').prepend(successMessage)
-
-    // 画面にアイテムを追加（後のステップで実装）
+    // 画面にアイテムを追加
     this.addNewItemToDom(result)
 
     // 入力フィールドをクリア
@@ -724,15 +715,6 @@ export default class extends Controller {
 
   // 編集成功時の処理
   handleEditSuccess(result, itemId) {
-    // 成功メッセージを表示
-    const successMessage = document.createElement('div')
-    successMessage.className = 'alert alert-success alert-dismissible fade show'
-    successMessage.innerHTML = `
-      <strong>成功!</strong> 「${result.shop_name}: ${result.menu_name}」の情報を更新しました。
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
-    document.querySelector('.main-content').prepend(successMessage)
-
     // モーダルを閉じる
     this.editItemModal.hide()
 
