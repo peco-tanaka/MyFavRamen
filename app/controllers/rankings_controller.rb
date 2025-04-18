@@ -41,7 +41,6 @@ class RankingsController < ApplicationController
 
   def edit
     @ranking_items = @ranking.ranking_items.includes(:shop).order(:position)
-
     # URLからのgenre_idパラメータがある場合は、そのジャンルを@current_genreとして設定
     if params[:genre_id].present?
       @current_genre = Genre.find_by(id: params[:genre_id])
