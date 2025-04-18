@@ -3,91 +3,96 @@
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
     <div class="col-md-8">
-      <div class="logo-container">
-        <div class="logo-text">
-          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.name %>らぁめん</span>
+      <div class="logo-container text-center">
+        <div class="logo-text text-center" style="margin: 0 auto; display: block;">
+          <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
         </div>
       </div>
       <%# ランキングアイテムの存在を確認 %>
       <% if @ranking_items && @ranking_items.any? %>
         <!-- ランキングカード表示エリア -->
-        <div class="ranking-container">
-          <!-- 1位 - 最大サイズのカード -->
-          <div class="card mb-3 border-0 shadow-sm rank-1">
-            <div class="position-relative">
-              <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold">1st</span>
-              <!-- 画像の代わりにプレースホルダー -->
-              <% if @ranking_items.first.photo.attached? %>
-                <%= image_tag @ranking_items.first.photo, class: "card-img-top", style: "height: 160px; object-fit: cover;" %>
-              <% else %>
-                <div class="placeholder-img position-relative" style="height: 160px; background-color: #f8f9fa;">
-                  <div class="position-absolute top-50 start-50 translate-middle text-muted">
-                    <i class="bi bi-image fs-1"></i>
-                    <p class="mb-0">ラーメン写真</p>
+        <div class="ranking-container" style="max-width: 600px; margin: 0 auto;">
+          <% if @ranking_items.present? && @ranking_items.exists?(position: 1) %>
+            <% first_item = @ranking_items.find_by(position: 1) %>
+            <!-- 1位 - 最大サイズのカード -->
+            <div class="card mb-3 border-0 shadow-sm rank-1 mx-auto" style="max-width: 400px;">
+              <div class="position-relative">
+                <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold">1st</span>
+                <!-- 画像の表示 -->
+                <% if first_item.photo.attached? %>
+                  <%= image_tag first_item.photo, class: "card-img-top", style: "height: 180px; object-fit: cover;" %>
+                <% else %>
+                  <div class="placeholder-img position-relative" style="height: 160px; background-color: #f8f9fa;">
+                    <div class="position-absolute top-50 start-50 translate-middle text-muted">
+                      <i class="bi bi-image fs-1"></i>
+                      <p class="mb-0">ラーメン写真</p>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="card-body py-2 text-center bg-light">
+                <h4 class="card-title mb-1">
+                  <% if first_item.is_manual? %>
+                    <%= first_item.manual_shop_name %>
+                  <% elsif first_item.shop.present? %>
+                    <%= first_item.shop.name %>
+                  <% end %>
+                </h4>
+                <p class="card-text text-muted small mb-0"><%= first_item.menu_name %></p>
+                <div class="comment-box bg-white p-1 rounded border">
+                  <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i><%= first_item.comment.present? ? first_item.comment : "コメントはありません" %></p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="row g-3">
+            <% [2, 3].each do |position| %>
+              <% if @ranking_items.present? && @ranking_items.exists?(position: position) %>
+                <% item = @ranking_items.find_by(position: position) %>
+                <!-- 位のカード -->
+                <div class="col-6">
+                  <div class="card h-100 border-0 shadow-sm rank-<%= position %>">
+                    <div class="position-relative">
+                      <span class="position-absolute top-0 start-0 bg-<%= position == 2 ? 'secondary' : 'danger' %> text-white p-1 fs-6 rounded-end fw-bold"><%= position == 2 ? '2nd' : '3rd' %></span>
+                      <!-- 画像の表示 -->
+                      <% if item.photo.attached? %>
+                        <%= image_tag item.photo, class: "card-img-top", style: "height: 130px; object-fit: cover;" %>
+                      <% else %>
+                        <div class="placeholder-img position-relative" style="height: <%= position == 2 ? '100px' : '130px' %>; background-color: #f8f9fa;">
+                          <div class="position-absolute top-50 start-50 translate-middle text-muted">
+                            <i class="bi bi-image fs-2"></i>
+                            <p class="mb-0 small">ラーメン写真</p>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="card-body py-2 text-center bg-light">
+                      <h5 class="card-title mb-0">
+                        <% if item.is_manual? %>
+                          <%= item.manual_shop_name %>
+                        <% elsif item.shop.present? %>
+                          <%= item.shop.name %>
+                        <% end %>
+                      </h5>
+                      <p class="card-text text-muted small mb-0"><%= item.menu_name %></p>
+                    </div>
                   </div>
                 </div>
               <% end %>
-            </div>
-            <div class="card-body py-2 text-center bg-light">
-              <h4 class="card-title mb-1">店舗名が表示されます</h4>
-              <p class="card-text text-muted small mb-2">メニュー名が表示されます</p>
-              <div class="comment-box bg-white p-2 rounded border">
-                <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>コメントが表示されます</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row g-3">
-            <!-- 2位 - 中サイズのカード -->
-            <div class="col-6">
-              <div class="card h-100 border-0 shadow-sm rank-2">
-                <div class="position-relative">
-                  <span class="position-absolute top-0 start-0 bg-secondary text-white p-1 fs-6 rounded-end fw-bold">2nd</span>
-                  <!-- 画像の代わりにプレースホルダー -->
-                  <div class="placeholder-img position-relative" style="height: 100px; background-color: #f8f9fa;">
-                    <div class="position-absolute top-50 start-50 translate-middle text-muted">
-                      <i class="bi bi-image fs-2"></i>
-                      <p class="mb-0 small">ラーメン写真</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body py-2 text-center bg-light">
-                  <h5 class="card-title mb-1">店舗名が表示されます</h5>
-                  <p class="card-text text-muted small mb-2">メニュー名が表示されます</p>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 3位 - 中サイズのカード -->
-            <div class="col-6">
-              <div class="card h-100 border-0 shadow-sm rank-3">
-                <div class="position-relative">
-                  <span class="position-absolute top-0 start-0 bg-danger text-white p-1 fs-6 rounded-end fw-bold">3rd</span>
-                  <!-- 画像の代わりにプレースホルダー -->
-                  <div class="placeholder-img position-relative" style="height: 130px; background-color: #f8f9fa;">
-                    <div class="position-absolute top-50 start-50 translate-middle text-muted">
-                      <i class="bi bi-image fs-2"></i>
-                      <p class="mb-0 small">ラーメン写真</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body py-2 text-center bg-light">
-                  <h5 class="card-title mb-1">店舗名が表示されます</h5>
-                  <p class="card-text text-muted small mb-2">メニュー名が表示されます</p>
-                </div>
-              </div>
-            </div>
+            <% end %>
           </div>
 
-          <% @ranking_items.order(:position).each do |item| %>
-            <div class="card mb-2 border-0 shadow-sm ranking-item"
+          <!-- 4位以降のランキングアイテム -->
+          <% @ranking_items.where("position > 3").order(:position).each do |item| %>
+            <div class="card my-2 border-0 shadow-sm ranking-item bg-light"
                   data-ranking-sort-target="item"
                   data-id="<%= item.id %>">
               <div class="card-body p-2">
                 <div class="row align-items-center">
                   <div class="col-1 text-center">
                     <!-- ランク表示 -->
-                    <span class="position-number fw-bold fs-5 <%= item.position <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][item.position-1] : '' %>"><%= item.position %></span>
+                    <span class="position-number fw-bold fs-5"><%= item.position %></span>
                   </div>
 
                   <div class="col-2">
