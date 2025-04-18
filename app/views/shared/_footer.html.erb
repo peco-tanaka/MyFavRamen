@@ -6,9 +6,9 @@
   <div class="container-fluid">
     <div class="row text-center py-2">
       <div class="col-3">
-        <%= link_to "#", class: "text-decoration-none d-flex flex-column align-items-center" do %>
+        <%= link_to edit_ranking_path(current_user.id, genre_id: 1), class: "text-decoration-none d-flex flex-column align-items-center" do %>
           <i class="bi bi-list-ol" style="color: #fd7e14; font-size: 1.2rem;"></i>
-          <span class="small text-dark" style="font-size: 0.65rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">ランキング</span>
+          <span class="small text-dark" style="font-size: 0.65rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">編集</span>
         <% end %>
       </div>
       <div class="col-3">
