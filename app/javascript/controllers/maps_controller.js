@@ -237,7 +237,6 @@ export default class extends Controller {
     // キーワードが空の場合はここで処理を中断
     if (!keyword) {
       console.log("検索キーワードが入力されていません。");
-      // alert("検索キーワードを入力してください。"); // ユーザーへの通知
       return;
     }
 

@@ -80,16 +80,27 @@ export default class extends Controller {
   // data-action="click->ranking-item#toggleManualForm"で呼び出される
   toggleManualForm(event) {
     event.preventDefault()
-    this.manualFormTarget.style.display =
-      this.manualFormTarget.style.display === 'none' ? 'block' : 'none'
+
+    // フォームの現在の表示状態を取得 (切り替えを行う前にチェック)
+    const isCurrentlyVisible = this.manualFormTarget.style.display !== 'none';
+
+    // フォームを現在表示されているなら非表示に、非表示なら表示にする
+    this.manualFormTarget.style.display = isCurrentlyVisible ? 'none' : 'block';
 
     // 手動フォームの表示状態に応じて「選択して次へ」ボタンの状態を更新
     this.updateSelectButtonState();
 
-    // 手動フォームが表示された場合、地図検索結果の選択状態を解除する
-    if (!isVisible) { // isVisibleは変更前の状態なので、!isVisibleは表示された時
+    // もしフォームが（切り替え操作の後に）表示されているならば...
+    // (切り替え前に非表示 isCurrentlyVisible === false だった場合)
+    if (!isCurrentlyVisible) {
+      console.log("手動フォームが表示されました。");
+      // 地図検索結果リストのハイライトを解除する処理
       this.clearMapSelectionVisuals();
-      // this.selectedShop = null; // 必要に応じて選択自体も解除
+      // 地図検索で選択されていた可能性のある情報をリセット
+      this.selectedShop = null;
+      console.log("地図検索の選択状態と選択情報をリセットしました。");
+    } else {
+      console.log("手動フォームが非表示になりました。");
     }
   }
 
@@ -97,7 +108,7 @@ export default class extends Controller {
   // data-action="click->ranking-item#selectShop"で呼び出し
   selectShop() {
     // 1. 選択された店舗情報を取得（手動入力なので is_manual: true が含まれる）
-    this.manualData = this.getSelectedShopData();
+    const manualData = this.getSelectedShopData();
 
     // 店舗名が入力されているかチェック
     if (!manualData || !manualData.name) {
@@ -113,11 +124,13 @@ export default class extends Controller {
       is_manual: true,           // ★ 手動入力なので true ★
       dbId: null                   // ★ DB ID はないので null ★
     };
+
     console.log("手動入力店舗選択完了:", this.selectedShop);
 
     // 3. モーダル遷移 & UI調整
     this.manualFormTarget.style.display = 'none'; // 手動フォーム自体を隠す
     this.menuInputModal.show();
+    this.shopSearchModal.hide()
     this.menuNameInputTarget.focus();
     this.updateSelectButtonState(); // ボタン状態を更新
   }
@@ -659,18 +672,25 @@ export default class extends Controller {
     // インジケーターを非表示
   }
 
+  // 地図検索結果の視覚的な選択状態（ハイライト）を解除するメソッド
+  clearMapSelectionVisuals() {
+    // searchResultsTarget (検索結果を表示するコンテナ) が存在するか確認
+    if (this.hasSearchResultsTarget) {
+      // コンテナ内の .active クラスを持つ要素（選択されている項目）を探す
+      const activeItem = this.searchResultsTarget.querySelector('.list-group-item.active, .list-group-item-action.active');
+      // もし選択されている項目があれば、active クラスを削除する
+      if (activeItem) {
+        activeItem.classList.remove('active');
+        console.log("地図検索結果のハイライトを解除しました。");
+      }
+    } else {
+      console.warn("clearMapSelectionVisuals: searchResultsTarget が見つかりません。");
+    }
+  }
+
   // 保存成功時の処理
   handleSaveSuccess(result) {
-    // 成功メッセージを表示
-    const successMessage = document.createElement('div')
-    successMessage.className = 'alert alert-success alert-dismissible fade show'
-    successMessage.innerHTML = `
-      <strong>成功!</strong> 「${result.shop_name}: ${result.menu_name}」をランキングに追加しました。
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
-    document.querySelector('.main-content').prepend(successMessage)
-
-    // 画面にアイテムを追加（後のステップで実装）
+    // 画面にアイテムを追加
     this.addNewItemToDom(result)
 
     // 入力フィールドをクリア
@@ -695,15 +715,6 @@ export default class extends Controller {
 
   // 編集成功時の処理
   handleEditSuccess(result, itemId) {
-    // 成功メッセージを表示
-    const successMessage = document.createElement('div')
-    successMessage.className = 'alert alert-success alert-dismissible fade show'
-    successMessage.innerHTML = `
-      <strong>成功!</strong> 「${result.shop_name}: ${result.menu_name}」の情報を更新しました。
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
-    document.querySelector('.main-content').prepend(successMessage)
-
     // モーダルを閉じる
     this.editItemModal.hide()
 

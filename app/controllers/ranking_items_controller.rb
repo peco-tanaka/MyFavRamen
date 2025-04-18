@@ -23,7 +23,7 @@ class RankingItemsController < ApplicationController
     # 4. 保存処理とレスポンス
     respond_to do |format|
       if @ranking_item.save # 保存成功時
-        format.html { redirect_to edit_ranking_path(@ranking), notice: "ラーメンをランキングに追加しました" }
+        format.html { redirect_to edit_ranking_path(@ranking) }
         format.json {
           render json: {
             id: @ranking_item.id,
@@ -68,7 +68,7 @@ class RankingItemsController < ApplicationController
 
       if @ranking_item.update(ranking_item_params_for_update)
         @ranking_item.photo.attach(photo_to_attach) if photo_to_attach.present? && photo_to_attach.respond_to?(:tempfile)
-        format.html { redirect_to edit_ranking_path(@ranking), notice: "ラーメンの情報を更新しました" }
+        format.html { redirect_to edit_ranking_path(@ranking) }
         format.json {
           render json: {
           # JSON形式で必要な情報を返す

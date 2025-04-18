@@ -35,13 +35,12 @@ class RankingsController < ApplicationController
       @ranking = current_user.rankings.create(genre_id: @genre_id, is_public: true)
       @current_ranking = @ranking # ここでも@current_rankingを更新
       @ranking_items = []
-      redirect_to edit_ranking_path(@ranking), notice: "#{@genre.name}のランキングを作成しました"
+      redirect_to edit_ranking_path(@ranking)
     end
   end
 
   def edit
     @ranking_items = @ranking.ranking_items.includes(:shop).order(:position)
-
     # URLからのgenre_idパラメータがある場合は、そのジャンルを@current_genreとして設定
     if params[:genre_id].present?
       @current_genre = Genre.find_by(id: params[:genre_id])
@@ -55,7 +54,7 @@ class RankingsController < ApplicationController
 
   def update
     if @ranking.update(ranking_params)
-      redirect_to ranking_path(@ranking), notice: "#{@ranking.genre.name}のランキングを更新しました"
+      redirect_to ranking_path(@ranking)
     else
       # 更新に失敗した時はランキング項目を再度取得して変種画面に戻る
       @ranking_items = @ranking.ranking_items.includes(:shop).order(:position)
