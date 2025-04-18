@@ -106,8 +106,10 @@
                     <!-- 店舗・メニュー情報 -->
                     <h5 class="card-title mb-0">
                       <% if item.is_manual? %>
+                        <%= item.manual_shop_name %>
                         <span class="badge bg-secondary ms-1" style="font-size: 0.7em;">手動</span>
                       <% elsif item.shop.present? %>
+                        <%= item.shop.name %>
                         <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
                       <% end %>
                     </h5>
