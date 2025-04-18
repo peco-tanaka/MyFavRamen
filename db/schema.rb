@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_17_175226) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_18_031541) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,7 +44,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_17_175226) do
 
   create_table "ranking_items", force: :cascade do |t|
     t.bigint "ranking_id", null: false
-    t.bigint "shop_id", null: false
+    t.bigint "shop_id"
     t.integer "position", null: false
     t.text "comment"
     t.string "menu_name", null: false
