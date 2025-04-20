@@ -116,19 +116,36 @@ class RankingItemsController < ApplicationController
   end
 
   def sort
-    # トランザクションを使用して、全ての更新が成功した場合のみコミット
+  # item_position パラメータを必須とし、その中身全体を許可してからハッシュに変換
+  item_positions = params.require(:item_position).permit!.to_h
+
     ActiveRecord::Base.transaction do
-      params[:item_position].each do |id, position|
-        @ranking.ranking_items.find(id).update!(position: position) # 「!」を追加してエラー時に例外を発生
+      item_positions.each do |id, position_str|
+        item = @ranking.ranking_items.find(id)
+        # acts_as_list の insert_at メソッドを使用して順位を指定
+        item.insert_at(position_str.to_i)
       end
     end
-    head :ok
-  rescue ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid => e
-    # エラー時の処理
-    render json: { error: e.message }, status: :unprocessable_entity
-  end
+    head :ok # 成功したらステータスコード200を返す
+# RecordInvalid の rescue (ステータスコードも修正推奨)
+rescue ActiveRecord::RecordInvalid => e
+  Rails.logger.error("RecordInvalid in RankingItemsController#sort: #{e.message}") # ログ出力追加
+  Rails.logger.error(e.backtrace.join("\n")) # バックトレースも出力
+  render json: { error: "更新内容に問題があります: #{e.message}" }, status: :unprocessable_entity # 422 に修正
 
+# RecordNotFound の rescue を追加 (find で失敗した場合)
+rescue ActiveRecord::RecordNotFound => e
+  Rails.logger.error("RecordNotFound in RankingItemsController#sort: #{e.message}") # ログ出力追加
+  Rails.logger.error(e.backtrace.join("\n")) # バックトレースも出力
+  render json: { error: "指定されたアイテムが見つかりません: #{e.message}" }, status: :not_found # 404
 
+# その他の予期せぬエラーを捕捉
+rescue => e
+  # ★★★ エラークラス名、メッセージ、バックトレースをログに出力 ★★★
+  Rails.logger.error("Unexpected error in RankingItemsController#sort: #{e.class.name} - #{e.message}")
+  Rails.logger.error(e.backtrace.join("\n")) # バックトレースもログに出力
+  render json: { error: "順序の更新中に予期せぬエラーが発生しました: #{e.message}" }, status: :internal_server_error # 500 Internal Server Error がより適切かも
+end
   private
 
   def set_ranking
@@ -146,9 +163,9 @@ class RankingItemsController < ApplicationController
       :menu_name,   # メニュー名
       :comment,     # コメント (なければ nil or 空文字)
       :position,     # 順位 (並び替え機能があるなら、ここでは不要かも？)
-      :is_manual,           # ★ 手動入力フラグを追加 ★
-      :manual_shop_name,    # ★ 手動入力用店舗名を追加 ★
-      :manual_shop_address  # ★ 手動入力用住所を追加 ★
+      :is_manual,           # 手動入力フラグ
+      :manual_shop_name,    # 手動入力用店舗名
+      :manual_shop_address  # 手動入力用住所
     )
   end
 
