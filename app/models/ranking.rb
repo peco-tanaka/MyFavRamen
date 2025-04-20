@@ -1,6 +1,6 @@
 class Ranking < ApplicationRecord
   belongs_to :user
-  has_many :ranking_items, dependent: :destroy
+  has_many :ranking_items, -> { order(position: :asc) }, dependent: :destroy
   has_many :shops, through: :ranking_items
 
   extend ActiveHash::Associations::ActiveRecordExtensions
