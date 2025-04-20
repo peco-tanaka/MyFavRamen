@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_18_031541) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_20_194716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,7 +53,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_18_031541) do
     t.boolean "is_manual", default: false, null: false
     t.string "manual_shop_name"
     t.string "manual_shop_address"
-    t.index ["ranking_id", "position"], name: "index_ranking_items_on_ranking_id_and_position", unique: true
+    t.index ["ranking_id", "position"], name: "index_ranking_items_on_ranking_id_and_position"
     t.index ["ranking_id", "shop_id", "menu_name"], name: "index_ranking_items_on_ranking_id_and_shop_id_and_menu_name", unique: true
     t.index ["ranking_id"], name: "index_ranking_items_on_ranking_id"
     t.index ["shop_id"], name: "index_ranking_items_on_shop_id"
