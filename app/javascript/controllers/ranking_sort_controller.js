@@ -5,6 +5,10 @@ import Sortable from "sortablejs"
 export default class extends Controller {
   static targets = ["container", "item"]
 
+  static values = {
+    rankingId: Number
+  }
+
   connect() {
     console.log("RankingSortController connected")
     this.initSortable()
@@ -29,7 +33,7 @@ export default class extends Controller {
     console.log("Sort ended:", event)
     // 順番が変わったことをコンソールに出力
     console.log(`Item moved from position ${event.oldIndex} to ${event.newIndex}`)
-  
+
     // 新しい順序を計算
     this.updatePositions()
 
@@ -37,7 +41,7 @@ export default class extends Controller {
     this.saveNewOrder()
   }
 
-  // 順序を変更するメソッド
+  // 順序を変更するメソッド（この段階ではDBに保存されない）
   updatePositions() {
     // 全てのアイテムを取得して新しい位置を割り当て
     this.itemTargets.forEach((item, index) => {
@@ -60,7 +64,7 @@ export default class extends Controller {
   async saveNewOrder() {
     try {
       // データの準備
-      const rankingId = this.element.dataset.rankingId
+      const rankingId = this.rankingIdValue
       const itemPositions = {}
 
       // 各アイテムのIDと新しい位置を取得
@@ -85,8 +89,6 @@ export default class extends Controller {
 
       if (response.ok) {
         console.log("順序の保存に成功しました")
-        // ユーザーに通知
-        this.showNotification("順序が保存されました", "success")
       } else {
         console.error("順序の保存に失敗しました")
         const errorText = await response.text()
@@ -94,8 +96,6 @@ export default class extends Controller {
       }
     } catch (error) {
       console.error("順序の保存中にエラーが発生しました:", error)
-      // ユーザーに通知
-      this.showNotification("エラーが発生しました", "error")
     }
   }
 }

@@ -4,7 +4,7 @@
 <div class="container-fluid main-content text-center"
       data-controller="ranking-item"
       data-ranking-item-ranking-id-value="<%= @ranking.id %>"
-      data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>">  <!-- ランキングアイテムを保存する為のidとURLをranking_itemコントローラーに渡す -->
+      data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>">  <!-- ランキングアイテムを保存する為のidとURLをranking_item.jsコントローラーに渡す -->
 
   <% if notice %>
     <p class="alert alert-success"><%= notice %></p>
@@ -37,7 +37,8 @@
               data-ranking-item-ranking-id-value="<%= @ranking.id %>"
               data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>"
               data-ranking-sort-target="container"
-              data-ranking-sort-url-value="<%= sort_ranking_ranking_items_path(@ranking) %>">
+              data-ranking-sort-url-value="<%= sort_ranking_ranking_items_path(@ranking) %>"
+              data-ranking-sort-ranking-id-value="<%= @ranking.id %>">
           <% if @ranking_items.any? %>
 
             <!-- 編集用アイテムリストを呼び出し -->
@@ -46,7 +47,7 @@
             <% end %>
 
           <% else %>
-            <!-- 空のランキングメッセージ（以前と同じ） -->
+            <!-- 空のランキングメッセージ -->
             <div class="empty-ranking-message text-center p-4 bg-light rounded mb-3">
               <i class="bi bi-emoji-smile fs-1 text-muted"></i>
               <h5 class="mt-2">まだお店が登録されていません</h5>
