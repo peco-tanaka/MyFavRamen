@@ -116,36 +116,68 @@ class RankingItemsController < ApplicationController
   end
 
   def sort
-  # item_position パラメータを必須とし、その中身全体を許可してからハッシュに変換
-  item_positions = params.require(:item_position).permit!.to_h
+    # --- 1. パラメータ検証・整形フェーズ ---
+    begin
+      # to_unsafe_h で順位情報ハッシュ形式にして一度受け取る
+      raw_item_positions = params.require(:item_position).to_unsafe_h
 
-    ActiveRecord::Base.transaction do
-      item_positions.each do |id, position_str|
-        item = @ranking.ranking_items.find(id)
-        # acts_as_list の insert_at メソッドを使用して順位を指定
-        item.insert_at(position_str.to_i)
+      # 受け取ったデータが本当に { ID(数値文字列) => Position(数値文字列) } か検証・整形
+      item_positions = {} # ★ item_positions をここで定義 ★
+      raw_item_positions.each do |id_key, position_val|
+        # キーと値が nil でないことを確認
+        next if id_key.nil? || position_val.nil?
+        # キーと値を文字列に変換
+        id_str = id_key.to_s
+        position_str = position_val.to_s
+        # 数字のみかチェック
+        next unless id_str.match?(/\A\d+\z/) && position_str.match?(/\A\d+\z/)
+        # 整数に変換して新しいハッシュに入れる
+        item_positions[id_str.to_i] = position_str.to_i
       end
-    end
-    head :ok # 成功したらステータスコード200を返す
-# RecordInvalid の rescue (ステータスコードも修正推奨)
-rescue ActiveRecord::RecordInvalid => e
-  Rails.logger.error("RecordInvalid in RankingItemsController#sort: #{e.message}") # ログ出力追加
-  Rails.logger.error(e.backtrace.join("\n")) # バックトレースも出力
-  render json: { error: "更新内容に問題があります: #{e.message}" }, status: :unprocessable_entity # 422 に修正
 
-# RecordNotFound の rescue を追加 (find で失敗した場合)
-rescue ActiveRecord::RecordNotFound => e
-  Rails.logger.error("RecordNotFound in RankingItemsController#sort: #{e.message}") # ログ出力追加
-  Rails.logger.error(e.backtrace.join("\n")) # バックトレースも出力
-  render json: { error: "指定されたアイテムが見つかりません: #{e.message}" }, status: :not_found # 404
+      # もし有効なデータが一つもなければエラー (ArgumentErrorを発生させる)
+      if item_positions.empty? && !raw_item_positions.empty?
+        raise ArgumentError, "不正な形式のパラメータです。"
+      end
 
-# その他の予期せぬエラーを捕捉
-rescue => e
-  # ★★★ エラークラス名、メッセージ、バックトレースをログに出力 ★★★
-  Rails.logger.error("Unexpected error in RankingItemsController#sort: #{e.class.name} - #{e.message}")
-  Rails.logger.error(e.backtrace.join("\n")) # バックトレースもログに出力
-  render json: { error: "順序の更新中に予期せぬエラーが発生しました: #{e.message}" }, status: :internal_server_error # 500 Internal Server Error がより適切かも
-end
+    # --- パラメータ検証フェーズのエラーを捕捉 ---
+    rescue ActionController::ParameterMissing => e
+      Rails.logger.error("ParameterMissing in RankingItemsController#sort: #{e.message}")
+      render json: { error: "必須パラメータ(item_position)がありません: #{e.message}" }, status: :bad_request # 400
+      return # メソッドを抜ける
+    rescue ArgumentError => e
+      Rails.logger.error("ArgumentError (validation) in RankingItemsController#sort: #{e.message}")
+      render json: { error: e.message }, status: :bad_request # 400
+      return # メソッドを抜ける
+    end # begin に対する end
+
+    # --- 2. データベース更新フェーズ ---
+    begin
+      ActiveRecord::Base.transaction do
+        # ★★★ 検証済みの item_positions を使って DB 更新 ★★★
+        item_positions.each do |id, position|
+          item = @ranking.ranking_items.find(id)
+          item.insert_at(position)
+        end
+      end
+      head :ok # 成功したら 200 OK を返す
+
+    # --- DB 更新フェーズのエラーを捕捉 ---
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("RecordInvalid in RankingItemsController#sort: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: { error: "更新内容に問題があります: #{e.message}" }, status: :unprocessable_entity # 422
+    rescue ActiveRecord::RecordNotFound => e
+      Rails.logger.error("RecordNotFound in RankingItemsController#sort: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: { error: "指定されたアイテムが見つかりません: #{e.message}" }, status: :not_found # 404
+    rescue => e # その他の予期せぬエラー
+      Rails.logger.error("Unexpected DB error in RankingItemsController#sort: #{e.class.name} - #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      render json: { error: "順序の更新中に予期せぬエラーが発生しました: #{e.message}" }, status: :internal_server_error # 500
+    end # begin に対する end
+  end # def sort に対する end
+
   private
 
   def set_ranking
