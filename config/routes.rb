@@ -18,6 +18,11 @@ Rails.application.routes.draw do
     collection do
       # ジャンル別のランキング表示用（as： でパスヘルパーに名前をつける）
       get "genre/:genre_id", to: "rankings#genre", as: "genre"
+      # ジャンルIDに基づいた編集画面
+      get "genre/:genre_id/edit", to: "rankings#edit", as: "edit_genre_ranking"
+      # ジャンルIDに基づいた更新処理
+      patch "genre/:genre_id", to: "rankings#update", as: "update_genre_ranking"
+      put   "genre/:genre_id", to: "rankings#update"
     end
     # ランキングアイテムのネスト
     resources :ranking_items, only: [ :create, :update, :destroy, :edit ] do
