@@ -4,6 +4,8 @@ class RankingItemsController < ApplicationController
   before_action :set_ranking_item, only: [ :update, :destroy, :edit ]
 
   def create
+    @current_ranking = @ranking
+
     # 1 .Strong Parameters を使用してRankingItem オブジェクトを作成、変数に格納
     # ranking_item_params で :shop_id が許可され、フロントから送られてくる前提
     @ranking_item = @ranking.ranking_items.build(ranking_item_params)
@@ -23,7 +25,7 @@ class RankingItemsController < ApplicationController
     # 4. 保存処理とレスポンス
     respond_to do |format|
       if @ranking_item.save # 保存成功時
-        format.html { redirect_to edit_ranking_path(@ranking) }
+        format.html { redirect_to edit_genre_ranking_rankings_path(@current_ranking.genre_id) }
         format.json {
           render json: {
             id: @ranking_item.id,
@@ -36,7 +38,7 @@ class RankingItemsController < ApplicationController
           }, status: :created
         }
       else # 保存失敗時
-        format.html { redirect_to edit_ranking_path(@ranking), alert: @ranking_item.errors.full_messages.join(", ") }
+        format.html { redirect_to edit_genre_ranking_rankings_path(@current_ranking.genre_id), alert: @ranking_item.errors.full_messages.join(", ") }
         format.json {
           render json: {
             errors: @ranking_item.errors.full_messages # errorsキーにエラーメッセージ配列をセット
@@ -62,13 +64,15 @@ class RankingItemsController < ApplicationController
   end
 
   def update
+    @current_ranking = @ranking
+
     respond_to do |format|
       # Photo のattach 処理
       photo_to_attach = params[:ranking_item][:photo] if params[:ranking_item].present?
 
       if @ranking_item.update(ranking_item_params_for_update)
         @ranking_item.photo.attach(photo_to_attach) if photo_to_attach.present? && photo_to_attach.respond_to?(:tempfile)
-        format.html { redirect_to edit_ranking_path(@ranking) }
+        format.html { redirect_to edit_genre_ranking_rankings_path(@current_ranking.genre_id) }
         format.json {
           render json: {
           # JSON形式で必要な情報を返す
@@ -94,6 +98,8 @@ class RankingItemsController < ApplicationController
   end
 
   def destroy
+    @current_ranking = @ranking
+
     # 削除するアイテムの現在の順位を保存。後で他のアイテムの順位を更新する際に使用
     position = @ranking_item.position
     @ranking_item.destroy
@@ -104,7 +110,7 @@ class RankingItemsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to edit_ranking_path(@ranking), notice: "ラーメンをランキングから削除しました" }
+      format.html { redirect_to edit_genre_ranking_rankings_path(@current_ranking.genre_id), notice: "ラーメンをランキングから削除しました" }
       format.json { head :no_content }
     end
   end
