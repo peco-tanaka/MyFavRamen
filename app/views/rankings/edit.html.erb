@@ -6,6 +6,13 @@
       data-ranking-item-ranking-id-value="<%= @ranking.id %>"
       data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>">  <!-- ランキングアイテムを保存する為のidとURLをranking_itemコントローラーに渡す -->
 
+  <% if notice %>
+    <p class="alert alert-success"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
+
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
     <div class="col-md-8">
@@ -15,40 +22,64 @@
         </div>
       </div>
 
-      <!-- ランキング編集の説明 -->
-      <div class="alert alert-info mb-3">
-        <i class="bi bi-info-circle me-2"></i>
-        ドラッグ＆ドロップで項目を並べ替えることができます。順序を変更すると自動的に保存されます。
-      </div>
+      <!-- ランキングが存在する場合のみ編集画面を表示 -->
+      <% if @ranking&.persisted? %>
+        <!-- ランキング編集の説明 -->
+        <div class="alert alert-info mb-1 small">
+          <i class="bi bi-info-circle me-2"></i>
+          ドラッグ＆ドロップでランキングを作りましょう。
+        </div>
 
-      <!-- ランキングカード表示エリア - すべて同じサイズのカードに統一 -->
-      <div id="sortable-ranking-items" class="ranking-items-list"
-            data-controller="ranking-sort"
-            data-ranking-sort-target="container"
-            data-ranking-id="<%= @ranking.id %>">
-        <% if @ranking_items.any? %>
+        <!-- ランキングカード表示エリア - すべて同じサイズのカードに統一 -->
+        <!-- Stimulus データ属性に正しい @ranking.id を設定（ランキングデータがある場合のみidとurlを渡せるように設定） -->
+        <div id="sortable-ranking-items" class="ranking-items-list"
+              data-controller="ranking-item ranking-sort"
+              data-ranking-item-ranking-id-value="<%= @ranking.id %>"
+              data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>"
+              data-ranking-sort-target="container"
+              data-ranking-sort-url-value="<%= sort_ranking_ranking_items_path(@ranking) %>">
+          <% if @ranking_items.any? %>
 
-          <!-- 編集用アイテムリストを呼び出し -->
-          <% @ranking_items.order(:position).each do |item| %>
-            <%= render 'shared/editable_ranking_item', item: item, ranking: @ranking %>
+            <!-- 編集用アイテムリストを呼び出し -->
+            <% @ranking_items.order(:position).each do |item| %>
+              <%= render 'shared/editable_ranking_item', item: item, ranking: @ranking %>
+            <% end %>
+
+          <% else %>
+            <!-- 空のランキングメッセージ（以前と同じ） -->
+            <div class="empty-ranking-message text-center p-4 bg-light rounded mb-3">
+              <i class="bi bi-emoji-smile fs-1 text-muted"></i>
+              <h5 class="mt-2">まだお店が登録されていません</h5>
+              <p class="text-muted">右側の「ラーメンを追加」ボタンから<br>お気に入りのラーメンを追加しましょう！</p>
+            </div>
           <% end %>
 
-        <% else %>
-          <!-- 空のランキングメッセージ（以前と同じ） -->
-          <div class="empty-ranking-message text-center p-4 bg-light rounded mb-3">
-            <i class="bi bi-emoji-smile fs-1 text-muted"></i>
-            <h5 class="mt-2">まだお店が登録されていません</h5>
-            <p class="text-muted">右側の「ラーメンを追加」ボタンから<br>お気に入りのラーメンを追加しましょう！</p>
-          </div>
-        <% end %>
+          <!-- 新規追加アイテム（最初は非表示、Javascriptで追加）-->
+          <div id="new-items-container" data-ranking-item-target="newItemsContainer"></div>
+        </div>
+        <!-- ここまでが データ属性設定 -->
 
-        <!-- 新規追加アイテム（最初は非表示、Javascriptで追加）-->
-        <div id="new-items-container" data-ranking-item-target="newItemsContainer"></div>
-      </div>
+        <div class="text-center mt-4">
+          <%= link_to "編集完了", ranking_path(@ranking, genre_id: @current_genre.id), class: "btn btn-lg btn-orange rounded-pill px-4" %>
+        </div>
 
-      <div class="text-center mt-4">
-        <%= link_to "編集完了", ranking_path(@ranking), class: "btn btn-lg btn-orange rounded-pill px-4" %>
-      </div>
+      <% else %>
+
+        <!-- ランキングが存在しない場合 -->
+        <div class="alert alert-warning mt-3">
+          <i class="bi bi-info-circle me-1"></i>
+          このジャンルのランキングはまだ作成されていません。
+          <br>
+          右側の「ラーメンを追加」ボタンから最初のラーメンを登録すると、ランキングが自動的に作成されます。
+        </div>
+        <!-- ランキングが存在しなくてもアイテム追加モーダルは開けるように -->
+        <div data-controller="ranking-item"
+            data-ranking-item-ranking-id-value=""
+            data-ranking-item-url-value="<%= ranking_ranking_items_path(ranking_id: 'temp') %>">
+          <div id="new-items-container" data-ranking-item-target="newItemsContainer"></div>
+        </div>
+      <% end %>
+
     </div>
 
     <!-- サイドメニュー -->
@@ -62,7 +93,7 @@
           <div class="card-body p-2">
             <div class="d-flex flex-wrap justify-content-center gap-2" id="rankingTabs" role="tablist">
               <% @genres.each do |genre| %>
-                <%= link_to edit_ranking_path(@ranking, genre_id: genre.id),
+                <%= link_to edit_genre_ranking_rankings_path(genre_id: genre.id),
                     class: "btn #{@current_genre&.id == genre.id ? 'btn-danger' : 'btn-outline-secondary'} px-2 py-1 rounded-pill btn-sm" do %>
                   <%= genre.name %>
                 <% end %>
