@@ -60,10 +60,10 @@ class RankingsController < ApplicationController
       @ranking.genre_id ||= @current_genre.id
 
       if @ranking.save
-        redirect_to edit_genre_ranking_path(genre_id: @ranking.genre_id), notice: 'ランキングを作成しました。'
+        redirect_to edit_genre_ranking_path(genre_id: @ranking.genre_id), notice: "ランキングを作成しました。"
       else
         @ranking_items = []
-        flash.now[:alert] = 'ランキングの保存に失敗しました'
+        flash.now[:alert] = "ランキングの保存に失敗しました"
         render :edit, status: :unprocessable_entity
       end
     else
@@ -73,7 +73,7 @@ class RankingsController < ApplicationController
       else
         # 更新に失敗時 edit を再描画
         @ranking_items = @ranking.ranking_items.includes(:shop).order(:position)
-        flash.now[:alert] = 'ランキングの更新に失敗しました'
+        flash.now[:alert] = "ランキングの更新に失敗しました"
         render :edit, status: :unprocessable_entity
       end
     end

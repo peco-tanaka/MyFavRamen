@@ -69,4 +69,4 @@ gem "propshaft"
 
 gem "pry-rails"
 
-gem 'acts_as_list'
+gem "acts_as_list"
