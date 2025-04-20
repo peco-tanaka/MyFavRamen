@@ -1,5 +1,12 @@
 <div class="container-fluid main-content text-center">
 
+  <% if notice %>
+    <p class="alert alert-success"><%= notice %></p>
+  <% end %>
+  <% if alert %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
+
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
     <div class="col-md-8">
@@ -8,7 +15,7 @@
           <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
         </div>
       </div>
-      <%# ランキングアイテムの存在を確認 %>
+      <!-- ランキングアイテムの存在を確認 -->
       <% if @ranking_items && @ranking_items.any? %>
         <!-- ランキングカード表示エリア -->
         <div class="ranking-container">
@@ -130,7 +137,7 @@
         <div class="alert alert-info">
           <h5>まだお店が登録されていません</h5>
           <p>ランキングを編集して、お気に入りのラーメンを登録しましょう！</p>
-          <%= link_to "ランキングを編集する", edit_ranking_path(@current_ranking), class: "btn btn-orange rounded-pill" if @current_ranking %>
+          <%= link_to "ランキングを編集する", edit_genre_ranking_rankings_path(@current_ranking.genre_id), class: "btn btn-orange rounded-pill" if @current_ranking %>
         </div>
       <% end %>
     </div>
@@ -157,7 +164,7 @@
       <!-- ランキング編集ボタン -->
       <div class="text-center mt-3 mb-2">
         <% if @current_ranking %>
-          <%= link_to edit_ranking_path(@current_ranking), class: "btn btn-orange px-3 py-1 rounded-pill shadow-sm" do %>
+          <%= link_to edit_genre_ranking_rankings_path(@current_ranking.genre_id), class: "btn btn-orange px-3 py-1 rounded-pill shadow-sm" do %>
             <i class="bi bi-pencil-fill me-1"></i>ランキングを編集する
           <% end %>
         <% end %>

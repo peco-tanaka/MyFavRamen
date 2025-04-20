@@ -1,6 +1,7 @@
 class RankingItem < ApplicationRecord
   belongs_to :ranking
   belongs_to :shop, optional: true # shop_idがnilでもOK。手動登録の場合など
+  acts_as_list scope: :ranking # scope 範囲内でpositionカラムの値が自動的に連番になり、重複しないようにする
 
   has_one_attached :photo
 
@@ -12,9 +13,6 @@ class RankingItem < ApplicationRecord
 
   # is_manual? が false (地図検索) の場合、shop_id (Shopとの関連) は必須
   validates :shop_id, presence: true, unless: :is_manual?
-
-  # 同じランキング内での順位は一位であること
-  validates :position, uniqueness: { scope: :ranking_id, message: "同じランキング内での順位は一意である必要があります" }
 
   # 同じランキング内で同じ店舗の同じメニューは登録できないこと
   validates :menu_name, uniqueness: { scope: [ :ranking_id, :shop_id ], message: "同じランキング内で同じ店舗の同じメニューは登録できません" }

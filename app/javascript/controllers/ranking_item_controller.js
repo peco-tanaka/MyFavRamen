@@ -20,7 +20,7 @@ export default class extends Controller {
 
   resultsController = null;
 
-  // 値の定義 - HTML要素から取得する値
+  // HTML要素から取得する値を設定 (data-ranking-hoge-value で指定)
   static values = {
     rankingId: Number, // ランキングID
     url: String        // 保存先URL
