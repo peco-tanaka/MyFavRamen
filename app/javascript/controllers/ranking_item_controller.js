@@ -412,7 +412,7 @@ export default class extends Controller {
   addNewItemToDom(item) {
     // 新しいランキングアイテム要素を作成
     const newItem = document.createElement('div')
-    newItem.className = 'card mb-2 border-0 shadow-sm'
+    newItem.className = 'card mb-2 border-0 shadow-sm ranking-item'
     newItem.dataset.id = item.id
     newItem.dataset.rankingSortTarget = 'item'
 
@@ -424,37 +424,44 @@ export default class extends Controller {
     newItem.innerHTML = `
       <div class="card-body p-2">
         <div class="row align-items-center">
-          <div class="col-1 text-center">
+          <div class="col-1 text-center ps-2">
             <!-- ランク表示 -->
-            <span class="position-number fw-bold fs-5 ${newPosition <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][newPosition-1] : ''}">
+            <span class="position-number fw-bold fs-6 ${newPosition <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][newPosition-1] : ''}">
               ${newPosition}
             </span>
           </div>
 
-          <div class="col-2">
+          <div class="col-auto px-0">
             <!-- 画像プレビュー -->
-            <div class="placeholder-img d-flex align-items-center justify-content-center"
+            <div class="placeholder-img img-thumbnail d-flex align-items-center justify-content-center"
                 style="width: 70px; height: 70px; background-color: #f8f9fa; border-radius: 0.25rem;">
               <i class="bi bi-image text-muted"></i>
             </div>
           </div>
 
-          <div class="col-5 text-start">
+          <div class="col text-start px-1">
             <!-- 店舗・メニュー情報 -->
-            <h5 class="card-title mb-0">${item.shop_name}</h5>
-            <p class="card-text small text-muted mb-0">${item.menu_name}</p>
+            <h6 class="card-title mb-0 fs-6">
+              ${item.shop_name}
+              ${item.is_manual ? '<span class="badge bg-secondary ms-1" style="font-size: 0.5em;">手動登録</span>' : ''}
+            </h6>
+            <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">${item.menu_name}</p>
           </div>
 
-          <div class="col-4 text-end">
+          <div class="col-1 text-end d-flex flex-column align-items-end px-1">
             <!-- 操作ボタン -->
-            <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="${item.id}">
-              <i class="bi bi-pencil-fill"></i> 編集
+            <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn mb-2" data-id="${item.id}" 
+                style="font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;">
+              <i class="bi bi-pencil-fill"></i>
+              <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">編集</span>
             </button>
             <a href="/rankings/${this.rankingIdValue}/ranking_items/${item.id}" 
               data-turbo-method="delete"
               data-turbo-confirm="このラーメン店をランキングから削除してもよろしいですか？"
-              class="btn btn-sm btn-outline-danger">
-              <i class="bi bi-trash-fill"></i> 削除
+              class="btn btn-sm btn-outline-danger"
+              style="font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;">
+              <i class="bi bi-trash-fill"></i>
+              <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">削除</span>
             </a>
           </div>
         </div>
