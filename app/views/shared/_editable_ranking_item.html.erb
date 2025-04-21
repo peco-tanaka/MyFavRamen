@@ -5,7 +5,7 @@
     <div class="row align-items-center">
       <div class="col-1 text-center">
         <!-- ランク表示 -->
-        <span class="position-number fw-bold fs-5 <%= item.position <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][item.position-1] : '' %>"><%= item.position %></span>
+        <span class="position-number fw-bold fs-6 <%= item.position <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][item.position-1] : '' %>"><%= item.position %></span>
       </div>
 
       <div class="col-2 px-0">
@@ -20,37 +20,40 @@
         <% end %>
       </div>
 
-      <div class="col-5 text-start">
+      <div class="col-8 text-start px-1">
         <!-- 店舗・メニュー情報 -->
-        <h5 class="card-title mb-0">
+        <h6 class="card-title mb-0 fs-6">
           <% if item.is_manual? %>
             <%= item.manual_shop_name %>
-            <span class="badge bg-secondary ms-1" style="font-size: 0.6em;">手動登録</span>
+            <span class="badge bg-secondary ms-1" style="font-size: 0.5em;">手動登録</span>
           <% elsif item.shop.present? %>
             <%= item.shop.name %>
             <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
           <% end %>
-        </h5>
-        <p class="card-text small text-muted mb-0"><%= item.menu_name %></p>
+        </h6>
+        <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;"><%= item.menu_name %></p>
 
         <!-- 1位のみコメントがある場合はその表示 -->
         <% if item.position == 1 && item.comment.present? %>
-          <p class="small mb-0 text-truncate">
+          <p class="mb-0 text-truncate" style="font-size: 0.7rem;">
             <i class="bi bi-chat-quote-fill text-warning me-1"></i>
             <%= truncate(item.comment, length: 20) %>
           </p>
         <% end %>
       </div>
 
-      <div class="col-4 text-end">
+      <div class="col-1 text-end d-flex flex-column align-items-end px-1">
         <!-- 操作ボタン -->
-        <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn" data-id="<%= item.id %>">
-          <i class="bi bi-pencil-fill"></i> 編集
+        <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn mb-2" data-id="<%= item.id %>" style="font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;">
+          <i class="bi bi-pencil-fill"></i>
+          <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">編集</span>
         </button>
         <%= link_to ranking_ranking_item_path(@ranking, item),
             data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
-            class: "btn btn-sm btn-outline-danger" do %>
-          <i class="bi bi-trash-fill"></i> 削除
+            class: "btn btn-sm btn-outline-danger",
+            style: "font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;" do %>
+          <i class="bi bi-trash-fill"></i>
+          <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">削除</span>
         <% end %>
       </div>
     </div>
