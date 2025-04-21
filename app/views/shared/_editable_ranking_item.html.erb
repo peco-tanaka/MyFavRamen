@@ -24,8 +24,8 @@
         <!-- 店舗・メニュー情報 -->
         <h6 class="card-title mb-0 fs-6">
           <% if item.is_manual? %>
+            <span class="badge bg-secondary ms-1" style="font-size: 0.5em;">手動登録</span><br>
             <%= item.manual_shop_name %>
-            <span class="badge bg-secondary ms-1" style="font-size: 0.5em;">手動登録</span>
           <% elsif item.shop.present? %>
             <%= item.shop.name %>
             <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
@@ -46,14 +46,14 @@
         <!-- 操作ボタン -->
         <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn mb-2" data-id="<%= item.id %>" style="font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;">
           <i class="bi bi-pencil-fill"></i>
-          <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">編集</span>
+          <span class="d-none d-md-block" style="font-size: 0.7rem; margin-top: 2px;">編集</span>
         </button>
         <%= link_to ranking_ranking_item_path(@ranking, item),
             data: { turbo_method: :delete, turbo_confirm: "このラーメン店をランキングから削除してもよろしいですか？" },
             class: "btn btn-sm btn-outline-danger",
             style: "font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;" do %>
           <i class="bi bi-trash-fill"></i>
-          <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">削除</span>
+          <span class="d-none d-md-block" style="font-size: 0.7rem; margin-top: 2px;">削除</span>
         <% end %>
       </div>
     </div>
