@@ -1,0 +1,34 @@
+<!-- フォントの読み込み -->
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- モバイル用フッターナビゲーション -->
+<footer class="fixed-bottom d-lg-none bg-white border-top shadow-sm">
+  <div class="container-fluid">
+    <div class="row text-center py-2">
+      <!-- アイテム追加ボタン -->
+      <div class="col-6 d-flex justify-content-center">
+        <button type="button" class="btn btn-link text-decoration-none d-flex flex-column align-items-center"
+            data-action="click->ranking-item#openShopSearchModal">
+          <i class="bi bi-plus-circle-fill" style="color: #fd7e14; font-size: 1.1rem;"></i>
+          <span class="small text-dark" style="font-size: 0.5rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">ラーメン追加</span>
+        </button>
+      </div>
+
+      <!-- 編集完了ボタン -->
+      <div class="col-6 d-flex justify-content-center">
+        <button type="button" class="btn btn-link text-decoration-none d-flex flex-column align-items-center"
+                onclick="window.location='<%= ranking_path(@ranking, genre_id: @current_genre.id) %>'">
+          <i class="bi bi-check2-circle" style="color: #198754; font-size: 1.1rem;"></i>
+          <span class="small text-dark" style="font-size: 0.5rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">編集完了</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- PC用フッター（最小限のコンテンツ） -->
+<footer class="mt-5 py-3 border-top d-none d-lg-block text-center">
+  <div class="container">
+    <p class="text-muted mb-0" style="font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 400;">&copy; <%= Date.current.year %> MyFavらぁめん - あなただけのラーメンランキングを作成しよう</p>
+  </div>
+</footer>
