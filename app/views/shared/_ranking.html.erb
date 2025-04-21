@@ -9,8 +9,8 @@
 
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
-    <div class="col-md-8">
-      <div class="logo-container text-center">
+    <div class="col-md-8 mx-auto" style="max-width: 600px;">
+      <div class="logo-container text-center p-0">
         <div class="logo-text text-center">
           <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
         </div>
@@ -22,14 +22,16 @@
           <% if @ranking_items.present? && @ranking_items.exists?(position: 1) %>
             <% first_item = @ranking_items.find_by(position: 1) %>
             <!-- 1位 - 最大サイズのカード -->
-            <div class="card mb-3 border-0 shadow-sm rank-1 mx-auto">
+            <div class="card mb-3 border-0 shadow-sm rank-1 mx-auto"">
               <div class="position-relative">
                 <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold">1st</span>
                 <!-- 画像の表示 -->
                 <% if first_item.photo.attached? %>
-                  <%= image_tag first_item.photo, class: "card-img-top" %>
+                  <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <%= image_tag first_item.photo, class: "card-img-top", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" %>
+                  </div>
                 <% else %>
-                  <div class="placeholder-img position-relative">
+                  <div class="square-image-container placeholder-img position-relative" style="width: 100%; padding-top: 100%;">
                     <div class="position-absolute top-50 start-50 translate-middle text-muted">
                       <i class="bi bi-image fs-1"></i>
                       <p class="mb-0">ラーメン写真</p>
@@ -37,23 +39,22 @@
                   </div>
                 <% end %>
               </div>
-              <div class="card-body py-2 text-center bg-light">
+              <div class="card-body py-1 text-center bg-light">
                 <h4 class="card-title mb-1">
                   <% if first_item.is_manual? %>
-                    <%= first_item.manual_shop_name %>
+                    <%= first_item.manual_shop_name %> <span class="mx-1">/</span> <span class="text-muted small"><%= first_item.menu_name %></span>
                   <% elsif first_item.shop.present? %>
-                    <%= first_item.shop.name %>
+                    <%= link_to first_item.shop.name, shop_path(first_item.shop), class: "text-decoration-none text-dark" %> <span class="mx-1">/</span> <span class="text-muted small"><%= first_item.menu_name %></span>
                   <% end %>
                 </h4>
-                <p class="card-text text-muted small mb-0"><%= first_item.menu_name %></p>
-                <div class="comment-box bg-white p-1 rounded border">
+                <div class="comment-box bg-white p-1 rounded border mt-2">
                   <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i><%= first_item.comment.present? ? first_item.comment : "コメントはありません" %></p>
                 </div>
               </div>
             </div>
           <% end %>
 
-          <div class="row g-3">
+          <div class="row g-1">
             <% [2, 3].each do |position| %>
               <% if @ranking_items.present? && @ranking_items.exists?(position: position) %>
                 <% item = @ranking_items.find_by(position: position) %>
@@ -64,9 +65,11 @@
                       <span class="position-absolute top-0 start-0 bg-<%= position == 2 ? 'secondary' : 'danger' %> text-white p-1 fs-6 rounded-end fw-bold"><%= position == 2 ? '2nd' : '3rd' %></span>
                       <!-- 画像の表示 -->
                       <% if item.photo.attached? %>
-                        <%= image_tag item.photo, class: "card-img-top" %>
+                        <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                          <%= image_tag item.photo, class: "card-img-top", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" %>
+                        </div>
                       <% else %>
-                        <div class="placeholder-img position-relative">
+                        <div class="placeholder-img position-relative" style="width: 100%; padding-top: 100%;">
                           <div class="position-absolute top-50 start-50 translate-middle text-muted">
                             <i class="bi bi-image fs-2"></i>
                             <p class="mb-0 small">ラーメン写真</p>
@@ -74,12 +77,12 @@
                         </div>
                       <% end %>
                     </div>
-                    <div class="card-body py-2 text-center bg-light">
+                    <div class="card-body py-1 text-center bg-light">
                       <h5 class="card-title mb-0">
                         <% if item.is_manual? %>
                           <%= item.manual_shop_name %>
                         <% elsif item.shop.present? %>
-                          <%= item.shop.name %>
+                          <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark" %>
                         <% end %>
                       </h5>
                       <p class="card-text text-muted small mb-0"><%= item.menu_name %></p>
@@ -92,35 +95,36 @@
 
           <!-- 4位以降のランキングアイテム -->
           <% @ranking_items.where("position > 3").order(:position).each do |item| %>
-            <div class="card my-2 border-0 shadow-sm ranking-item bg-light"
+            <div class="card my-1 border-0 shadow-sm ranking-item bg-light"
                   data-ranking-sort-target="item"
                   data-id="<%= item.id %>">
               <div class="card-body p-2">
-                <div class="row align-items-center">
-                  <div class="col-1 text-center">
+                <div class="row align-items-center g-0">
+                  <div class="col-1 text-start px-0">
                     <!-- ランク表示 -->
-                    <span class="position-number fw-bold fs-5"><%= item.position %></span>
+                    <span class="position-number fw-bold"><%= item.position %></span>
                   </div>
 
-                  <div class="col-2">
+                  <div class="col-3 col-sm-2">
                     <!-- 画像プレビュー（小さいサイズで統一） -->
                     <% if item.photo.attached? %>
-                      <%= image_tag item.photo, class: "img-thumbnail" %>
+                      <div class="square-image-container px-0" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                        <%= image_tag item.photo, class: "img-thumbnail", style: "position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" %>
+                      </div>
                     <% else %>
-                      <div class="placeholder-img d-flex align-items-center justify-content-center">
-                        <i class="bi bi-image text-muted"></i>
+                      <div class="placeholder-img d-flex align-items-center justify-content-center" style="width: 100%; padding-top: 100%;">
+                        <i class="bi bi-image text-muted position-absolute top-50 start-50 translate-middle"></i>
                       </div>
                     <% end %>
                   </div>
 
-                  <div class="col-5 text-start">
+                  <div class="col-8 col-sm-9 text-start">
                     <!-- 店舗・メニュー情報 -->
                     <h5 class="card-title mb-0">
                       <% if item.is_manual? %>
                         <%= item.manual_shop_name %>
-                        <span class="badge bg-secondary ms-1">手動</span>
                       <% elsif item.shop.present? %>
-                        <%= item.shop.name %>
+                        <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark" %>
                         <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
                       <% end %>
                     </h5>
@@ -152,7 +156,7 @@
           <div class="card-body p-2">
             <div class="d-flex flex-wrap justify-content-center gap-2" id="rankingTabs" role="tablist">
               <% @genres.each do |genre| %>
-                <%= link_to genre_rankings_path(genre_id: genre.id), 
+                <%= link_to genre_rankings_path(genre_id: genre.id),
                     class: "btn #{@current_genre&.id == genre.id ? 'btn-danger' : 'btn-outline-secondary'} px-2 py-1 rounded-pill btn-sm" do %>
                   </i><%= genre.name %>
                 <% end %>
