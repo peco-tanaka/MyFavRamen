@@ -1,0 +1,22 @@
+/* ドラッグ中のアイテム */
+.sortable-chosen {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  opacity: 0.8;
+  background-color: #f8f9fa;
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+/* ドラッグ中に表示されるゴースト（元の位置） */
+.sortable-ghost {
+  opacity: 0.4;
+  background-color: #e9ecef;
+  border: 2px dashed #ced4da;
+}
+
+/* ドラッグしているアイテム自体 */
+.sortable-drag {
+  background-color: #f8f9fa;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  transform: rotate(1deg);
+}

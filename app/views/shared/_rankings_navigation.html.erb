@@ -22,15 +22,21 @@
   </div>
 </div>
 <%# スマホ用header %>
-<nav class="navbar navbar-expand-lg sticky-top d-lg-none shadow-sm py-1" style="background-color: #fd7e14 !important;">
-  <div class="container-fluid">
-    <%= link_to root_path, class: "navbar-brand text-white d-flex align-items-center" do %>
-      <div class="mobile-logo-container">
-        <span class="mobile-logo-my">My</span><span class="mobile-logo-fav">Fav</span><span class="mobile-logo-ramen">らぁめん</span>
+<nav class="navbar navbar-expand-lg sticky-top d-lg-none shadow-sm py-1" style="background-color: #fd7e14 !important; height: 49.2px;">
+  <div class="container-fluid d-flex align-items-center">
+    <!-- ジャンル選択ボタン -->
+    <div class="genre-buttons-container mx-auto d-flex overflow-auto">
+      <div class="d-flex gap-1" role="tablist">
+        <% if @genres.present? %>
+          <% @genres.each do |genre| %>
+            <%= link_to edit_genre_ranking_rankings_path(genre_id: genre.id),
+                class: "btn #{@current_genre&.id == genre.id ? 'btn-danger' : 'btn-outline-light'} px-2 py-0 rounded-pill btn-sm",
+                style: "font-size: 0.9rem; white-space: nowrap; font-weight: bold;" do %>
+              <%= genre.name %>
+            <% end %>
+          <% end %>
+        <% end %>
       </div>
-    <% end %>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    </div>
   </div>
 </nav>

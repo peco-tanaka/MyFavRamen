@@ -1,5 +1,5 @@
 <%= render 'shared/header_for_pc' %>
-<%= render 'shared/navigation' %>
+<%= render 'shared/rankings_navigation' %>
 
 <div class="container-fluid main-content text-center"
       data-controller="ranking-item"
@@ -16,7 +16,7 @@
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
     <div class="col-md-8">
-      <div class="logo-container">
+      <div class="logo-container p-0">
         <div class="logo-text">
           <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
         </div>
@@ -25,9 +25,9 @@
       <!-- ランキングが存在する場合のみ編集画面を表示 -->
       <% if @ranking&.persisted? %>
         <!-- ランキング編集の説明 -->
-        <div class="alert alert-info mb-1 small">
-          <i class="bi bi-info-circle me-2"></i>
-          ドラッグ＆ドロップでランキングを作りましょう。
+        <div class="alert alert-info mb-1 p-2 small">
+          <i class="bi bi-info-circle me-1"></i>
+          ドラッグ＆ドロップでランキング制作！
         </div>
 
         <!-- ランキングカード表示エリア - すべて同じサイズのカードに統一 -->
@@ -51,7 +51,7 @@
             <div class="empty-ranking-message text-center p-4 bg-light rounded mb-3">
               <i class="bi bi-emoji-smile fs-1 text-muted"></i>
               <h5 class="mt-2">まだお店が登録されていません</h5>
-              <p class="text-muted">右側の「ラーメンを追加」ボタンから<br>お気に入りのラーメンを追加しましょう！</p>
+              <p class="text-muted">右側の「<i class="bi bi-plus-circle-fill me-1"></i>ラーメン」ボタンから<br>お気に入りのラーメンを追加しましょう！</p>
             </div>
           <% end %>
 
@@ -60,10 +60,6 @@
         </div>
         <!-- ここまでが データ属性設定 -->
 
-        <div class="text-center mt-4">
-          <%= link_to "編集完了", ranking_path(@ranking, genre_id: @current_genre.id), class: "btn btn-lg btn-orange rounded-pill px-4" %>
-        </div>
-
       <% else %>
 
         <!-- ランキングが存在しない場合 -->
@@ -71,7 +67,7 @@
           <i class="bi bi-info-circle me-1"></i>
           このジャンルのランキングはまだ作成されていません。
           <br>
-          右側の「ラーメンを追加」ボタンから最初のラーメンを登録すると、ランキングが自動的に作成されます。
+          右側の「<i class="bi bi-plus-circle-fill me-1"></i>ラーメン追加」ボタンから最初のラーメンを登録すると、ランキングが自動的に作成されます。
         </div>
         <!-- ランキングが存在しなくてもアイテム追加モーダルは開けるように -->
         <div data-controller="ranking-item"
@@ -86,7 +82,7 @@
     <!-- サイドメニュー -->
     <div class="col-md-4">
       <!-- ジャンル選択タブエリア（右側） -->
-      <div class="genre-tabs-container sticky-top" style="top: 10px;">
+      <div class="genre-tabs-container sticky-top d-none d-md-block" style="top: 10px;">
         <div class="card border-0">
           <div class="card-header bg-white">
             <h5 class="mb-0 fw-bold text-dark">ジャンル</h5>
@@ -105,10 +101,20 @@
       </div>
 
       <!-- アイテム追加ボタン -->
-      <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill m-5"
-              data-action="click->ranking-item#openShopSearchModal">
-        <i class="bi bi-plus-circle-fill me-2"></i> ラーメンを追加
-      </button>
+      <div class="text-center my-4 d-none d-md-block">
+        <button id="add-ranking-item-btn" class="btn btn-lg btn-orange rounded-pill px-4 py-2 shadow-sm fw-bold"
+                data-action="click->ranking-item#openShopSearchModal">
+          <i class="bi bi-plus-circle-fill me-2"></i> ラーメン追加
+        </button>
+      </div>
+
+      <!-- 編集完了ボタン -->
+      <div class="text-center my-4 d-none d-md-block">
+        <%= link_to ranking_path(@ranking, genre_id: @current_genre.id),
+                    class: "btn btn-lg btn-success rounded-pill px-4 py-2 shadow-sm fw-bold" do %>
+          <i class="bi bi-check2-circle me-2"></i> 編集完了
+        <% end %>
+      </div>
 
       <!-- 編集のヒント -->
       <div class="card shadow-sm mb-4">
@@ -119,7 +125,7 @@
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <i class="bi bi-plus-circle-fill text-orange me-2"></i>
-              上の「ラーメンを追加」ボタンから新しいお店を追加できます。
+              「<i class="bi bi-plus-circle-fill me-1"></i>ラーメン追加」ボタンから新しいお店を追加できます。
             </li>
             <li class="list-group-item">
               <i class="bi bi-arrow-down-up text-orange me-2"></i>
@@ -240,7 +246,5 @@
       </div>
     </div>
   </div>
+  <%= render "shared/edit_footer" %>
 </div>
-
-
-<%= render "shared/footer" %>
