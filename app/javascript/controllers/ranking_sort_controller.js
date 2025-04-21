@@ -20,8 +20,12 @@ export default class extends Controller {
 
       this.sortable = new Sortable(this.containerTarget, {
         animation: 150,
+        delay: 150,  // 長押し後にドラッグ開始
         ghostClass: "sortable-ghost",
         dragClass: "sortable-drag",
+        delayOnTouchOnly: true,
+        touchStartThreshold: 3, // タッチ開始時の移動許容量
+        chosenClass: "sortable-chosen",
         onEnd: this.onSortEnd.bind(this),  // bind(this)でonSortEndメソッドの中でもコントローラーのプロパティやメソッドでアクセス可能にする
       })
     } else {
