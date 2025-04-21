@@ -1,6 +1,10 @@
-// app/assets/stylesheets/layout/_content.scss
+.main-content {
+  margin-top: 0.25rem !important; // mt-1 相当 (モバイル用)
+}
+
 @media (min-width: 992px) {
   .main-content {
+    margin-top: 0.5rem !important; // mt-2 相当 (PC用)
     margin-left: 280px; /* サイドバーの幅 (sidebar-lg の style="width: 280px;" と合わせる) */
     width: calc(100% - 280px); /* サイドバーの幅を引いた分だけ広げる */
     min-height: calc(100vh - var(--header-height-lg)); /* ← --header-height-lg (100px) を参照しているか確認 */
@@ -12,5 +16,7 @@
 @media (max-width: 991.98px) { // lg未満
   .main-content {
     padding-bottom: 70px;
+    padding-left: 0.25rem !important; // px-1 相当
+    padding-right: 0.25rem !important; // px-1 相当
   }
 }
