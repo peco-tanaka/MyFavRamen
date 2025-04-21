@@ -16,7 +16,11 @@
 @media (max-width: 991.98px) { // lg未満
   .main-content {
     padding-bottom: 70px;
-    padding-left: 0.25rem !important; // px-1 相当
-    padding-right: 0.25rem !important; // px-1 相当
+    --bs-gutter-x: 0.5rem; // Bootstrapのgutter変数を上書き
+    // .main-content の中の .row 要素に対して、変数を直接上書きする
+    // (Bootstrap の .row ルールより詳細度が高くなるようにセレクタを記述)
+    > .row { // .main-content の直接の子要素の .row
+      --bs-gutter-x: 0.5rem;
+    }
   }
 }
