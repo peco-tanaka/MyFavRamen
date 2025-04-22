@@ -29,7 +29,7 @@
       <div class="d-flex gap-1" role="tablist">
         <% if @genres.present? %>
           <% @genres.each do |genre| %>
-              <%= link_to genre_rankings_path(genre_id: genre.id),
+            <%= link_to edit_genre_ranking_rankings_path(genre_id: genre.id),
                 class: "btn #{@current_genre&.id == genre.id ? 'btn-danger' : 'btn-outline-light'} px-2 py-0 rounded-pill btn-sm",
                 style: "font-size: 1.0rem; white-space: nowrap; font-weight: bold;" do %>
               <%= genre.name %>
