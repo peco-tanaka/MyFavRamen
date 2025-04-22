@@ -3,7 +3,7 @@
 
 <%= render 'shared/navigation' %>
 
-<div class="container main-content" data-controller="maps"
+<div class="container-fluid px-md-4 main-content" data-controller="maps"
     data-maps-keyword-value="<%= @search_keyword %>"
     data-maps-has-db-results-value="<%= @has_db_results || false %>"
     <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
@@ -17,7 +17,7 @@
 
   <div class="row">
     <!-- 検索フォーム - 左側 -->
-    <div class="col-12 col-md-6 mb-3">
+    <div class="col-12 col-lg-5 col-xl-5 mb-3">
       <%= form_with url: shops_path, method: :get, local: true,
                     data: { maps_target: "searchForm", action: "submit->maps#search" } do |f| %>
         <div class="card">
@@ -58,18 +58,20 @@
     </div>
 
     <!-- Google Map - 右側 -->
-    <div class="col-12 col-md-6 mb-3">
-      <div class="card">
-        <div class="card-body p-0">
-          <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
-            <%= render "shared/google_map",
-                  latitude: @shop.latitude,
-                  longitude: @shop.longitude,
-                  shop_name: @shop.name,
-                  is_detail_page: true %>
-          <% else %>
-            <%= render "shared/google_map", is_detail_page: false %>
-          <% end %>
+    <div class="col-12 col-lg-7 col-xl-7 mb-3">
+      <div class="card h-100">
+        <div class="card-body p-0" style="height: 100%;">
+          <div class="map-container">
+            <% if defined?(@shop) && @shop.present? && @shop.latitude.present? && @shop.longitude.present? %>
+              <%= render "shared/google_map",
+                    latitude: @shop.latitude,
+                    longitude: @shop.longitude,
+                    shop_name: @shop.name,
+                    is_detail_page: true %>
+            <% else %>
+              <%= render "shared/google_map", is_detail_page: false %>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

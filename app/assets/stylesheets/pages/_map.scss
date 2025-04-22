@@ -1,20 +1,35 @@
+// map-container スタイル
+.map-container {
+  height: 50vh; // スマホ用に小さくする
+  min-height: 300px; // 最小高さも小さくする
+  display: flex;
+  flex-direction: column;
+}
+
 // google_map
 #map {
   width: 100% !important;
-  height: 50vh !important; // ビューポート高さの50%
-  min-height: 300px !important; // 最小高さは確保
+  height: 100% !important; // map-containerいっぱいに表示
+  min-height: 300px !important;
+  flex-grow: 1; // コンテナ内で拡大
 }
 
-// 大きい画面サイズでの調整
+// 画面サイズに応じた高さ調整
+@media (min-width: 576px) {
+  .map-container {
+    height: 60vh;
+  }
+}
+
 @media (min-width: 768px) {
-  #map {
-    height: 60vh !important; // タブレット以上では少し大きく
+  .map-container {
+    height: 70vh;
   }
 }
 
 @media (min-width: 992px) {
-  #map {
-    height: 70vh !important; // デスクトップではさらに大きく
+  .map-container {
+    height: 85vh;
   }
 }
 
