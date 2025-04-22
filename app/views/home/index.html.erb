@@ -5,326 +5,1179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyFavらぁめん - 自分だけのラーメンランキング</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-        /* --- Custom Styles (ファイル保存時にUTF-8形式であることを確認してください) --- */
+        /* --- 基本設定 --- */
         :root {
-            /* Bootstrapのカラー変数をオレンジ系でオーバーライド */
-            --bs-primary: #F57C00;
-            --bs-primary-rgb: 245, 124, 0;
-            --bs-secondary: #FFB74D;
-            --bs-secondary-rgb: 255, 183, 77;
-            --bs-dark-orange: #BF360C;
-            --bs-light-orange: #FFF8E1;
-            --bs-text-dark-orange: #BF360C;
-            --bs-text-orange: #E65100;
-
-            /* Bootstrap Body Colors */
-            --bs-body-bg: var(--bs-light-orange);
-            --bs-body-color: #4A4A4A;
-            --bs-body-font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
-            --bs-link-color: var(--bs-primary);
-            --bs-link-hover-color: #E65100;
-
-            --bs-border-radius: 0.5rem;
-            --bs-border-radius-pill: 50rem;
+            /* メインカラー */
+            --main-orange: #FF7A00;
+            --deep-orange: #E65100;
+            --light-orange: #FFE0B2;
+            
+            /* 補色カラー */
+            --accent-blue: #0077B6;
+            --light-blue: #90E0EF;
+            
+            /* 中間色 */
+            --warm-beige: #FFF8E1;
+            --dark-brown: #3E2723;
+            --red-accent: #D32F2F;
+            
+            /* テキストカラー */
+            --text-dark: #333333;
+            --text-light: #FFFFFF;
+            --text-muted: #757575;
+            
+            /* 効果 */
+            --default-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --hover-shadow: 0 10px 30px rgba(255, 122, 0, 0.25);
+            --button-shadow: 0 6px 12px rgba(230, 81, 0, 0.3);
+            
+            /* 角丸 */
+            --radius-small: 8px;
+            --radius-medium: 16px;
+            --radius-large: 24px;
+            --radius-circle: 50%;
         }
 
         body {
-            font-family: var(--bs-body-font-family);
-            background-color: var(--bs-body-bg);
-            color: var(--bs-body-color);
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--warm-beige);
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
-
-        /* Header Customizations */
-        .navbar {
-            background: linear-gradient(to right, #FFA726, #FB8C00);
-            border-bottom: 3px solid #E65100;
-            padding-top: 0.8rem;
-            padding-bottom: 0.8rem;
-        }
-        .navbar .navbar-brand {
-            font-size: 1.7rem;
+        
+        h1, h2, h3, h4, h5, .brand-font {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
             font-weight: 700;
-            transition: transform 0.3s ease;
         }
-         .navbar .navbar-brand:hover {
-             transform: scale(1.05);
-         }
-        .navbar .nav-link {
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: var(--bs-border-radius-pill);
-            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-            margin-left: 0.5rem;
-        }
-        .navbar .nav-link:hover,
-        .navbar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .navbar .nav-link.btn-signup {
-             background-color: #E65100;
-             color: #fff !important;
-             font-weight: 600;
-        }
-        .navbar .nav-link.btn-signup:hover {
-             background-color: var(--bs-dark-orange);
-             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        /* Hero Section Customizations */
-        .hero {
-            background: url('https://images.unsplash.com/photo-1557872943-16a5ac26437e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover no-repeat;
+        
+        /* --- 共通スタイル --- */
+        .section-bg-pattern {
             position: relative;
-            color: #fff;
             overflow: hidden;
         }
-        .hero::before { /* Overlay */
+        
+        .section-bg-pattern::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff9800' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.5s ease;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::after {
+            left: 0;
+        }
+        
+        .btn-primary {
+            background-color: var(--main-orange);
+            border: none;
+            box-shadow: var(--button-shadow);
+            padding: 12px 24px;
+            border-radius: var(--radius-medium);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--deep-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(230, 81, 0, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--accent-blue);
+            border: none;
+            box-shadow: 0 6px 12px rgba(0, 119, 182, 0.3);
+            padding: 12px 24px;
+            border-radius: var(--radius-medium);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #005A8D;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(0, 119, 182, 0.4);
+        }
+        
+        .card {
+            border: none;
+            border-radius: var(--radius-medium);
+            box-shadow: var(--default-shadow);
+            transition: all 0.5s ease;
+        }
+        
+        .animated-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .animated-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* --- ナビゲーションバー --- */
+        .navbar {
+            background: linear-gradient(135deg, var(--main-orange), var(--deep-orange));
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+            background: rgba(255, 122, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar-brand {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .navbar-brand::before {
+            content: "🍜";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) rotate(-15deg);
+            font-size: 1.8rem;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+        }
+        
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 5px;
+            position: relative;
+            padding: 8px 15px !important;
+            border-radius: var(--radius-small);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 60%;
+        }
+        
+        .nav-link.btn-signup {
+            background-color: var(--accent-blue);
+            color: white !important;
+            padding: 8px 18px !important;
+            margin-left: 15px;
+            border-radius: var(--radius-medium);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-link.btn-signup:hover {
+            background-color: #005A8D;
+            transform: translateY(-3px);
+        }
+        
+        /* --- ヒーローセクション --- */
+        .hero {
+            position: relative;
+            padding: 180px 0 120px;
+            background: linear-gradient(170deg, var(--deep-orange), var(--main-orange));
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: 4rem;
+            color: white;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDown 1s ease forwards;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: var(--light-orange);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s 0.3s ease forwards;
+        }
+        
+        .hero-description {
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: white;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s 0.6s ease forwards;
+        }
+        
+        .hero-buttons {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s 0.9s ease forwards;
+        }
+        
+        .hero-decoration {
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .hero-decoration-1 {
+            bottom: -10%;
+            right: -5%;
+            width: 300px;
+            height: 300px;
+            background: var(--accent-blue);
+            border-radius: var(--radius-circle);
+            opacity: 0.1;
+        }
+        
+        .hero-decoration-2 {
+            top: 20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            background: var(--light-blue);
+            border-radius: var(--radius-circle);
+            opacity: 0.1;
+        }
+        
+        .hero-decoration-3 {
+            bottom: 30%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: var(--red-accent);
+            border-radius: var(--radius-circle);
+            opacity: 0.2;
+        }
+        
+        .hero-image-container {
+            position: relative;
+        }
+        
+        .hero-image {
+            position: relative;
+            z-index: 2;
+            max-width: 100%;
+            border-radius: var(--radius-large);
+            box-shadow: var(--default-shadow);
+            transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+            opacity: 0;
+            animation: fadeInRight 1s 1.2s ease forwards;
+        }
+        
+        /* --- 機能セクション --- */
+        .features-section {
+            padding: 100px 0;
+            background-color: white;
+            position: relative;
+        }
+        
+        .section-title-container {
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            display: inline-block;
+            background-color: var(--light-orange);
+            color: var(--deep-orange);
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: var(--radius-small);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--deep-orange);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--main-orange);
+            border-radius: var(--radius-small);
+        }
+        
+        .feature-card {
+            padding: 30px;
+            border-radius: var(--radius-medium);
+            background: white;
+            position: relative;
+            margin-bottom: 30px;
+            overflow: hidden;
+            height: 100%;
+            transition: all 0.5s ease;
+            border-top: 5px solid var(--main-orange);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .feature-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(251, 140, 0, 0.75), rgba(191, 54, 12, 0.85));
+            height: 5px;
+            background: linear-gradient(to right, var(--main-orange), var(--accent-blue));
+            opacity: 0;
+            transition: all 0.5s ease;
         }
-        .hero .container {
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-circle);
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+            background: var(--light-orange);
+        }
+        
+        .feature-icon-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: var(--radius-circle);
+            background: linear-gradient(135deg, var(--main-orange), var(--deep-orange));
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--main-orange);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--deep-orange);
+        }
+        
+        .feature-text {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+        
+        /* --- ランキングデモセクション --- */
+        .ranking-demo {
+            padding: 120px 0;
+            background-color: var(--warm-beige);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ranking-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='84' height='48' viewBox='0 0 84 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h12v6H0V0zm28 8h12v6H28V8zm14-8h12v6H42V0zm14 0h12v6H56V0zm0 8h12v6H56V8zM42 8h12v6H42V8zm0 16h12v6H42v-6zm14-8h12v6H56v-6zm14 0h12v6H70v-6zm0-16h12v6H70V0zM28 32h12v6H28v-6zM14 16h12v6H14v-6zM0 24h12v6H0v-6zm0 8h12v6H0v-6zm14 0h12v6H14v-6zm14 8h12v6H28v-6zm-14 0h12v6H14v-6zm28 0h12v6H42v-6zm14-8h12v6H56v-6zm0-8h12v6H56v-6zm14 8h12v6H70v-6zm0 8h12v6H70v-6zM14 24h12v6H14v-6zm14-8h12v6H28v-6zM14 8h12v6H14V8zM0 8h12v6H0V8z' fill='%23FF7A00' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .ranking-card {
+            background: white;
+            border-radius: var(--radius-medium);
+            box-shadow: var(--default-shadow);
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        
+        .ranking-card.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .ranking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .ranking-position {
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 50px;
+            height: 50px;
+            background: var(--main-orange);
+            color: white;
+            border-radius: var(--radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(255, 122, 0, 0.3);
+            z-index: 2;
+        }
+        
+        .ranking-card:nth-child(1) .ranking-position {
+            background: linear-gradient(135deg, #FFC107, #FF9800);
+        }
+        
+        .ranking-card:nth-child(2) .ranking-position {
+            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+        }
+        
+        .ranking-card:nth-child(3) .ranking-position {
+            background: linear-gradient(135deg, #D35400, #A04000);
+        }
+        
+        .ranking-img {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-small);
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        
+        .ranking-content {
+            flex: 1;
+        }
+        
+        .ranking-title {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--deep-orange);
+        }
+        
+        .ranking-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .ranking-comment {
+            background: var(--light-orange);
+            padding: 10px 15px;
+            border-radius: var(--radius-small);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            color: var(--deep-orange);
+            position: relative;
+        }
+        
+        .ranking-comment::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid var(--light-orange);
+        }
+        
+        .ranking-demo-img {
+            max-width: 100%;
+            border-radius: var(--radius-medium);
+            box-shadow: var(--default-shadow);
+            transform: perspective(1000px) rotateY(15deg) rotateX(5deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+        
+        .ranking-demo-img.visible {
+            opacity: 1;
+        }
+        
+        .ranking-demo-img:hover {
+            transform: perspective(1000px) rotateY(0) rotateX(0);
+        }
+        
+        /* --- ユーザー登録セクション --- */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--main-orange), var(--deep-orange));
+            clip-path: polygon(0 15%, 100% 0, 100% 85%, 0 100%);
             position: relative;
             z-index: 1;
         }
-        .hero h1 {
-            color: #fff;
-            font-size: 3.2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            animation: fadeInDown 1s ease-out;
-        }
-        .hero h2 {
-            color: #FFEBCC;
-            font-size: 1.5rem;
-            font-weight: 400;
-            animation: fadeInUp 1s ease-out 0.3s;
-            animation-fill-mode: backwards;
-        }
-        .hero p.description {
-            font-size: 1.1rem;
-            color: #FFF3E0;
-             max-width: 700px;
-             margin-left: auto;
-             margin-right: auto;
-             animation: fadeInUp 1s ease-out 0.6s;
-            animation-fill-mode: backwards;
-        }
-         .hero .btn-container {
-             animation: fadeInUp 1s ease-out 0.9s;
-             animation-fill-mode: backwards;
-         }
-
-        /* Button Customizations */
-        .btn-primary {
-             background-color: var(--bs-primary);
-             border-color: var(--bs-primary);
-             color: #fff;
-             transition: all 0.3s ease;
-             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-         .btn-primary:hover {
-             background-color: #E65100;
-             border-color: #E65100;
-             transform: translateY(-3px);
-             box-shadow: 0 6px 15px rgba(245, 124, 0, 0.4);
-         }
-        .btn-secondary {
-             background-color: var(--bs-secondary);
-             border-color: var(--bs-secondary);
-             color: #4E342E;
-             transition: all 0.3s ease;
-              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .btn-secondary:hover {
-             background-color: #FFE0B2;
-             border-color: #FFE0B2;
-             color: #BF360C;
-             transform: translateY(-3px);
-             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Features Section Customizations */
-        .features {
-            background-color: #fff;
-        }
-        .features .section-title {
-             color: var(--bs-text-dark-orange);
-             margin-bottom: 3rem;
-             font-size: 2.3rem;
-              border-left: 5px solid var(--bs-secondary);
-              padding-left: 15px;
-              display: inline-block;
-        }
-        .feature-card {
-            border: none;
-            border-radius: var(--bs-border-radius);
-            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.12);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            border-top: 4px solid var(--bs-secondary);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            z-index: -1;
         }
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(255, 112, 67, 0.2);
+        
+        .cta-content {
+            text-align: center;
+            color: white;
         }
-        .feature-icon {
+        
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: a 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            margin: 10px;
+            min-width: 200px;
+        }
+        
+        .btn-cta-primary {
+            background-color: white;
+            color: var(--deep-orange);
+            border: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-cta-primary:hover {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+        
+        .btn-cta-secondary {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-cta-secondary:hover {
+            background-color: white;
+            color: var(--deep-orange);
+        }
+        
+        .cta-decoration {
+            position: absolute;
+        }
+        
+        .cta-decoration-1 {
+            bottom: 20%;
+            left: 10%;
+            font-size: 4rem;
+            opacity: 0.2;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .cta-decoration-2 {
+            top: 30%;
+            right: 10%;
             font-size: 3rem;
-            color: var(--bs-primary);
-            margin-bottom: 1.5rem;
+            opacity: 0.2;
+            animation: float 4s ease-in-out infinite;
         }
-        .feature-card .card-title {
-             color: var(--bs-text-orange);
-             font-weight: 600;
+        
+        .cta-decoration-3 {
+            bottom: 30%;
+            right: 15%;
+            font-size: 5rem;
+            opacity: 0.2;
+            animation: float 5s ease-in-out infinite;
         }
-
-        /* Auth Links Section */
-        .auth-links {
-             background-color: #FFF3E0;
-             border-top: 1px solid #FFE0B2;
-             border-bottom: 1px solid #FFE0B2;
+        
+        .cta-note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 20px;
         }
-         .auth-links .prompt {
-              color: var(--bs-text-dark-orange);
-              font-weight: 500;
-              font-size: 1.3rem;
-          }
-           .auth-links .forgot-password-link {
-               font-size: 0.95rem;
-               color: #6c757d;
-           }
-           .auth-links .forgot-password-link:hover {
-                color: var(--bs-link-hover-color);
-            }
-
-        /* Footer Customizations */
+        
+        .cta-note a {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        /* --- フッター --- */
         .footer {
-            background-color: var(--bs-dark-orange);
-            color: #FFEBCC;
+            background-color: var(--dark-brown);
+            color: var(--light-orange);
+            padding: 60px 0 30px;
+            position: relative;
         }
-         .footer p {
-             margin-bottom: 0;
-         }
-
-        /* Animations */
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Responsive Adjustments */
-         @media (max-width: 767.98px) {
-              .hero h1 { font-size: 2.6rem; }
-              .hero h2 { font-size: 1.3rem; }
-              .features .section-title { font-size: 1.9rem; }
-              .feature-card { margin-bottom: 1.5rem; }
-         }
-          @media (max-width: 575.98px) {
-               .hero h1 { font-size: 2.2rem; }
-               .hero h2 { font-size: 1.1rem; }
-               .hero p.description { font-size: 1rem; }
-               .navbar .navbar-brand { font-size: 1.5rem; }
-               .btn { padding: 0.6rem 1.2rem; font-size: 0.95rem; }
-                .auth-links .btn { width: 75%; margin-bottom: 1rem; }
-          }
+        
+        .footer-logo {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-description {
+            color: #E0E0E0;
+            max-width: 300px;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .footer-title {
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--main-orange);
+            border-radius: var(--radius-small);
+        }
+        
+        .footer-link {
+            display: block;
+            color: #E0E0E0;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            color: var(--main-orange);
+            transform: translateX(5px);
+        }
+        
+        .footer-link i {
+            margin-right: 10px;
+            color: var(--main-orange);
+        }
+        
+        .footer-bottom {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .footer-copyright {
+            color: #9E9E9E;
+            font-size: 0.9rem;
+        }
+        
+        /* --- アニメーション --- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px) perspective(1000px) rotateY(-15deg) rotateX(5deg); }
+            to { opacity: 1; transform: translateX(0) perspective(1000px) rotateY(-15deg) rotateX(5deg); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+        
+        /* --- レスポンシブ --- */
+        @media (max-width: 1199.98px) {
+            .hero {
+                padding: 150px 0 100px;
+            }
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            .cta-decoration-1, .cta-decoration-2, .cta-decoration-3 {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 991.98px) {
+            .hero {
+                padding: 130px 0 80px;
+                clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            }
+            .hero-title {
+                font-size: 3rem;
+            }
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+            .hero-image {
+                margin-top: 40px;
+                transform: perspective(1000px) rotateY(0) rotateX(0);
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .feature-card {
+                margin-bottom: 30px;
+            }
+            .ranking-demo-img {
+                margin-top: 40px;
+                transform: perspective(1000px) rotateY(0) rotateX(0);
+            }
+            .cta-section {
+                clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
+            }
+        }
+        
+        @media (max-width: 767.98px) {
+            .navbar-brand {
+                font-size: 1.4rem;
+            }
+            .hero {
+                padding: 120px 0 60px;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            .hero-description {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .cta-title {
+                font-size: 2rem;
+            }
+            .cta-subtitle {
+                font-size: 1.1rem;
+            }
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .footer {
+                text-align: center;
+            }
+            .footer-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+        
+        @media (max-width: 575.98px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+                padding-left: 30px;
+            }
+            .navbar-brand::before {
+                font-size: 1.4rem;
+            }
+            .hero {
+                padding: 110px 0 50px;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            .hero-buttons .btn {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .ranking-img {
+                width: 60px;
+                height: 60px;
+            }
+            .ranking-title {
+                font-size: 1.1rem;
+            }
+            .cta-title {
+                font-size: 1.8rem;
+            }
+            .cta-button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <!-- ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">🍜 MyFavらぁめん</a>
+            <a class="navbar-brand" href="/">MyFavらぁめん</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">ホーム</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/rankings">ランキングを見る</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<%= new_user_session_path %>">ログイン</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-signup" href="<%= new_user_registration_path %>">新規登録</a></li>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">ホーム</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rankings">みんなのランキング</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/sign_in">ログイン</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-signup" href="/users/sign_up">新規登録</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="hero py-5">
-        <div class="container text-center py-lg-5">
-            <h1 class="mb-3">MyFavらぁめん</h1>
-            <h2 class="mb-4">感動の一杯を、あなただけのランキングに。</h2>
-            <p class="description mb-5">
-                MyFavらぁめんは、あなたのお気に入りのラーメン店を記録し、自分だけのランキングを作成・共有できる場所。<br>
-                評価ではなく「好き」を大切にする、ポジティブなラーメンコミュニティです。
-            </p>
-            <div class="btn-container">
-                <a href="<%= new_user_registration_path %>" class="btn btn-primary btn-lg px-4 me-sm-3">今すぐランキングを作る (無料)</a>
-                <a href="/rankings" class="btn btn-secondary btn-lg px-4">他の人のランキングを見る</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="features py-5">
+    <!-- ヒーローセクション -->
+    <section class="hero">
+        <div class="hero-decoration hero-decoration-1"></div>
+        <div class="hero-decoration hero-decoration-2"></div>
+        <div class="hero-decoration hero-decoration-3"></div>
         <div class="container">
-             <div class="text-center text-lg-start mb-5">
-                <h3 class="section-title">MyFavらぁめんの楽しみ方</h3>
-             </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content text-center text-lg-start">
+                        <h1 class="hero-title">MyFavらぁめん</h1>
+                        <h2 class="hero-subtitle">あなただけのラーメンランキング</h2>
+                        <p class="hero-description">
+                            感動の一杯を記録し、自分だけのランキングを作成・共有。評価ではなく「好き」を大切にする、ポジティブなラーメン愛好家のためのコミュニティです。
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="/users/sign_up" class="btn btn-primary me-3 mb-2 mb-md-0">無料ではじめる</a>
+                            <a href="/rankings" class="btn btn-secondary">ランキングを見る</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image-container text-center">
+                        <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?q=80&w=1470&auto=format&fit=crop" alt="ラーメンランキングのイメージ" class="hero-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 機能セクション -->
+    <section class="features-section section-bg-pattern">
+        <div class="container">
+            <div class="section-title-container">
+                <div class="section-subtitle">楽しみ方</div>
+                <h2 class="section-title">あなたのラーメン愛を記録する3つの機能</h2>
+                <p class="text-muted mb-0">シンプルで使いやすい機能で、あなたのラーメン体験を次のレベルへ</p>
+            </div>
+            
             <div class="row g-4">
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                    <div class="card feature-card text-center p-4">
-                        <div class="card-body d-flex flex-column">
+                <div class="col-lg-4 col-md-6 animated-element">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
                             <i class="bi bi-trophy-fill feature-icon"></i>
-                            <h4 class="card-title mt-3">あなただけのランキング</h4>
-                            <p class="card-text mt-auto">食べたラーメン店を記録して、自分だけの「俺ランク」を作成。総合、ジャンル別など自由にカスタマイズ！お店への評価機能はありません。</p>
                         </div>
+                        <h3 class="feature-title">あなただけのランキング</h3>
+                        <p class="feature-text">自分が食べたラーメン店を「俺ランク」として記録・整理。総合やジャンル別など、自由にカスタマイズできます。店舗への評価ではなく、あくまであなた自身の好みを表現する場所です。</p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                    <div class="card feature-card text-center p-4">
-                         <div class="card-body d-flex flex-column">
-                             <i class="bi bi-pencil-square feature-icon"></i>
-                            <h4 class="card-title mt-3">食べた記録をシンプルに</h4>
-                            <p class="card-text mt-auto">お店の名前、訪問日、写真、そしてトップ3には熱い想いを込めた一言コメントも。感動した一杯の記憶を、かんたんに、いつまでも残せます。</p>
+                
+                <div class="col-lg-4 col-md-6 animated-element" style="animation-delay: 0.2s;">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-camera-fill feature-icon"></i>
                         </div>
+                        <h3 class="feature-title">食べた記録をシンプルに</h3>
+                        <p class="feature-text">店名、訪問日、写真、そしてトップ3には熱い想いを込めた一言コメントも。シンプルな操作で、感動した一杯の記憶をいつまでも残せます。複雑な入力は一切不要です。</p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                    <div class="card feature-card text-center p-4">
-                         <div class="card-body d-flex flex-column">
-                             <i class="bi bi-people-fill feature-icon"></i>
-                            <h4 class="card-title mt-3">ラーメン好きとゆるく繋がる</h4>
-                            <p class="card-text mt-auto">他の人のランキングを見て、新しいお店を発見！フォロー機能で気になるユーザーの更新をチェック。批判のない平和な空間で交流を楽しめます。</p>
+                
+                <div class="col-lg-4 col-md-6 animated-element" style="animation-delay: 0.4s;">
+                    <div class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-people-fill feature-icon"></i>
                         </div>
+                        <h3 class="feature-title">ラーメン好きとゆるく繋がる</h3>
+                        <p class="feature-text">他のユーザーのランキングを閲覧して新たな発見を。フォロー機能で気になるユーザーの更新をチェックできます。批判のない、ポジティブな交流の場で仲間と繋がりましょう。</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-     <section class="auth-links py-5">
-        <div class="container text-center">
-            <p class="prompt mb-4">さあ、あなただけのラーメン道をはじめよう！</p>
-            <a href="<%= new_user_registration_path %>" class="btn btn-primary btn-lg px-5 me-sm-3 mb-3 mb-sm-0">新規登録はこちら</a>
-            <a href="<%= new_user_session_path %>" class="btn btn-secondary btn-lg px-5">ログインはこちら</a>
-            <div class="mt-4">
-                 <a href="<%= new_user_password_path %>" class="forgot-password-link">パスワードをお忘れですか？</a>
+    <!-- ランキングデモセクション -->
+    <section class="ranking-demo">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="section-title-container text-center text-lg-start">
+                        <div class="section-subtitle">デモ</div>
+                        <h2 class="section-title">こんなランキングが作れます</h2>
+                        <p class="text-muted mb-4">ドラッグ＆ドロップで簡単に順位変更。あなただけのこだわりランキングを作成できます</p>
+                    </div>
+                    
+                    <div class="ranking-card-container">
+                        <div class="ranking-card animated-element">
+                            <div class="ranking-position">1</div>
+                            <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?w=400&auto=format" alt="一位のラーメン" class="ranking-img">
+                            <div class="ranking-content">
+                                <h4 class="ranking-title">中華そば 青葉</h4>
+                                <p class="ranking-subtitle">特製醤油ラーメン</p>
+                                <p class="ranking-comment">澄んだスープなのに旨味が凝縮。極上の一杯！</p>
+                            </div>
+                        </div>
+                        
+                        <div class="ranking-card animated-element" style="animation-delay: 0.2s;">
+                            <div class="ranking-position">2</div>
+                            <img src="https://images.unsplash.com/photo-1557872943-16a5ac26437e?w=400&auto=format" alt="二位のラーメン" class="ranking-img">
+                            <div class="ranking-content">
+                                <h4 class="ranking-title">麺屋 一燈</h4>
+                                <p class="ranking-subtitle">芳醇味噌ラーメン</p>
+                                <p class="ranking-comment">コクと深みが最高。寒い日に食べたい一杯。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="ranking-card animated-element" style="animation-delay: 0.4s;">
+                            <div class="ranking-position">3</div>
+                            <img src="https://images.unsplash.com/photo-1626759486966-c067e3f79982?w=400&auto=format" alt="三位のラーメン" class="ranking-img">
+                            <div class="ranking-content">
+                                <h4 class="ranking-title">博多 一幸舎</h4>
+                                <p class="ranking-subtitle">元祖豚骨ラーメン</p>
+                                <p class="ranking-comment">あっさりなのに旨味が凝縮された豚骨スープ！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?w=600&auto=format" alt="スマートフォンでのランキング画面" class="ranking-demo-img animated-element" style="animation-delay: 0.6s;">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="footer py-4 mt-auto">
-        <div class="container text-center">
-            <p>&copy; 2025 MyFavらぁめん. All Rights Reserved.</p>
+    <!-- ユーザー登録セクション -->
+    <section class="cta-section">
+        <div class="cta-decoration cta-decoration-1">🍜</div>
+        <div class="cta-decoration cta-decoration-2">🍥</div>
+        <div class="cta-decoration cta-decoration-3">🥢</div>
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">あなただけのラーメン道を始めよう</h2>
+                <p class="cta-subtitle">MyFavらぁめんは完全無料。自分だけのラーメンランキングを作成して、感動の一杯を記録しませんか？</p>
+                
+                <div class="cta-buttons">
+                    <a href="/users/sign_up" class="btn btn-cta-primary btn-lg cta-button">今すぐ登録する（無料）</a>
+                    <a href="/users/sign_in" class="btn btn-cta-secondary btn-lg cta-button">ログインする</a>
+                </div>
+                
+                <p class="cta-note">
+                    アカウントをお持ちでない方は <a href="/users/password/new">パスワード再設定</a> をご利用ください
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <div class="footer-logo">🍜 MyFavらぁめん</div>
+                    <p class="footer-description">ラーメン愛好家のための、自分だけのラーメンランキングを作成・共有できるサービスです。</p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h3 class="footer-title">サービス</h3>
+                    <a href="/rankings" class="footer-link"><i class="bi bi-chevron-right"></i>ランキング一覧</a>
+                    <a href="/users/sign_up" class="footer-link"><i class="bi bi-chevron-right"></i>新規登録</a>
+                    <a href="/users/sign_in" class="footer-link"><i class="bi bi-chevron-right"></i>ログイン</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h3 class="footer-title">サポート</h3>
+                    <a href="#" class="footer-link"><i class="bi bi-question-circle"></i>よくある質問</a>
+                    <a href="#" class="footer-link"><i class="bi bi-envelope"></i>お問い合わせ</a>
+                    <a href="#" class="footer-link"><i class="bi bi-shield-check"></i>プライバシーポリシー</a>
+                    <a href="#" class="footer-link"><i class="bi bi-file-text"></i>利用規約</a>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="footer-title">フォローする</h3>
+                    <a href="#" class="footer-link"><i class="bi bi-twitter"></i>Twitter</a>
+                    <a href="#" class="footer-link"><i class="bi bi-instagram"></i>Instagram</a>
+                    <a href="#" class="footer-link"><i class="bi bi-facebook"></i>Facebook</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 MyFavらぁめん All Rights Reserved.</p>
+            </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // スクロールアニメーション
+        document.addEventListener('DOMContentLoaded', function() {
+            // ナビゲーションバースクロール効果
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    document.querySelector('.navbar').classList.add('scrolled');
+                } else {
+                    document.querySelector('.navbar').classList.remove('scrolled');
+                }
+            });
+            
+            // 要素表示アニメーション
+            const animatedElements = document.querySelectorAll('.animated-element');
+            
+            function checkIfInView() {
+                animatedElements.forEach(function(element) {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('visible');
+                    }
+                });
+                
+                const rankingImg = document.querySelector('.ranking-demo-img');
+                if (rankingImg) {
+                    const imgTop = rankingImg.getBoundingClientRect().top;
+                    if (imgTop < window.innerHeight - 100) {
+                        rankingImg.classList.add('visible');
+                    }
+                }
+            }
+            
+            // 初期チェック
+            checkIfInView();
+            
+            // スクロール時チェック
+            window.addEventListener('scroll', checkIfInView);
+        });
+    </script>
 </body>
 </html>
