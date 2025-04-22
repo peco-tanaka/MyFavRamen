@@ -24,9 +24,9 @@
         <% if @ranking_items.exists?(position: 1) %>
           <% first_item = @ranking_items.find_by(position: 1) %>
           <!-- 1位 - 最大サイズのカード -->
-          <div class="card mb-3 border-0 shadow-sm rank-1 mx-auto">
+          <div class="card mb-3 border border-light shadow mx-auto rank-1">
             <div class="position-relative">
-              <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold" style="z-index: 10;">1st</span>
+              <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-4 rounded-end fw-bold d-flex align-items-center" style="z-index: 10;"><i class="bi bi-trophy-fill me-1"></i>1st</span>
               <!-- 画像の表示 -->
               <% if first_item.photo.attached? %>
                 <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
@@ -65,9 +65,9 @@
             <% if @ranking_items.exists?(position: position) %>
               <% item = @ranking_items.find_by(position: position) %>
               <div class="col-6">
-                <div class="card h-100 border-0 shadow-sm rank-<%= position %>">
+                <div class="card h-100 border border-light shadow rank-<%= position %>">
                   <div class="position-relative">
-                    <span class="position-absolute top-0 start-0 bg-<%= position == 2 ? 'secondary' : 'danger' %> text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;"><%= position == 2 ? '2nd' : '3rd' %></span>
+                    <span class="position-absolute top-0 start-0 <%= position == 2 ? 'rank-badge-2nd' : 'rank-badge-3rd' %> text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;"><%= position == 2 ? '2nd' : '3rd' %></span>
                     <!-- 画像の表示 -->
                     <% if item.photo.attached? %>
                       <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
@@ -100,8 +100,9 @@
 
         <!-- 4位以降のランキングアイテム -->
         <div class="mt-3">
-          <% @ranking_items.where("position > 3").order(:position).each do |item| %>
-            <div class="card my-1 border-0 shadow-sm ranking-item bg-light"
+          <!-- 4位と5位のランキングアイテム -->
+          <% @ranking_items.where("position > 3 AND position <= 5").order(:position).each do |item| %>
+            <div class="card my-1 border border-light shadow-sm ranking-item bg-light"
                   data-ranking-sort-target="item"
                   data-id="<%= item.id %>">
               <div class="card-body p-2">
@@ -139,6 +140,70 @@
               </div>
             </div>
           <% end %>
+
+          <!-- 6位以降を表示するトグルボタン -->
+          <% if @ranking_items.where("position > 5").exists? %>
+            <div class="text-center mt-2" id="toggleButtonContainer">
+              <button class="btn btn-sm small btn-outline-secondary rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#moreRankings" aria-expanded="false" aria-controls="moreRankings" 
+                      onclick="document.getElementById('toggleButtonContainer').style.display='none'">
+                <i class="bi bi-chevron-down"></i> 6位以降のランキング
+                <span class="badge bg-secondary ms-1"><%= @ranking_items.where("position > 5").count %></span>
+              </button>
+            </div>
+
+            <!-- 6位以降のランキングアイテム（トグル表示） -->
+            <div class="collapse mt-2" id="moreRankings">
+              <div class="border-top pt-2">
+                <% @ranking_items.where("position > 5").order(:position).each do |item| %>
+                  <div class="card my-1 border border-light shadow ranking-item bg-light"
+                       data-ranking-sort-target="item"
+                       data-id="<%= item.id %>">
+                    <div class="card-body p-2">
+                      <div class="row align-items-center">
+                        <div class="col-1 text-center ps-2">
+                          <!-- ランク表示 -->
+                          <span class="position-number fw-bold fs-6 text-muted"><%= item.position %></span>
+                        </div>
+
+                        <div class="col-auto px-0 d-flex justify-content-start">
+                          <!-- 画像プレビュー（小さいサイズで統一） -->
+                          <% if item.photo.attached? %>
+                            <%= image_tag item.photo, class: "img-thumbnail", style: "width: 70px; height: 70px; object-fit: cover;" %>
+                          <% else %>
+                            <div class="placeholder-img img-thumbnail d-flex align-items-center"
+                                 style="width: 70px; height: 70px; background-color: #f8f9fa; border-radius: 0.25rem;">
+                              <i class="bi bi-image text-muted mx-auto"></i>
+                            </div>
+                          <% end %>
+                        </div>
+
+                        <div class="col text-start px-1">
+                          <!-- 店舗・メニュー情報 -->
+                          <h6 class="card-title mb-0 fs-6">
+                            <% if item.is_manual? %>
+                              <%= item.manual_shop_name %>
+                            <% elsif item.shop.present? %>
+                              <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark" %>
+                              <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
+                            <% end %>
+                          </h6>
+                          <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;"><%= item.menu_name %></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+                
+                <!-- 閉じるボタン -->
+                <div class="text-center mt-2">
+                  <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#moreRankings" aria-expanded="true" aria-controls="moreRankings"
+                          onclick="document.getElementById('toggleButtonContainer').style.display='block'">
+                    <i class="bi bi-chevron-up"></i> 閉じる
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     <% else %>
@@ -160,7 +225,7 @@
     <!-- ジャンル選択タブエリア（右側） -->
     <div class="col-12 col-md-2">
       <div class="genre-tabs-container sticky-top d-none d-md-block">
-        <div class="card border-0">
+        <div class="card border border-light shadow">
           <div class="card-header bg-white">
             <h5 class="mb-0 fw-bold text-dark">ジャンル</h5>
           </div>
