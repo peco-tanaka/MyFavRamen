@@ -24,9 +24,35 @@ body {
 }
 
 /* カードのホバーエフェクト */
-.rank-1:hover, .rank-2:hover, .rank-3:hover, .rank-4:hover, .rank-5:hover {
+.rank-1:hover, .rank-2:hover, .rank-3:hover, .ranking-item:hover {
   transform: translateY(-3px);
   transition: transform 0.2s;
+}
+
+/* 順位バッジのスタイル */
+.rank-1 .position-absolute {
+  /* 1位: 金色 (Bootstrapのwarningを使用) */
+  padding: 0.5rem 0.75rem !important;
+}
+.rank-badge-2nd {
+  /* 2位: 銀色 */
+  background-color: #c0c0c0; /* Silver */
+  padding: 0.3rem 0.6rem !important;
+  color: #333 !important; /* 暗めの文字色の方が見やすい */
+}
+.rank-badge-3rd {
+  /* 3位: 銅色 */
+  background-color: #cd7f32; /* Bronze */
+  padding: 0.3rem 0.6rem !important;
+}
+
+/* 店舗名リンクのホバーアニメーション */
+.rank-1 .card-title a.text-dark:hover,
+.rank-2 .card-title a.text-dark:hover,
+.rank-3 .card-title a.text-dark:hover,
+.ranking-item .card-title a.text-dark:hover {
+  color: var(--main-color) !important; /* ホバー時にメインカラーに変更 */
+  transition: color 0.2s ease-in-out; /* 色の変化を滑らかにする */
 }
 
 /* オレンジボタン */
@@ -100,5 +126,20 @@ body {
   /* モバイル表示時のカラム順序変更 */
   .col-md-3 {
     order: -1;
+  }
+  
+  /* モバイル表示時は影を消す */
+  .rank-1, .rank-2, .rank-3, .ranking-item {
+    box-shadow: none !important;
+  }
+  
+  /* 6位以降のアイテムも影を消す */
+  #moreRankings .ranking-item {
+    box-shadow: none !important;
+  }
+  
+  /* カードボディの背景色を白に統一 */
+  .card-body {
+    background-color: #fff !important;
   }
 }
