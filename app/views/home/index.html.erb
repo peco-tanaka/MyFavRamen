@@ -1,13 +1,21 @@
 <%# ヒーローセクション - より視覚的なインパクトを追加 %>
 <div class="hero-section position-relative overflow-hidden py-5 mb-5">
   <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(253,126,20,0.7) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.9;"></div>
-  
+
   <div class="container">
-    <div class="row py-5 align-items-center">
+    <div class="row py-2 align-items-center">
       <div class="col-lg-7 text-white">
-        <h1 class="display-4 fw-bold mb-3">MyFavらぁめん</h1>
-        <h2 class="h3 mb-4">自分だけのラーメンランキングを作ろう！</h2>
-        <p class="lead mb-4">MyFavらぁめんは、あなたのお気に入りの一杯をランキング形式で記録、共有できるサービスです。食べた感動を記録して、あなただけの「推しラーメン」を世界に発信しよう！</p>
+        <div class="mb-3">
+          <div class="logo-container text-center p-0 my-1">
+            <h1 class="logo-text text-center">
+              <span class="logo-my text-white">My</span>
+              <span class="logo-fav text-white">Fav</span>
+              <span class="logo-ramen text-white">らぁめん</span>
+            </h1>
+          </div>
+        </div>
+        <h3 class="mb-4">自分だけのラーメンランキングを作ろう！</h3>
+        <p class="lead mb-4">お気に入りの一杯を記録し、自分だけのランキングを作成！評価ではなく「好き」を大切にする、ポジティブなラーメン好きのためのサービスです。</p>
         <div class="d-flex flex-wrap gap-2 mb-3">
           <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-light btn-lg rounded-pill px-4 shadow-sm text-orange fw-bold' %>
           <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4">使い方を見る</a>
@@ -16,8 +24,10 @@
       <div class="col-lg-5 d-none d-lg-block">
         <div class="demo-device shadow-lg rounded-4 bg-white p-3 mx-auto" style="max-width: 400px; transform: rotate(3deg);">
           <div class="device-header text-center p-1 mb-2">
-            <div class="logo-text text-center">
-              <span class="logo-my" style="color: #fd7e14; font-weight: bold;">My</span><span class="logo-fav" style="color: #fd7e14; font-weight: bold;">Fav</span><span class="logo-ramen" style="color: #212529; font-weight: normal;">らぁめん</span>
+            <div class="logo-container text-center p-0 my-1">
+              <h3 class="logo-text text-center">
+                <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
+              </h3>
             </div>
           </div>
           <div class="demo-ranking">
@@ -66,10 +76,11 @@
 </div>
 
 <%# 特徴セクション - アイコンと視覚的要素を追加 %>
-<div class="container mb-6">
+<div class="container">
   <div class="text-center mb-5">
-    <h2 class="h2 mb-3">MyFavらぁめんの特徴</h2>
-    <p class="lead text-muted">ラーメン好きのための、ラーメン好きによるサービスです</p>
+    <h2 class="h2 mb-3">
+      <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>の特徴</h2>
+    <p class="lead text-muted">お気に入りのラーメンを記録に残したい！そんなラーメン好きの要望を叶えるサービスです</p>
   </div>
   
   <div class="row g-4 mb-5">
@@ -81,7 +92,7 @@
             <i class="bi bi-trophy fs-1"></i>
           </div>
           <h4 class="card-title mb-3">あなただけのランキング</h4>
-          <p class="card-text">お気に入りのラーメンを好きな順番でランキング付け。あなただけの「推しラーメン」リストを作れます。ジャンル別のランキングも自由自在！</p>
+          <p class="card-text">お気に入りのラーメンを好きな順番でランキング付け。あなただけの「ラーメンランキング」を作れます。ジャンル別のランキングも自由自在！</p>
         </div>
       </div>
     </div>
@@ -248,13 +259,11 @@
       <div class="col-lg-7">
         <div class="demo-ranking shadow rounded-3 border-0 p-4 bg-white">
           <!-- ランキングのタイトル -->
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="logo-text">
-              <span class="logo-my fs-4" style="color: #fd7e14; font-weight: bold;">My</span><span class="logo-fav fs-4" style="color: #fd7e14; font-weight: bold;">Fav</span><span class="logo-ramen fs-4" style="color: #212529; font-weight: normal;">らぁめん</span>
-            </div>
-            <div class="user-info d-flex align-items-center">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-2" width="40" height="40" alt="ユーザーアイコン">
-              <span class="fw-bold">ラーメン太郎</span>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="logo-container text-center p-0 my-1">
+              <h3 class="logo-text text-center">
+                <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
+              </h3>
             </div>
           </div>
           
