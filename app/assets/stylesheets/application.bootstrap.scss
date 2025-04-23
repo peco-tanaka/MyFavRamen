@@ -17,7 +17,10 @@
 
 // 5. コンポーネントのスタイルをインポート
 @import "components/logo";
+@import "components/sort";
 
 // 6. ページ固有のスタイルをインポート
 @import "pages/rankings";
 @import "pages/map";
+@import "pages/edit_rankings";
+@import "pages/home";

@@ -1,1183 +1,433 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyFavらぁめん - 自分だけのラーメンランキング</title>
+<%# ヒーローセクション - より視覚的なインパクトを追加 %>
+<div class="hero-section position-relative overflow-hidden py-5 mb-5">
+  <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(253,126,20,0.7) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.9;"></div>
+  
+  <div class="container">
+    <div class="row py-5 align-items-center">
+      <div class="col-lg-7 text-white">
+        <h1 class="display-4 fw-bold mb-3">MyFavらぁめん</h1>
+        <h2 class="h3 mb-4">自分だけのラーメンランキングを作ろう！</h2>
+        <p class="lead mb-4">MyFavらぁめんは、あなたのお気に入りの一杯をランキング形式で記録、共有できるサービスです。食べた感動を記録して、あなただけの「推しラーメン」を世界に発信しよう！</p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-light btn-lg rounded-pill px-4 shadow-sm text-orange fw-bold' %>
+          <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4">使い方を見る</a>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="demo-device shadow-lg rounded-4 bg-white p-3 mx-auto" style="max-width: 400px; transform: rotate(3deg);">
+          <div class="device-header text-center p-1 mb-2">
+            <div class="logo-text text-center">
+              <span class="logo-my" style="color: #fd7e14; font-weight: bold;">My</span><span class="logo-fav" style="color: #fd7e14; font-weight: bold;">Fav</span><span class="logo-ramen" style="color: #212529; font-weight: normal;">らぁめん</span>
+            </div>
+          </div>
+          <div class="demo-ranking">
+            <!-- TOP3のラーメン表示 -->
+            <div class="top-3-container mb-3">
+              <!-- 2位 -->
+              <div class="rank-item rank-2 shadow-sm rounded" style="position: absolute; width: 35%; left: 0; top: 20%; z-index: 1; transform: rotate(-5deg);">
+                <span class="position-absolute top-0 start-0 bg-secondary text-white px-2 py-1 rounded-end fw-bold fs-6">2</span>
+                <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" class="card-img-top" alt="ラーメン2位">
+                <div class="p-1 bg-white text-center">
+                  <h6 class="mb-0 fs-6">特製醤油ラーメン</h6>
+                </div>
+              </div>
+              
+              <!-- 1位（中央・大きめ） -->
+              <div class="rank-item rank-1 shadow rounded" style="position: relative; width: 65%; margin: 0 auto; z-index: 2;">
+                <span class="position-absolute top-0 start-0 bg-warning text-white px-2 py-1 rounded-end fw-bold d-flex align-items-center"><i class="bi bi-trophy-fill me-1"></i>1</span>
+                <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1073&q=80" class="card-img-top" alt="ラーメン1位">
+                <div class="p-2 bg-white text-center">
+                  <h5 class="mb-1 fs-6">特製とんこつラーメン</h5>
+                  <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>感動の一杯</p>
+                </div>
+              </div>
+              
+              <!-- 3位 -->
+              <div class="rank-item rank-3 shadow-sm rounded" style="position: absolute; width: 35%; right: 0; top: 20%; z-index: 1; transform: rotate(5deg);">
+                <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 rounded-end fw-bold fs-6">3</span>
+                <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="ラーメン3位">
+                <div class="p-1 bg-white text-center">
+                  <h6 class="mb-0 fs-6">味噌ラーメン</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- 波形の区切り -->
+  <div class="position-absolute bottom-0 start-0 w-100">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" class="wave" preserveAspectRatio="none" style="width: 100%; height: 50px;">
+      <path fill="#ffffff" fill-opacity="1" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
+    </svg>
+  </div>
+</div>
 
-    <style>
-        /* --- 基本設定 --- */
-        :root {
-            /* メインカラー */
-            --main-orange: #FF7A00;
-            --deep-orange: #E65100;
-            --light-orange: #FFE0B2;
-            
-            /* 補色カラー */
-            --accent-blue: #0077B6;
-            --light-blue: #90E0EF;
-            
-            /* 中間色 */
-            --warm-beige: #FFF8E1;
-            --dark-brown: #3E2723;
-            --red-accent: #D32F2F;
-            
-            /* テキストカラー */
-            --text-dark: #333333;
-            --text-light: #FFFFFF;
-            --text-muted: #757575;
-            
-            /* 効果 */
-            --default-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            --hover-shadow: 0 10px 30px rgba(255, 122, 0, 0.25);
-            --button-shadow: 0 6px 12px rgba(230, 81, 0, 0.3);
-            
-            /* 角丸 */
-            --radius-small: 8px;
-            --radius-medium: 16px;
-            --radius-large: 24px;
-            --radius-circle: 50%;
-        }
+<%# 特徴セクション - アイコンと視覚的要素を追加 %>
+<div class="container mb-6">
+  <div class="text-center mb-5">
+    <h2 class="h2 mb-3">MyFavらぁめんの特徴</h2>
+    <p class="lead text-muted">ラーメン好きのための、ラーメン好きによるサービスです</p>
+  </div>
+  
+  <div class="row g-4 mb-5">
+    <!-- 特徴1 -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
+          <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+            <i class="bi bi-trophy fs-1"></i>
+          </div>
+          <h4 class="card-title mb-3">あなただけのランキング</h4>
+          <p class="card-text">お気に入りのラーメンを好きな順番でランキング付け。あなただけの「推しラーメン」リストを作れます。ジャンル別のランキングも自由自在！</p>
+        </div>
+      </div>
+    </div>
 
-        body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: var(--warm-beige);
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-        
-        h1, h2, h3, h4, h5, .brand-font {
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            font-weight: 700;
-        }
-        
-        /* --- 共通スタイル --- */
-        .section-bg-pattern {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .section-bg-pattern::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff9800' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-            z-index: -1;
-        }
-        
-        .btn {
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: all 0.5s ease;
-        }
-        
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            transition: all 0.5s ease;
-            z-index: -1;
-        }
-        
-        .btn:hover::after {
-            left: 0;
-        }
-        
-        .btn-primary {
-            background-color: var(--main-orange);
-            border: none;
-            box-shadow: var(--button-shadow);
-            padding: 12px 24px;
-            border-radius: var(--radius-medium);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--deep-orange);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px rgba(230, 81, 0, 0.4);
-        }
-        
-        .btn-secondary {
-            background-color: var(--accent-blue);
-            border: none;
-            box-shadow: 0 6px 12px rgba(0, 119, 182, 0.3);
-            padding: 12px 24px;
-            border-radius: var(--radius-medium);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #005A8D;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px rgba(0, 119, 182, 0.4);
-        }
-        
-        .card {
-            border: none;
-            border-radius: var(--radius-medium);
-            box-shadow: var(--default-shadow);
-            transition: all 0.5s ease;
-        }
-        
-        .animated-element {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-        
-        .animated-element.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* --- ナビゲーションバー --- */
-        .navbar {
-            background: linear-gradient(135deg, var(--main-orange), var(--deep-orange));
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-        
-        .navbar.scrolled {
-            padding: 10px 0;
-            background: rgba(255, 122, 0, 0.95);
-            backdrop-filter: blur(10px);
-        }
-        
-        .navbar-brand {
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            font-weight: 800;
-            font-size: 1.6rem;
-            color: var(--text-light);
-            position: relative;
-            padding-left: 40px;
-        }
-        
-        .navbar-brand::before {
-            content: "🍜";
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%) rotate(-15deg);
-            font-size: 1.8rem;
-            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
-        }
-        
-        .nav-link {
-            color: var(--text-light) !important;
-            font-weight: 500;
-            margin: 0 5px;
-            position: relative;
-            padding: 8px 15px !important;
-            border-radius: var(--radius-small);
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: white;
-            transform: translateX(-50%);
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 60%;
-        }
-        
-        .nav-link.btn-signup {
-            background-color: var(--accent-blue);
-            color: white !important;
-            padding: 8px 18px !important;
-            margin-left: 15px;
-            border-radius: var(--radius-medium);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .nav-link.btn-signup:hover {
-            background-color: #005A8D;
-            transform: translateY(-3px);
-        }
-        
-        /* --- ヒーローセクション --- */
-        .hero {
-            position: relative;
-            padding: 180px 0 120px;
-            background: linear-gradient(170deg, var(--deep-orange), var(--main-orange));
-            overflow: hidden;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .hero-title {
-            font-size: 4rem;
-            color: white;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            transform: translateY(-30px);
-            animation: fadeInDown 1s ease forwards;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.8rem;
-            color: var(--light-orange);
-            margin-bottom: 2rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s 0.3s ease forwards;
-        }
-        
-        .hero-description {
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: white;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s 0.6s ease forwards;
-        }
-        
-        .hero-buttons {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s 0.9s ease forwards;
-        }
-        
-        .hero-decoration {
-            position: absolute;
-            z-index: 1;
-        }
-        
-        .hero-decoration-1 {
-            bottom: -10%;
-            right: -5%;
-            width: 300px;
-            height: 300px;
-            background: var(--accent-blue);
-            border-radius: var(--radius-circle);
-            opacity: 0.1;
-        }
-        
-        .hero-decoration-2 {
-            top: 20%;
-            left: -5%;
-            width: 200px;
-            height: 200px;
-            background: var(--light-blue);
-            border-radius: var(--radius-circle);
-            opacity: 0.1;
-        }
-        
-        .hero-decoration-3 {
-            bottom: 30%;
-            right: 15%;
-            width: 80px;
-            height: 80px;
-            background: var(--red-accent);
-            border-radius: var(--radius-circle);
-            opacity: 0.2;
-        }
-        
-        .hero-image-container {
-            position: relative;
-        }
-        
-        .hero-image {
-            position: relative;
-            z-index: 2;
-            max-width: 100%;
-            border-radius: var(--radius-large);
-            box-shadow: var(--default-shadow);
-            transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
-            opacity: 0;
-            animation: fadeInRight 1s 1.2s ease forwards;
-        }
-        
-        /* --- 機能セクション --- */
-        .features-section {
-            padding: 100px 0;
-            background-color: white;
-            position: relative;
-        }
-        
-        .section-title-container {
-            margin-bottom: 60px;
-            text-align: center;
-        }
-        
-        .section-subtitle {
-            display: inline-block;
-            background-color: var(--light-orange);
-            color: var(--deep-orange);
-            font-weight: 600;
-            padding: 5px 15px;
-            border-radius: var(--radius-small);
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .section-title {
-            font-size: 2.5rem;
-            color: var(--deep-orange);
-            margin-bottom: 20px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--main-orange);
-            border-radius: var(--radius-small);
-        }
-        
-        .feature-card {
-            padding: 30px;
-            border-radius: var(--radius-medium);
-            background: white;
-            position: relative;
-            margin-bottom: 30px;
-            overflow: hidden;
-            height: 100%;
-            transition: all 0.5s ease;
-            border-top: 5px solid var(--main-orange);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--hover-shadow);
-        }
-        
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(to right, var(--main-orange), var(--accent-blue));
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-        
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-        
-        .feature-icon-wrapper {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-circle);
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
-            background: var(--light-orange);
-        }
-        
-        .feature-icon-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border-radius: var(--radius-circle);
-            background: linear-gradient(135deg, var(--main-orange), var(--deep-orange));
-            z-index: -1;
-            opacity: 0.3;
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--main-orange);
-        }
-        
-        .feature-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--deep-orange);
-        }
-        
-        .feature-text {
-            color: var(--text-muted);
-            line-height: 1.7;
-            margin-bottom: 0;
-        }
-        
-        /* --- ランキングデモセクション --- */
-        .ranking-demo {
-            padding: 120px 0;
-            background-color: var(--warm-beige);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .ranking-demo::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='84' height='48' viewBox='0 0 84 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h12v6H0V0zm28 8h12v6H28V8zm14-8h12v6H42V0zm14 0h12v6H56V0zm0 8h12v6H56V8zM42 8h12v6H42V8zm0 16h12v6H42v-6zm14-8h12v6H56v-6zm14 0h12v6H70v-6zm0-16h12v6H70V0zM28 32h12v6H28v-6zM14 16h12v6H14v-6zM0 24h12v6H0v-6zm0 8h12v6H0v-6zm14 0h12v6H14v-6zm14 8h12v6H28v-6zm-14 0h12v6H14v-6zm28 0h12v6H42v-6zm14-8h12v6H56v-6zm0-8h12v6H56v-6zm14 8h12v6H70v-6zm0 8h12v6H70v-6zM14 24h12v6H14v-6zm14-8h12v6H28v-6zM14 8h12v6H14V8zM0 8h12v6H0V8z' fill='%23FF7A00' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-        
-        .ranking-card {
-            background: white;
-            border-radius: var(--radius-medium);
-            box-shadow: var(--default-shadow);
-            padding: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            position: relative;
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateX(-30px);
-        }
-        
-        .ranking-card.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .ranking-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--hover-shadow);
-        }
-        
-        .ranking-position {
-            position: absolute;
-            top: -15px;
-            left: -15px;
-            width: 50px;
-            height: 50px;
-            background: var(--main-orange);
-            color: white;
-            border-radius: var(--radius-circle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 10px rgba(255, 122, 0, 0.3);
-            z-index: 2;
-        }
-        
-        .ranking-card:nth-child(1) .ranking-position {
-            background: linear-gradient(135deg, #FFC107, #FF9800);
-        }
-        
-        .ranking-card:nth-child(2) .ranking-position {
-            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
-        }
-        
-        .ranking-card:nth-child(3) .ranking-position {
-            background: linear-gradient(135deg, #D35400, #A04000);
-        }
-        
-        .ranking-img {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius-small);
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        
-        .ranking-content {
-            flex: 1;
-        }
-        
-        .ranking-title {
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-            color: var(--deep-orange);
-        }
-        
-        .ranking-subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .ranking-comment {
-            background: var(--light-orange);
-            padding: 10px 15px;
-            border-radius: var(--radius-small);
-            font-size: 0.9rem;
-            margin-bottom: 0;
-            color: var(--deep-orange);
-            position: relative;
-        }
-        
-        .ranking-comment::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-bottom: 8px solid var(--light-orange);
-        }
-        
-        .ranking-demo-img {
-            max-width: 100%;
-            border-radius: var(--radius-medium);
-            box-shadow: var(--default-shadow);
-            transform: perspective(1000px) rotateY(15deg) rotateX(5deg);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-        
-        .ranking-demo-img.visible {
-            opacity: 1;
-        }
-        
-        .ranking-demo-img:hover {
-            transform: perspective(1000px) rotateY(0) rotateX(0);
-        }
-        
-        /* --- ユーザー登録セクション --- */
-        .cta-section {
-            padding: 100px 0;
-            background: linear-gradient(135deg, var(--main-orange), var(--deep-orange));
-            clip-path: polygon(0 15%, 100% 0, 100% 85%, 0 100%);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.3;
-            z-index: -1;
-        }
-        
-        .cta-content {
-            text-align: center;
-            color: white;
-        }
-        
-        .cta-title {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .cta-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: a 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .cta-button {
-            margin: 10px;
-            min-width: 200px;
-        }
-        
-        .btn-cta-primary {
-            background-color: white;
-            color: var(--deep-orange);
-            border: none;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn-cta-primary:hover {
-            background-color: var(--accent-blue);
-            color: white;
-        }
-        
-        .btn-cta-secondary {
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-        
-        .btn-cta-secondary:hover {
-            background-color: white;
-            color: var(--deep-orange);
-        }
-        
-        .cta-decoration {
-            position: absolute;
-        }
-        
-        .cta-decoration-1 {
-            bottom: 20%;
-            left: 10%;
-            font-size: 4rem;
-            opacity: 0.2;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .cta-decoration-2 {
-            top: 30%;
-            right: 10%;
-            font-size: 3rem;
-            opacity: 0.2;
-            animation: float 4s ease-in-out infinite;
-        }
-        
-        .cta-decoration-3 {
-            bottom: 30%;
-            right: 15%;
-            font-size: 5rem;
-            opacity: 0.2;
-            animation: float 5s ease-in-out infinite;
-        }
-        
-        .cta-note {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-top: 20px;
-        }
-        
-        .cta-note a {
-            color: white;
-            text-decoration: underline;
-        }
-        
-        /* --- フッター --- */
-        .footer {
-            background-color: var(--dark-brown);
-            color: var(--light-orange);
-            padding: 60px 0 30px;
-            position: relative;
-        }
-        
-        .footer-logo {
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            font-weight: 700;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        
-        .footer-description {
-            color: #E0E0E0;
-            max-width: 300px;
-            margin-bottom: 30px;
-            line-height: 1.7;
-        }
-        
-        .footer-title {
-            font-size: 1.3rem;
-            color: white;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .footer-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: var(--main-orange);
-            border-radius: var(--radius-small);
-        }
-        
-        .footer-link {
-            display: block;
-            color: #E0E0E0;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-        
-        .footer-link:hover {
-            color: var(--main-orange);
-            transform: translateX(5px);
-        }
-        
-        .footer-link i {
-            margin-right: 10px;
-            color: var(--main-orange);
-        }
-        
-        .footer-bottom {
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-        
-        .footer-copyright {
-            color: #9E9E9E;
-            font-size: 0.9rem;
-        }
-        
-        /* --- アニメーション --- */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translateX(30px) perspective(1000px) rotateY(-15deg) rotateX(5deg); }
-            to { opacity: 1; transform: translateX(0) perspective(1000px) rotateY(-15deg) rotateX(5deg); }
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0); }
-        }
-        
-        /* --- レスポンシブ --- */
-        @media (max-width: 1199.98px) {
-            .hero {
-                padding: 150px 0 100px;
-            }
-            .hero-title {
-                font-size: 3.5rem;
-            }
-            .cta-decoration-1, .cta-decoration-2, .cta-decoration-3 {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 991.98px) {
-            .hero {
-                padding: 130px 0 80px;
-                clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-            }
-            .hero-title {
-                font-size: 3rem;
-            }
-            .hero-subtitle {
-                font-size: 1.5rem;
-            }
-            .hero-image {
-                margin-top: 40px;
-                transform: perspective(1000px) rotateY(0) rotateX(0);
-            }
-            .section-title {
-                font-size: 2.2rem;
-            }
-            .feature-card {
-                margin-bottom: 30px;
-            }
-            .ranking-demo-img {
-                margin-top: 40px;
-                transform: perspective(1000px) rotateY(0) rotateX(0);
-            }
-            .cta-section {
-                clip-path: polygon(0 5%, 100% 0, 100% 95%, 0 100%);
-            }
-        }
-        
-        @media (max-width: 767.98px) {
-            .navbar-brand {
-                font-size: 1.4rem;
-            }
-            .hero {
-                padding: 120px 0 60px;
-            }
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            .hero-subtitle {
-                font-size: 1.3rem;
-            }
-            .hero-description {
-                font-size: 1rem;
-            }
-            .section-title {
-                font-size: 2rem;
-            }
-            .cta-title {
-                font-size: 2rem;
-            }
-            .cta-subtitle {
-                font-size: 1.1rem;
-            }
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            .footer {
-                text-align: center;
-            }
-            .footer-title::after {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-        
-        @media (max-width: 575.98px) {
-            .navbar-brand {
-                font-size: 1.2rem;
-                padding-left: 30px;
-            }
-            .navbar-brand::before {
-                font-size: 1.4rem;
-            }
-            .hero {
-                padding: 110px 0 50px;
-            }
-            .hero-title {
-                font-size: 2.2rem;
-            }
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-            .hero-buttons .btn {
-                width: 100%;
-                margin-bottom: 15px;
-            }
-            .section-title {
-                font-size: 1.8rem;
-            }
-            .ranking-img {
-                width: 60px;
-                height: 60px;
-            }
-            .ranking-title {
-                font-size: 1.1rem;
-            }
-            .cta-title {
-                font-size: 1.8rem;
-            }
-            .cta-button {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- ナビゲーションバー -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">MyFavらぁめん</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+    <!-- 特徴2 -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
+          <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+            <i class="bi bi-journal-richtext fs-1"></i>
+          </div>
+          <h4 class="card-title mb-3">食べた記録を残す</h4>
+          <p class="card-text">感動した一杯を写真と共に記録。あなたのラーメン巡礼の思い出を残せます。訪問履歴はプロフィールページでいつでも振り返れます。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 特徴3 -->
+    <div class="col-md-4">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
+          <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+            <i class="bi bi-people fs-1"></i>
+          </div>
+          <h4 class="card-title mb-3">ゆるくつながる</h4>
+          <p class="card-text">ラーメン仲間のランキングをチェックして、新たな一杯との出会いを。お気に入りの店舗を共有して、ラーメン好き同士の交流を楽しめます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# ランキングデモセクション - より分かりやすく %>
+<div class="ranking-demo-section py-5 bg-light">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-12 text-center">
+        <h2 class="mb-3">こんなランキングが作れます</h2>
+        <p class="lead text-muted mb-4">あなたのお気に入りのラーメンをランキングにして記録・共有しましょう</p>
+      </div>
+    </div>
+
+    <!-- 二分割されたセクション -->
+    <div class="row g-4 align-items-center">
+      <!-- 左側：編集可能なランキングデモ -->
+      <div class="col-lg-5">
+        <div class="card shadow border-0 rounded-3 p-3">
+          <h4 class="text-center mb-3 text-orange"><i class="bi bi-pencil-square me-2"></i>ドラッグ＆ドロップで編集</h4>
+          <div class="alert alert-light border mb-3 small">
+            <i class="bi bi-info-circle me-1"></i>
+            各項目をドラッグして順位を入れ替えたり、お好みで編集できます
+          </div>
+
+          <!-- 編集可能なランキングアイテムのデモ -->
+          <div id="sortable-ranking-items" class="ranking-items-list"
+                data-controller="ranking-sort"
+                data-ranking-sort-target="container"
+                data-ranking-sort-demo-value="true">
+            <!-- 1位のアイテム -->
+            <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-1" data-ranking-sort-target="item" data-position="1">
+              <div class="card-body p-2">
+                <div class="row align-items-center">
+                  <div class="col-1 text-center ps-2">
+                    <span class="position-number fw-bold fs-6 text-warning">1</span>
+                  </div>
+                  <div class="col-auto px-0 d-flex justify-content-start">
+                    <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
+                      <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
+                    </div>
+                  </div>
+                  <div class="col text-start px-1">
+                    <h6 class="card-title mb-0 fs-6">中華そば 青葉</h6>
+                    <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製中華そば</p>
+                    <p class="mb-0 text-truncate" style="font-size: 0.7rem;">
+                      <i class="bi bi-chat-quote-fill text-warning me-1"></i>
+                      スープの旨味が凝縮された一杯
+                    </p>
+                  </div>
+                  <div class="col-auto text-end px-1">
+                    <div class="d-flex flex-column gap-1">
+                      <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                        <i class="bi bi-pencil-fill me-1"></i>編集
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                        <i class="bi bi-trash-fill me-1"></i>削除
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 2位のアイテム -->
+            <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-2" data-ranking-sort-target="item" data-position="2">
+              <div class="card-body p-2">
+                <div class="row align-items-center">
+                  <div class="col-1 text-center ps-2">
+                    <span class="position-number fw-bold fs-6 text-secondary">2</span>
+                  </div>
+                  <div class="col-auto px-0 d-flex justify-content-start">
+                    <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
+                      <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
+                    </div>
+                  </div>
+                  <div class="col text-start px-1">
+                    <h6 class="card-title mb-0 fs-6">麺屋 一燈</h6>
+                    <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">芳醇醤油ラーメン</p>
+                  </div>
+                  <div class="col-auto text-end px-1">
+                    <div class="d-flex flex-column gap-1">
+                      <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                        <i class="bi bi-pencil-fill me-1"></i>編集
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                        <i class="bi bi-trash-fill me-1"></i>削除
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 3位のアイテム -->
+            <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-3" data-ranking-sort-target="item" data-position="3">
+              <div class="card-body p-2">
+                <div class="row align-items-center">
+                  <div class="col-1 text-center ps-2">
+                    <span class="position-number fw-bold fs-6 text-danger">3</span>
+                  </div>
+                  <div class="col-auto px-0 d-flex justify-content-start">
+                    <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
+                      <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
+                    </div>
+                  </div>
+                  <div class="col text-start px-1">
+                    <h6 class="card-title mb-0 fs-6">らぁ麺 やまぐち</h6>
+                    <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製らぁ麺</p>
+                  </div>
+                  <div class="col-auto text-end px-1">
+                    <div class="d-flex flex-column gap-1">
+                      <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                        <i class="bi bi-pencil-fill me-1"></i>編集
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                        <i class="bi bi-trash-fill me-1"></i>削除
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- ラーメン追加ボタン（デモ） -->
+          <div class="text-center mt-3">
+            <button class="btn btn-orange rounded-pill px-4 shadow-sm">
+              <i class="bi bi-plus-circle-fill me-2"></i> ラーメン追加
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">ホーム</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/rankings">みんなのランキング</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users/sign_in">ログイン</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn-signup" href="/users/sign_up">新規登録</a>
-                    </li>
-                </ul>
-            </div>
+          </div>
         </div>
-    </nav>
-
-    <!-- ヒーローセクション -->
-    <section class="hero">
-        <div class="hero-decoration hero-decoration-1"></div>
-        <div class="hero-decoration hero-decoration-2"></div>
-        <div class="hero-decoration hero-decoration-3"></div>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="hero-content text-center text-lg-start">
-                        <h1 class="hero-title">MyFavらぁめん</h1>
-                        <h2 class="hero-subtitle">あなただけのラーメンランキング</h2>
-                        <p class="hero-description">
-                            感動の一杯を記録し、自分だけのランキングを作成・共有。評価ではなく「好き」を大切にする、ポジティブなラーメン愛好家のためのコミュニティです。
-                        </p>
-                        <div class="hero-buttons">
-                            <a href="/users/sign_up" class="btn btn-primary me-3 mb-2 mb-md-0">無料ではじめる</a>
-                            <a href="/rankings" class="btn btn-secondary">ランキングを見る</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="hero-image-container text-center">
-                        <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?q=80&w=1470&auto=format&fit=crop" alt="ラーメンランキングのイメージ" class="hero-image">
-                    </div>
-                </div>
+      </div>
+      
+      <!-- 右側：完成したランキングの表示 -->
+      <div class="col-lg-7">
+        <div class="demo-ranking shadow rounded-3 border-0 p-4 bg-white">
+          <!-- ランキングのタイトル -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="logo-text">
+              <span class="logo-my fs-4" style="color: #fd7e14; font-weight: bold;">My</span><span class="logo-fav fs-4" style="color: #fd7e14; font-weight: bold;">Fav</span><span class="logo-ramen fs-4" style="color: #212529; font-weight: normal;">らぁめん</span>
             </div>
+            <div class="user-info d-flex align-items-center">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-2" width="40" height="40" alt="ユーザーアイコン">
+              <span class="fw-bold">ラーメン太郎</span>
+            </div>
+          </div>
+          
+          <div class="row g-3">
+            <!-- 1位のカード（左側） -->
+            <div class="col-12 col-md-5">
+              <div class="card mb-3 border-0 shadow rank-1 rounded-3 overflow-hidden">
+                <div class="position-relative">
+                  <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold d-flex align-items-center" style="z-index: 10;"><i class="bi bi-trophy-fill me-1"></i>1st</span>
+                  <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン1位">
+                  </div>
+                </div>
+                <div class="card-body py-3 text-center">
+                  <h5 class="card-title mb-2 fs-5">中華そば 青葉 <span class="mx-1">/</span> <span class="text-muted small fs-6">特製中華そば</span></h5>
+                  <div class="comment-box bg-light p-2 rounded border mt-2">
+                    <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>スープの旨味が凝縮された一杯。何度食べても感動します！</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2位以降のランキングアイテム（右側） -->
+            <div class="col-12 col-md-7">
+              <!-- 2位と3位のカード -->
+              <div class="row g-3 mb-3">
+                <!-- 2位 -->
+                <div class="col-6">
+                  <div class="card h-100 border-0 shadow rank-2 rounded-3 overflow-hidden">
+                    <div class="position-relative">
+                      <span class="position-absolute top-0 start-0 bg-secondary text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;">2nd</span>
+                      <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン2位">
+                      </div>
+                    </div>
+                    <div class="card-body py-2 text-center">
+                      <h6 class="card-title mb-0">麺屋 一燈</h6>
+                      <p class="card-text text-muted fs-6 mb-0">芳醇醤油ラーメン</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 3位 -->
+                <div class="col-6">
+                  <div class="card h-100 border-0 shadow rank-3 rounded-3 overflow-hidden">
+                    <div class="position-relative">
+                      <span class="position-absolute top-0 start-0 bg-danger text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;">3rd</span>
+                      <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン3位">
+                      </div>
+                    </div>
+                    <div class="card-body py-2 text-center">
+                      <h6 class="card-title mb-0">らぁ麺 やまぐち</h6>
+                      <p class="card-text text-muted fs-6 mb-0">特製らぁ麺</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 4位以降のリスト形式 -->
+              <div class="card mb-2 border-0 shadow-sm ranking-item bg-light rounded-3">
+                <div class="card-body p-2">
+                  <div class="row align-items-center">
+                    <div class="col-1 text-center ps-2">
+                      <span class="position-number fw-bold fs-5">4</span>
+                    </div>
+                    <div class="col-auto px-0">
+                      <div class="img-thumbnail rounded-3" style="width: 70px; height: 70px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1632709810780-a7f370a40daa?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン4位">
+                      </div>
+                    </div>
+                    <div class="col text-start px-2">
+                      <h6 class="card-title mb-0 fs-6">麺処 ほん田</h6>
+                      <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">味玉入り濃厚煮干しそば</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card mb-2 border-0 shadow-sm ranking-item bg-light rounded-3">
+                <div class="card-body p-2">
+                  <div class="row align-items-center">
+                    <div class="col-1 text-center ps-2">
+                      <span class="position-number fw-bold fs-5">5</span>
+                    </div>
+                    <div class="col-auto px-0">
+                      <div class="img-thumbnail rounded-3" style="width: 70px; height: 70px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン5位">
+                      </div>
+                    </div>
+                    <div class="col text-start px-2">
+                      <h6 class="card-title mb-0 fs-6">中華そば 向日葵</h6>
+                      <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製中華そば</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- 機能セクション -->
-    <section class="features-section section-bg-pattern">
-        <div class="container">
-            <div class="section-title-container">
-                <div class="section-subtitle">楽しみ方</div>
-                <h2 class="section-title">あなたのラーメン愛を記録する3つの機能</h2>
-                <p class="text-muted mb-0">シンプルで使いやすい機能で、あなたのラーメン体験を次のレベルへ</p>
+<%# 使い方ステップセクション - 新規追加 %>
+<div id="how-it-works" class="container py-5">
+  <div class="text-center mb-5">
+    <h2 class="mb-3">使い方は簡単3ステップ</h2>
+    <p class="lead text-muted">MyFavらぁめんでラーメン記録をもっと楽しく！</p>
+  </div>
+  
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="row g-4">
+        <!-- ステップ1 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm hover-card step-card">
+            <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem;">1</div>
+            <div class="card-body text-center p-4 pt-5 mt-3">
+              <div class="icon-container mb-3">
+                <i class="bi bi-person-plus fs-1 text-orange"></i>
+              </div>
+              <h5 class="card-title mb-3">アカウント登録</h5>
+              <p class="card-text">簡単な情報入力でアカウントを作成。無料ですぐに始められます。</p>
             </div>
-            
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 animated-element">
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <i class="bi bi-trophy-fill feature-icon"></i>
-                        </div>
-                        <h3 class="feature-title">あなただけのランキング</h3>
-                        <p class="feature-text">自分が食べたラーメン店を「俺ランク」として記録・整理。総合やジャンル別など、自由にカスタマイズできます。店舗への評価ではなく、あくまであなた自身の好みを表現する場所です。</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6 animated-element" style="animation-delay: 0.2s;">
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <i class="bi bi-camera-fill feature-icon"></i>
-                        </div>
-                        <h3 class="feature-title">食べた記録をシンプルに</h3>
-                        <p class="feature-text">店名、訪問日、写真、そしてトップ3には熱い想いを込めた一言コメントも。シンプルな操作で、感動した一杯の記憶をいつまでも残せます。複雑な入力は一切不要です。</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4 col-md-6 animated-element" style="animation-delay: 0.4s;">
-                    <div class="feature-card">
-                        <div class="feature-icon-wrapper">
-                            <i class="bi bi-people-fill feature-icon"></i>
-                        </div>
-                        <h3 class="feature-title">ラーメン好きとゆるく繋がる</h3>
-                        <p class="feature-text">他のユーザーのランキングを閲覧して新たな発見を。フォロー機能で気になるユーザーの更新をチェックできます。批判のない、ポジティブな交流の場で仲間と繋がりましょう。</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
-
-    <!-- ランキングデモセクション -->
-    <section class="ranking-demo">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="section-title-container text-center text-lg-start">
-                        <div class="section-subtitle">デモ</div>
-                        <h2 class="section-title">こんなランキングが作れます</h2>
-                        <p class="text-muted mb-4">ドラッグ＆ドロップで簡単に順位変更。あなただけのこだわりランキングを作成できます</p>
-                    </div>
-                    
-                    <div class="ranking-card-container">
-                        <div class="ranking-card animated-element">
-                            <div class="ranking-position">1</div>
-                            <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?w=400&auto=format" alt="一位のラーメン" class="ranking-img">
-                            <div class="ranking-content">
-                                <h4 class="ranking-title">中華そば 青葉</h4>
-                                <p class="ranking-subtitle">特製醤油ラーメン</p>
-                                <p class="ranking-comment">澄んだスープなのに旨味が凝縮。極上の一杯！</p>
-                            </div>
-                        </div>
-                        
-                        <div class="ranking-card animated-element" style="animation-delay: 0.2s;">
-                            <div class="ranking-position">2</div>
-                            <img src="https://images.unsplash.com/photo-1557872943-16a5ac26437e?w=400&auto=format" alt="二位のラーメン" class="ranking-img">
-                            <div class="ranking-content">
-                                <h4 class="ranking-title">麺屋 一燈</h4>
-                                <p class="ranking-subtitle">芳醇味噌ラーメン</p>
-                                <p class="ranking-comment">コクと深みが最高。寒い日に食べたい一杯。</p>
-                            </div>
-                        </div>
-                        
-                        <div class="ranking-card animated-element" style="animation-delay: 0.4s;">
-                            <div class="ranking-position">3</div>
-                            <img src="https://images.unsplash.com/photo-1626759486966-c067e3f79982?w=400&auto=format" alt="三位のラーメン" class="ranking-img">
-                            <div class="ranking-content">
-                                <h4 class="ranking-title">博多 一幸舎</h4>
-                                <p class="ranking-subtitle">元祖豚骨ラーメン</p>
-                                <p class="ranking-comment">あっさりなのに旨味が凝縮された豚骨スープ！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-6">
-                    <div class="text-center">
-                        <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?w=600&auto=format" alt="スマートフォンでのランキング画面" class="ranking-demo-img animated-element" style="animation-delay: 0.6s;">
-                    </div>
-                </div>
+        
+        <!-- ステップ2 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm hover-card step-card">
+            <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem;">2</div>
+            <div class="card-body text-center p-4 pt-5 mt-3">
+              <div class="icon-container mb-3">
+                <i class="bi bi-card-list fs-1 text-orange"></i>
+              </div>
+              <h5 class="card-title mb-3">ラーメンを登録</h5>
+              <p class="card-text">食べたラーメンを写真と共に記録。お店の情報も簡単に登録できます。</p>
             </div>
+          </div>
         </div>
-    </section>
-
-    <!-- ユーザー登録セクション -->
-    <section class="cta-section">
-        <div class="cta-decoration cta-decoration-1">🍜</div>
-        <div class="cta-decoration cta-decoration-2">🍥</div>
-        <div class="cta-decoration cta-decoration-3">🥢</div>
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="cta-title">あなただけのラーメン道を始めよう</h2>
-                <p class="cta-subtitle">MyFavらぁめんは完全無料。自分だけのラーメンランキングを作成して、感動の一杯を記録しませんか？</p>
-                
-                <div class="cta-buttons">
-                    <a href="/users/sign_up" class="btn btn-cta-primary btn-lg cta-button">今すぐ登録する（無料）</a>
-                    <a href="/users/sign_in" class="btn btn-cta-secondary btn-lg cta-button">ログインする</a>
-                </div>
-                
-                <p class="cta-note">
-                    アカウントをお持ちでない方は <a href="/users/password/new">パスワード再設定</a> をご利用ください
-                </p>
+        
+        <!-- ステップ3 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm hover-card step-card">
+            <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem;">3</div>
+            <div class="card-body text-center p-4 pt-5 mt-3">
+              <div class="icon-container mb-3">
+                <i class="bi bi-trophy fs-1 text-orange"></i>
+              </div>
+              <h5 class="card-title mb-3">ランキング作成</h5>
+              <p class="card-text">ドラッグ＆ドロップで簡単にランキングを作成。友達とシェアして楽しもう！</p>
             </div>
+          </div>
         </div>
-    </section>
+      </div>
+      
+      <!-- アクションボタン -->
+      <div class="text-center mt-5">
+        <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-lg btn-orange rounded-pill px-5 py-3 shadow-sm fw-bold' %>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- フッター -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                    <div class="footer-logo">🍜 MyFavらぁめん</div>
-                    <p class="footer-description">ラーメン愛好家のための、自分だけのラーメンランキングを作成・共有できるサービスです。</p>
-                </div>
-                
-                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                    <h3 class="footer-title">サービス</h3>
-                    <a href="/rankings" class="footer-link"><i class="bi bi-chevron-right"></i>ランキング一覧</a>
-                    <a href="/users/sign_up" class="footer-link"><i class="bi bi-chevron-right"></i>新規登録</a>
-                    <a href="/users/sign_in" class="footer-link"><i class="bi bi-chevron-right"></i>ログイン</a>
-                </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h3 class="footer-title">サポート</h3>
-                    <a href="#" class="footer-link"><i class="bi bi-question-circle"></i>よくある質問</a>
-                    <a href="#" class="footer-link"><i class="bi bi-envelope"></i>お問い合わせ</a>
-                    <a href="#" class="footer-link"><i class="bi bi-shield-check"></i>プライバシーポリシー</a>
-                    <a href="#" class="footer-link"><i class="bi bi-file-text"></i>利用規約</a>
-                </div>
-                
-                <div class="col-lg-3 col-md-6">
-                    <h3 class="footer-title">フォローする</h3>
-                    <a href="#" class="footer-link"><i class="bi bi-twitter"></i>Twitter</a>
-                    <a href="#" class="footer-link"><i class="bi bi-instagram"></i>Instagram</a>
-                    <a href="#" class="footer-link"><i class="bi bi-facebook"></i>Facebook</a>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p class="footer-copyright">&copy; 2025 MyFavらぁめん All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // スクロールアニメーション
-        document.addEventListener('DOMContentLoaded', function() {
-            // ナビゲーションバースクロール効果
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 50) {
-                    document.querySelector('.navbar').classList.add('scrolled');
-                } else {
-                    document.querySelector('.navbar').classList.remove('scrolled');
-                }
-            });
-            
-            // 要素表示アニメーション
-            const animatedElements = document.querySelectorAll('.animated-element');
-            
-            function checkIfInView() {
-                animatedElements.forEach(function(element) {
-                    const elementTop = element.getBoundingClientRect().top;
-                    const elementVisible = 150;
-                    
-                    if (elementTop < window.innerHeight - elementVisible) {
-                        element.classList.add('visible');
-                    }
-                });
-                
-                const rankingImg = document.querySelector('.ranking-demo-img');
-                if (rankingImg) {
-                    const imgTop = rankingImg.getBoundingClientRect().top;
-                    if (imgTop < window.innerHeight - 100) {
-                        rankingImg.classList.add('visible');
-                    }
-                }
-            }
-            
-            // 初期チェック
-            checkIfInView();
-            
-            // スクロール時チェック
-            window.addEventListener('scroll', checkIfInView);
-        });
-    </script>
-</body>
-</html>
+<%# 簡易トップフッター %>
+<div class="bg-light py-3 mt-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 mx-auto text-center">
+        <p class="small text-muted mb-0">© 2024 MyFavらぁめん All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+</div>

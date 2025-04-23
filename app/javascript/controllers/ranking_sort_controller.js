@@ -6,7 +6,8 @@ export default class extends Controller {
   static targets = ["container", "item"]
 
   static values = {
-    rankingId: Number
+    rankingId: Number,
+    demo: { type: Boolean, default: false }
   }
 
   connect() {
@@ -41,8 +42,12 @@ export default class extends Controller {
     // 新しい順序を計算
     this.updatePositions()
 
-    // サーバーに順序の変更を送信
-    this.saveNewOrder()
+    // デモモードでない場合のみサーバーに順序の変更を送信
+    if (!this.demoValue) {
+      this.saveNewOrder()
+    } else {
+      console.log("デモモードのため、サーバー通信をスキップします")
+    }
   }
 
   // 順序を変更するメソッド（この段階ではDBに保存されない）
@@ -66,9 +71,21 @@ export default class extends Controller {
 
   // サーバーに順序の変更を送信するメソッド
   async saveNewOrder() {
+    // デモモードの場合は処理をスキップ
+    if (this.demoValue) {
+      console.log("デモモードのため、サーバー通信をスキップします")
+      return
+    }
+
     try {
       // データの準備
       const rankingId = this.rankingIdValue
+      // rankingIdが設定されていない場合も処理をスキップ
+      if (!rankingId) {
+        console.log("rankingIdが設定されていないため、サーバー通信をスキップします")
+        return
+      }
+
       const itemPositions = {}
 
       // 各アイテムのIDと新しい位置を取得
