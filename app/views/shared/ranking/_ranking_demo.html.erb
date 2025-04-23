@@ -1,0 +1,231 @@
+<!-- 二分割されたセクション -->
+<div class="row g-4 align-items-center">
+  <!-- 左側：編集可能なランキングデモ -->
+  <div class="col-lg-5">
+    <div class="card shadow border-0 rounded-3 p-3">
+      <h5 class="text-center mb-3 text-orange"><i class="bi bi-pencil-square me-2"></i>ドラッグ＆ドロップで編集</h5>
+      <div class="alert alert-light border mb-3 small d-none d-md-block">
+        <i class="bi bi-info-circle me-1"></i>
+        各項目をドラッグして順位を入れ替えたり、お好みで編集できます
+      </div>
+
+      <!-- 編集可能なランキングアイテムのデモ -->
+      <div id="sortable-ranking-items" class="ranking-items-list"
+            data-controller="ranking-sort"
+            data-ranking-sort-target="container"
+            data-ranking-sort-demo-value="true">
+        <!-- 1位のアイテム -->
+        <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-1" data-ranking-sort-target="item" data-position="1">
+          <div class="card-body p-2">
+            <div class="row align-items-center">
+              <div class="col-1 text-center ps-2">
+                <span class="position-number fw-bold fs-6 text-warning">1</span>
+              </div>
+              <div class="col-auto px-0 d-flex justify-content-start">
+                <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
+                  <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
+                </div>
+              </div>
+              <div class="col text-start px-1">
+                <h6 class="card-title mb-0 fs-6">中華そば 青葉</h6>
+                <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製中華そば</p>
+                <p class="mb-0 text-truncate" style="font-size: 0.7rem;">
+                  <i class="bi bi-chat-quote-fill text-warning me-1"></i>
+                  スープがうまい！
+                </p>
+              </div>
+              <div class="col-auto text-end px-1">
+                <div class="d-flex flex-column gap-1">
+                  <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                    <i class="bi bi-pencil-fill me-1"></i><span class="d-none d-md-inline">編集</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                    <i class="bi bi-trash-fill me-1"></i><span class="d-none d-md-inline">削除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2位のアイテム -->
+        <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-2" data-ranking-sort-target="item" data-position="2">
+          <div class="card-body p-2">
+            <div class="row align-items-center">
+              <div class="col-1 text-center ps-2">
+                <span class="position-number fw-bold fs-6 rank-badge-2nd-text">2</span>
+              </div>
+              <div class="col-auto px-0 d-flex justify-content-start">
+                <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
+                  <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
+                </div>
+              </div>
+              <div class="col text-start px-1">
+                <h6 class="card-title mb-0 fs-6">麺屋 一燈</h6>
+                <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">芳醇醤油ラーメン</p>
+              </div>
+              <div class="col-auto text-end px-1">
+                <div class="d-flex flex-column gap-1">
+                  <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                    <i class="bi bi-pencil-fill me-1"></i><span class="d-none d-md-inline">編集</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                    <i class="bi bi-trash-fill me-1"></i><span class="d-none d-md-inline">削除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3位のアイテム -->
+        <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-3" data-ranking-sort-target="item" data-position="3">
+          <div class="card-body p-2">
+            <div class="row align-items-center">
+              <div class="col-1 text-center ps-2">
+                <span class="position-number fw-bold fs-6 rank-badge-3rd-text">3</span>
+              </div>
+              <div class="col-auto px-0 d-flex justify-content-start">
+                <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
+                  <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
+                </div>
+              </div>
+              <div class="col text-start px-1">
+                <h6 class="card-title mb-0 fs-6">らぁ麺 やまぐち</h6>
+                <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製らぁ麺</p>
+              </div>
+              <div class="col-auto text-end px-1">
+                <div class="d-flex flex-column gap-1">
+                  <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                    <i class="bi bi-pencil-fill me-1"></i><span class="d-none d-md-inline">編集</span>
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
+                    <i class="bi bi-trash-fill me-1"></i><span class="d-none d-md-inline">削除</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ラーメン追加ボタン（デモ） -->
+      <div class="text-center mt-3 d-none d-md-block">
+        <button class="btn btn-orange rounded-pill px-4 shadow-sm">
+          <i class="bi bi-plus-circle-fill me-2"></i> ラーメン追加
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右側：完成したランキングの表示 -->
+  <div class="col-lg-7">
+    <div class="demo-ranking shadow rounded-3 border-0 p-4 bg-white">
+      <!-- ランキングのタイトル -->
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="logo-container text-center p-0 my-1">
+          <h3 class="logo-text text-center">
+            <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
+          </h3>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <!-- 1位のカード（左側） -->
+        <div class="col-12 col-md-5">
+          <div class="card mb-3 border-0 shadow rank-1 rounded-3 overflow-hidden">
+            <div class="position-relative">
+              <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold d-flex align-items-center" style="z-index: 10;"><i class="bi bi-trophy-fill me-1"></i>1st</span>
+              <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン1位">
+              </div>
+            </div>
+            <div class="card-body py-3 text-center">
+              <h5 class="card-title mb-2 fs-5">中華そば 青葉 <span class="mx-1">/</span> <span class="text-muted small fs-6">特製中華そば</span></h5>
+              <div class="comment-box bg-light p-2 rounded border mt-2">
+                <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>スープの旨味が凝縮された一杯。何度食べても感動します！</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2位以降のランキングアイテム（右側） -->
+        <div class="col-12 col-md-7">
+          <!-- 2位と3位のカード -->
+          <div class="row g-3 mb-3">
+            <!-- 2位 -->
+            <div class="col-6">
+              <div class="card h-100 border-0 shadow rank-2 rounded-3 overflow-hidden">
+                <div class="position-relative">
+                  <span class="position-absolute top-0 start-0 bg-secondary text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;">2nd</span>
+                  <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン2位">
+                  </div>
+                </div>
+                <div class="card-body py-2 text-center">
+                  <h6 class="card-title mb-0">麺屋 一燈</h6>
+                  <p class="card-text text-muted fs-6 mb-0">芳醇醤油ラーメン</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3位 -->
+            <div class="col-6">
+              <div class="card h-100 border-0 shadow rank-3 rounded-3 overflow-hidden">
+                <div class="position-relative">
+                  <span class="position-absolute top-0 start-0 bg-danger text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;">3rd</span>
+                  <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン3位">
+                  </div>
+                </div>
+                <div class="card-body py-2 text-center">
+                  <h6 class="card-title mb-0">らぁ麺 やまぐち</h6>
+                  <p class="card-text text-muted fs-6 mb-0">特製らぁ麺</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4位以降のリスト形式 -->
+          <div class="card mb-2 border-0 shadow-sm ranking-item bg-light rounded-3">
+            <div class="card-body p-2">
+              <div class="row align-items-center">
+                <div class="col-1 text-center ps-2">
+                  <span class="position-number fw-bold fs-5">4</span>
+                </div>
+                <div class="col-auto px-0">
+                  <div class="img-thumbnail rounded-3" style="width: 70px; height: 70px; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1632709810780-a7f370a40daa?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン4位">
+                  </div>
+                </div>
+                <div class="col text-start px-2">
+                  <h6 class="card-title mb-0 fs-6">麺処 ほん田</h6>
+                  <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">味玉入り濃厚煮干しそば</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-2 border-0 shadow-sm ranking-item bg-light rounded-3">
+            <div class="card-body p-2">
+              <div class="row align-items-center">
+                <div class="col-1 text-center ps-2">
+                  <span class="position-number fw-bold fs-5">5</span>
+                </div>
+                <div class="col-auto px-0">
+                  <div class="img-thumbnail rounded-3" style="width: 70px; height: 70px; overflow: hidden;">
+                    <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン5位">
+                  </div>
+                </div>
+                <div class="col text-start px-2">
+                  <h6 class="card-title mb-0 fs-6">中華そば 向日葵</h6>
+                  <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製中華そば</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
