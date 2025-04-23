@@ -1,5 +1,5 @@
 <%= render 'shared/header_for_pc' %>
-<%= render 'shared/edit_navigation' %>
+<%= render 'shared/navigation/edit_navigation' %>
 
 <div class="container-fluid main-content text-center"
       data-controller="ranking-item"
@@ -43,7 +43,7 @@
 
             <!-- 編集用アイテムリストを呼び出し -->
             <% @ranking_items.order(:position).each do |item| %>
-              <%= render 'shared/editable_ranking_item', item: item, ranking: @ranking %>
+              <%= render 'shared/ranking/editable_ranking_item', item: item, ranking: @ranking %>
             <% end %>
 
           <% else %>
@@ -246,5 +246,5 @@
       </div>
     </div>
   </div>
-  <%= render "shared/edit_footer" %>
+  <%= render "shared/navigation/edit_footer" %>
 </div>

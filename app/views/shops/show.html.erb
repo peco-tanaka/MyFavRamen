@@ -1,7 +1,7 @@
 <%# PC用ヘッダー %>
 <%= render 'shared/header_for_pc' %>
 
-<%= render 'shared/navigation' %>
+<%= render 'shared/navigation/navigation' %>
 
 <div class="container main-content" data-controller="maps"
       data-maps-latitude-value="<%= @shop.latitude || 0 %>"
