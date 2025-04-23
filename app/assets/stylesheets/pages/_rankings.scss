@@ -46,6 +46,14 @@ body {
   padding: 0.3rem 0.6rem !important;
 }
 
+/* デモ用の順位テキストカラー */
+.rank-badge-2nd-text {
+  color: #6c757d; /* Bootstrap secondaryに近い銀色 */
+}
+.rank-badge-3rd-text {
+  color: #cd7f32; /* 銅色 */
+}
+
 /* 店舗名リンクのホバーアニメーション */
 .rank-1 .card-title a.text-dark:hover,
 .rank-2 .card-title a.text-dark:hover,
