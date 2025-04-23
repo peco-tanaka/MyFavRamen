@@ -1,5 +1,7 @@
-<%# ヒーローセクション - より視覚的なインパクトを追加 %>
-<div class="hero-section position-relative overflow-hidden py-5 mb-5">
+<%= render 'shared/header/pc_for_top' %>
+<%= render 'shared/header/phone_for_top' %>
+
+<div class="hero-section position-relative overflow-hidden py-5 mt-5 mb-5">
   <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(253,126,20,0.7) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.9;"></div>
 
   <div class="container">

@@ -1,0 +1,30 @@
+<header class="d-none d-lg-block border-bottom bg-white shadow-sm w-100 fixed-top">
+  <div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <!-- ロゴ部分（左寄せ） -->
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <div class="logo-container">
+          <h2 class="logo-text">
+            <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
+          </h2>
+        </div>
+      <% end %>
+
+      <!-- ナビゲーションメニュー（右寄せ） -->
+      <nav class="nav">
+        <%= link_to rankings_path(current_user), class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-trophy" style="color: #fd7e14;"></i> Myランキング
+        <% end %>
+        <%= link_to edit_ranking_path(current_user.id, genre_id: 1), class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-list-ol" style="color: #fd7e14;"></i> 編集
+        <% end %>
+        <%= link_to shops_path, class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-search" style="color: #fd7e14;"></i> 探す
+        <% end %>
+        <%= link_to user_path(current_user), class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-person" style="color: #fd7e14;"></i> プロフィール
+        <% end %>
+      </nav>
+    </div>
+  </div>
+</header>

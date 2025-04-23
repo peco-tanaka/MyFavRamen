@@ -1,4 +1,4 @@
-<%= render 'shared/header_for_pc' %>
+<%= render 'shared/header/pc' %>
 <%= render 'shared/navigation/edit_navigation' %>
 
 <div class="container-fluid main-content text-center"
@@ -17,9 +17,9 @@
     <!-- メインのランキングコンテンツエリア（左側） -->
     <div class="col-md-8">
       <div class="logo-container p-0">
-        <div class="logo-text">
+        <h3 class="logo-text">
           <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
-        </div>
+        </h3>
       </div>
 
       <!-- ランキングが存在する場合のみ編集画面を表示 -->
@@ -246,5 +246,5 @@
       </div>
     </div>
   </div>
-  <%= render "shared/navigation/edit_footer" %>
+  <%= render "shared/footer/edit_footer" %>
 </div>
