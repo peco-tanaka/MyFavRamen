@@ -24,3 +24,11 @@
     }
   }
 }
+
+@media (min-width: 992px) {
+  .top-content {
+    margin-top: 0; /* margin-topを削除 */
+    min-height: calc(100vh - var(--header-height-lg)); /* ヘッダーの高さを引いた分だけ広げる */
+    padding-top: var(--header-height-lg); /* 上部にヘッダー分のパディングを追加 */
+  }
+}

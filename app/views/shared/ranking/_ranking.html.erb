@@ -44,9 +44,9 @@
             <div class="card-body py-1 text-center bg-light">
               <h5 class="card-title mb-1 fs-5">
                 <% if first_item.is_manual? %>
-                  <%= first_item.manual_shop_name %> <span class="mx-1">/</span> <span class="text-muted small fs-6"><%= first_item.menu_name %></span>
+                  <span class="fw-bold"><%= first_item.manual_shop_name %></span> <span class="mx-1">/</span> <span class="text-muted small fs-6"><%= first_item.menu_name %></span>
                 <% elsif first_item.shop.present? %>
-                  <%= link_to first_item.shop.name, shop_path(first_item.shop), class: "text-decoration-none text-dark" %> <span class="mx-1">/</span> <span class="text-muted small fs-6"><%= first_item.menu_name %></span>
+                  <%= link_to first_item.shop.name, shop_path(first_item.shop), class: "text-decoration-none text-dark fw-bold" %> <span class="mx-1">/</span> <span class="text-muted small fs-6"><%= first_item.menu_name %></span>
                 <% end %>
               </h5>
               <div class="comment-box bg-white p-1 rounded border mt-2">
@@ -85,9 +85,9 @@
                   <div class="card-body py-1 text-center bg-light">
                     <h6 class="card-title mb-0">
                       <% if item.is_manual? %>
-                        <%= item.manual_shop_name %>
+                        <span class="fw-bold"><%= item.manual_shop_name %></span>
                       <% elsif item.shop.present? %>
-                        <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark" %>
+                        <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark fw-bold" %>
                       <% end %>
                     </h6>
                     <p class="card-text text-muted fs-6 mb-0"><%= item.menu_name %></p>
@@ -128,9 +128,9 @@
                     <!-- 店舗・メニュー情報 -->
                     <h6 class="card-title mb-0 fs-6">
                       <% if item.is_manual? %>
-                        <%= item.manual_shop_name %>
+                        <span class="fw-bold"><%= item.manual_shop_name %></span>
                       <% elsif item.shop.present? %>
-                        <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark" %>
+                        <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark fw-bold" %>
                         <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
                       <% end %>
                     </h6>
@@ -181,9 +181,9 @@
                           <!-- 店舗・メニュー情報 -->
                           <h6 class="card-title mb-0 fs-6">
                             <% if item.is_manual? %>
-                              <%= item.manual_shop_name %>
+                              <span class="fw-bold"><%= item.manual_shop_name %></span>
                             <% elsif item.shop.present? %>
-                              <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark" %>
+                              <%= link_to item.shop.name, shop_path(item.shop), class: "text-decoration-none text-dark  fw-bold" %>
                               <%= link_to '<i class="bi bi-info-circle"></i>'.html_safe, shop_path(item.shop), target: "_blank", class: "ms-1 text-decoration-none text-secondary", title: "店舗詳細" %>
                             <% end %>
                           </h6>
