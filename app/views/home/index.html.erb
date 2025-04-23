@@ -2,61 +2,56 @@
 <%= render 'shared/header/phone_for_top' %>
 
 <div class="top-content">
-  <%# スマホ専用ウェルカムセクション %>
-  <div class="mobile-welcome-section d-block d-md-none">
-    <%# 上部グラデーション背景セクション %>
-    <div class="welcome-hero position-relative overflow-hidden pt-4 pb-5" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(255,179,71,0.8) 100%);">
-      <div class="container">
-        <div class="text-center text-white mb-4">
-          <div class="logo-container p-0 mb-3">
-            <div class="logo-badge bg-white d-inline-block rounded-circle p-3 shadow-sm">
-              <h1 class="logo-text text-center m-0 p-0">
-                <span class="logo-my">My</span>
-                <span class="logo-fav">Fav</span>
-                <span class="logo-ramen">らぁめん</span>
-              </h1>
-            </div>
-          </div>
-          <h2 class="mb-3 fw-bold"><span class="highlight-text py-1 px-2">自分だけの</span><br>ラーメンランキングを作ろう！</h2>
-          <p class="mb-4 mx-auto" style="max-width: 90%">お気に入りの一杯を記録し、<strong>「好き」を大切にする</strong>ラーメン好きのためのサービスです。</p>
-          <%= link_to new_user_registration_path, class: 'btn btn-light btn-lg rounded-pill px-4 py-2 shadow fw-bold text-orange d-flex align-items-center justify-content-center mx-auto', style: 'max-width: 80%;' do %>
-            <i class="bi bi-person-plus-fill me-2"></i> 無料で始める
-          <% end %>
+  <%# --- スマホ専用ウェルカムセクション ここから --- %>
+  <div class="mobile-welcome-section d-md-none bg-light pt-4 pb-3 mb-4 shadow-sm">
+    <div class="container text-center px-md-5">
+
+      <%# キャッチコピー %>
+      <h3 class="mb-2 fw-bold h4">
+        自分だけの<br class="d-sm-none">ラーメンランキング！
+      </h3>
+
+      <%# 説明文 %>
+      <p class="lead fs-6 mb-3 px-2 text-muted">
+        出会った推しの一杯を記録に残そう！
+      </p>
+
+      <%# アイコン %>
+      <div class="d-flex justify-content-center text-orange gap-4 mb-4 animate__animated animate__fadeInUp">
+        <div class="d-flex flex-column align-items-center">
+          <i class="bi bi-camera-fill fs-3 mb-2"></i>
+          <span class="small">記録する</span>
+        </div>
+        <div class="d-flex flex-column align-items-center">
+          <i class="bi bi-trophy-fill fs-3 mb-2"></i>
+          <span class="small">ランク付け</span>
+        </div>
+        <div class="d-flex flex-column align-items-center">
+          <i class="bi bi-share-fill fs-3 mb-2"></i>
+          <span class="small">共有する</span>
         </div>
       </div>
-      
-      <%# 波形の区切り %>
-      <div class="position-absolute bottom-0 start-0 w-100">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" style="width: 100%; height: 40px;">
-          <path fill="#ffffff" fill-opacity="1" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
-        </svg>
+
+      <%# 無料で始めるボタン %>
+      <div class="d-grid gap-2 col-10 mx-auto mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+        <%= link_to new_user_registration_path, class: 'btn btn-orange rounded-pill fw-bold shadow-lg py-3 position-relative overflow-hidden', style: 'transition: all 0.3s ease;' do %>
+          <span class="position-relative z-1 d-flex align-items-center justify-content-center">
+            <span class="me-2">無料で始める</span>
+            <i class="bi bi-arrow-right-short fs-4"></i>
+          </span>
+          <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, #fd7e14 0%, #ff9d45 100%); z-index: 0;"></div>
+        <% end %>
       </div>
-    </div>
 
-    <%# ランキングプレビューセクション %>
-    <div class="container px-3 py-4">
-      <div class="mobile-ranking-card bg-white rounded-4 shadow-sm py-4 px-3 mb-4 position-relative" style="margin-top: -30px;">
-        <div class="section-badge position-absolute top-0 start-50 translate-middle bg-orange text-white px-3 py-1 rounded-pill shadow-sm">
-          <i class="bi bi-trophy-fill me-1"></i> ランキング作成
-        </div>
-        
-        <h4 class="text-center mt-3 mb-4 fw-bold">あなた好みのランキングを作成</h4>
+      <%# スマホ用ランキングデモ %>
+      <%= render "shared/ranking/ranking_demo" %>
 
-        <%# スマホ用ランキングデモ %>
-        <%= render "shared/ranking/ranking_demo" %>
-
-        <div class="text-center mt-4">
-          <a href="#how-it-works" class="btn btn-sm btn-outline-dark rounded-pill px-3 d-inline-flex align-items-center">
-            <i class="bi bi-info-circle me-1"></i> 使い方を見る <i class="bi bi-arrow-down-short ms-1"></i>
-          </a>
-        </div>
-      </div>
     </div>
   </div>
 
   <%# PC専用ウェルカムセクション %>
-  <div class="hero-section position-relative overflow-hidden py-5 mb-5">
-    <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(253,126,20,0.7) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.9;"></div>
+  <div class="hero-section position-relative overflow-hidden d-none d-md-block py-5 mb-5">
+    <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(230,95,0,0.95) 0%, rgba(253,126,20,0.85) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.95;"></div>
 
     <div class="container">
       <div class="row py-2 align-items-center">
@@ -132,7 +127,7 @@
   </div>
 
   <%# 特徴セクション - アイコンと視覚的要素を追加 %>
-  <div class="container">
+  <div class="container d-none d-md-block">
     <div class="text-center mb-5">
       <h2 class="h2 mb-3">
         <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>の特徴</h2>
@@ -182,7 +177,7 @@
   </div>
 
   <%# ランキングデモセクション %>
-  <div class="ranking-demo-section py-5 bg-light">
+  <div class="ranking-demo-section d-none d-md-block py-5 bg-light">
     <div class="container">
       <div class="row mb-4">
         <div class="col-12 text-center">
@@ -251,9 +246,15 @@
         </div>
 
         <!-- アクションボタン -->
-        <div class="text-center mt-5">
-          <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-lg btn-orange rounded-pill px-5 py-3 shadow-sm fw-bold' %>
-        </div>
+      <div class="d-grid gap-2 col-10 mx-auto mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+        <%= link_to new_user_registration_path, class: 'btn btn-orange rounded-pill fw-bold shadow-lg py-3 position-relative overflow-hidden', style: 'transition: all 0.3s ease;' do %>
+          <span class="position-relative z-1 d-flex align-items-center justify-content-center">
+            <span class="me-2">無料で始める</span>
+            <i class="bi bi-arrow-right-short fs-4"></i>
+          </span>
+          <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(90deg, #fd7e14 0%, #ff9d45 100%); z-index: 0;"></div>
+        <% end %>
+      </div>
       </div>
     </div>
   </div>
