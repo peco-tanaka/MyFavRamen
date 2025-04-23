@@ -8,7 +8,8 @@
 }
 
 .logo-text {
-  font-weight: bold;
+  font-weight: 700;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
   margin-bottom: 5px;
   display: flex;
   flex-direction: row; /* 変更: 子要素を横に配置 */
@@ -16,49 +17,30 @@
 }
 
 .logo-my {
-  font-size: 1.8rem;
   color: #fd7e14;
   margin-right: 2px; /* 追加: 右側に少しスペースを作る */
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 800;
 }
 
 .logo-fav {
-  font-size: 1.8rem;
   color: #fd7e14;
   font-style: italic;
   margin-right: 2px; /* 追加: 右側に少しスペースを作る */
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 800;
 }
 
 .logo-ramen {
-  font-size: 1.8rem;
   color: #333;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 700;
 }
 
 .logo-ranking {
-  font-size: 2.0rem !important;
   color: #333 !important;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif !important;
-}
-
-.logo-icon {
-  font-size: 2.2rem;
-  color: #fd7e14;
-  margin-top: 5px;
-}
-
-/* ロゴタイトル縦並び用スタイル */
-.logo-text-vertical {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.logo-text-vertical p {
-  margin: 0;
-  padding: 0;
-  text-align: center;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 700 !important;
 }
 
 /* モバイルデバイス用ロゴスタイル調整 */
@@ -85,9 +67,10 @@
 }
 
 .mobile-logo-my, .mobile-logo-fav {
-  font-weight: bold;
+  font-weight: 800;
   font-size: 1.3rem;
   color: white;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
 .mobile-logo-fav {
@@ -95,16 +78,16 @@
 }
 
 .mobile-logo-ramen {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 1.3rem;
   color: white;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
 }
 
 .mobile-logo-ranking {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 1.1rem;
   color: white;
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
   letter-spacing: 0.05em;
 }

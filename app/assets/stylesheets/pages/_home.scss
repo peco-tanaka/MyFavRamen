@@ -1,0 +1,77 @@
+/* ヒーローセクション用スタイル */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+/* 特徴カード用ホバーエフェクト */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+}
+
+/* 色関連のユーティリティクラス */
+.text-orange {
+  color: $primary-color !important;
+}
+
+.bg-orange {
+  background-color: $primary-color !important;
+}
+
+.btn-orange {
+  background-color: $primary-color;
+  border-color: $primary-color;
+  color: white;
+  
+  &:hover {
+    background-color: darken($primary-color, 5%);
+    border-color: darken($primary-color, 5%);
+    color: white;
+  }
+}
+
+.btn-outline-orange {
+  color: $primary-color;
+  border-color: $primary-color;
+
+  &:hover {
+    background-color: $primary-color;
+    color: white;
+  }
+}
+
+/* ステップカード用の特別スタイル */
+.step-card {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* デモランキング用のスタイル */
+.demo-ranking .top-3-container {
+  position: relative;
+  height: 250px;
+}
+
+/* 余白ユーティリティ */
+.mb-6 {
+  margin-bottom: 4rem;
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 767.98px) {
+  .hero-section {
+    text-align: center;
+  }
+
+  .step-number {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.25rem !important;
+  }
+}

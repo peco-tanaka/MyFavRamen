@@ -1,0 +1,24 @@
+<header class="d-none d-lg-block border-bottom bg-white shadow-sm w-100 fixed-top">
+  <div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <!-- ロゴ部分（左寄せ） -->
+      <%= link_to root_path, class: "navbar-brand" do %>
+        <div class="logo-container">
+          <h2 class="logo-text">
+            <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
+          </h2>
+        </div>
+      <% end %>
+
+      <!-- ナビゲーションメニュー（右寄せ） -->
+      <nav class="nav">
+        <%= link_to new_user_registration_path, class: "nav-link btn mx-2 px-4 py-2 fw-bold rounded-pill shadow", style: "background: linear-gradient(45deg, #FF8E53, #FE6B8B); color: white; border: none;" do %>
+          <i class="bi bi-person-plus fs-5 text-white"></i> 新規登録
+        <% end %>
+        <%= link_to new_user_session_path, class: "nav-link btn mx-2 px-4 py-2 fw-bold rounded-pill shadow", style: "background: linear-gradient(45deg, #FF512F, #DD2476); color: white; border: none;" do %>
+          <i class="bi bi-box-arrow-in-right fs-5 text-white"></i> ログイン
+        <% end %>
+      </nav>
+    </div>
+  </div>
+</header>
