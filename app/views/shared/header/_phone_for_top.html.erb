@@ -6,8 +6,8 @@
         <span class="mobile-logo-my">My</span><span class="mobile-logo-fav">Fav</span><span class="mobile-logo-ramen">らぁめん</span>
       </div>
     <% end %>
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <%= link_to new_user_session_path, class: "nav-link btn btn-sm ms-auto px-3 py-1 fw-bold rounded-pill shadow-sm fs-8", style: "background: linear-gradient(45deg, #FF512F, #DD2476); color: white; border: none;" do %>
+      <i class="bi bi-box-arrow-in-right text-white"></i> ログイン
+    <% end %>
   </div>
 </nav>

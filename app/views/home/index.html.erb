@@ -1,365 +1,119 @@
 <%= render 'shared/header/pc_for_top' %>
 <%= render 'shared/header/phone_for_top' %>
 
-<div class="hero-section position-relative overflow-hidden py-5 mt-5 mb-5">
-  <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(253,126,20,0.7) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.9;"></div>
-
-  <div class="container">
-    <div class="row py-2 align-items-center">
-      <div class="col-lg-7 text-white">
-        <div class="mb-3">
-          <div class="logo-container text-center p-0 my-1">
-            <h1 class="logo-text text-center">
-              <span class="logo-my text-white">My</span>
-              <span class="logo-fav text-white">Fav</span>
-              <span class="logo-ramen text-white">らぁめん</span>
-            </h1>
-          </div>
-        </div>
-        <h3 class="mb-4">自分だけのラーメンランキングを作ろう！</h3>
-        <p class="lead mb-4">お気に入りの一杯を記録し、自分だけのランキングを作成！評価ではなく「好き」を大切にする、ポジティブなラーメン好きのためのサービスです。</p>
-        <div class="d-flex flex-wrap gap-2 mb-3">
-          <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-light btn-lg rounded-pill px-4 shadow-sm text-orange fw-bold' %>
-          <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4">使い方を見る</a>
-        </div>
-      </div>
-      <div class="col-lg-5 d-none d-lg-block">
-        <div class="demo-device shadow-lg rounded-4 bg-white p-3 mx-auto" style="max-width: 400px; transform: rotate(3deg);">
-          <div class="device-header text-center p-1 mb-2">
-            <div class="logo-container text-center p-0 my-1">
-              <h3 class="logo-text text-center">
-                <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
-              </h3>
+<div class="top-content">
+  <%# スマホ専用ウェルカムセクション %>
+  <div class="mobile-welcome-section d-block d-md-none">
+    <%# 上部グラデーション背景セクション %>
+    <div class="welcome-hero position-relative overflow-hidden pt-4 pb-5" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(255,179,71,0.8) 100%);">
+      <div class="container">
+        <div class="text-center text-white mb-4">
+          <div class="logo-container p-0 mb-3">
+            <div class="logo-badge bg-white d-inline-block rounded-circle p-3 shadow-sm">
+              <h1 class="logo-text text-center m-0 p-0">
+                <span class="logo-my">My</span>
+                <span class="logo-fav">Fav</span>
+                <span class="logo-ramen">らぁめん</span>
+              </h1>
             </div>
           </div>
-          <div class="demo-ranking">
-            <!-- TOP3のラーメン表示 -->
-            <div class="top-3-container mb-3">
-              <!-- 2位 -->
-              <div class="rank-item rank-2 shadow-sm rounded" style="position: absolute; width: 35%; left: 0; top: 20%; z-index: 1; transform: rotate(-5deg);">
-                <span class="position-absolute top-0 start-0 bg-secondary text-white px-2 py-1 rounded-end fw-bold fs-6">2</span>
-                <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" class="card-img-top" alt="ラーメン2位">
-                <div class="p-1 bg-white text-center">
-                  <h6 class="mb-0 fs-6">特製醤油ラーメン</h6>
-                </div>
-              </div>
-              
-              <!-- 1位（中央・大きめ） -->
-              <div class="rank-item rank-1 shadow rounded" style="position: relative; width: 65%; margin: 0 auto; z-index: 2;">
-                <span class="position-absolute top-0 start-0 bg-warning text-white px-2 py-1 rounded-end fw-bold d-flex align-items-center"><i class="bi bi-trophy-fill me-1"></i>1</span>
-                <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1073&q=80" class="card-img-top" alt="ラーメン1位">
-                <div class="p-2 bg-white text-center">
-                  <h5 class="mb-1 fs-6">特製とんこつラーメン</h5>
-                  <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>感動の一杯</p>
-                </div>
-              </div>
-              
-              <!-- 3位 -->
-              <div class="rank-item rank-3 shadow-sm rounded" style="position: absolute; width: 35%; right: 0; top: 20%; z-index: 1; transform: rotate(5deg);">
-                <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 rounded-end fw-bold fs-6">3</span>
-                <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="ラーメン3位">
-                <div class="p-1 bg-white text-center">
-                  <h6 class="mb-0 fs-6">味噌ラーメン</h6>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 波形の区切り -->
-  <div class="position-absolute bottom-0 start-0 w-100">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" class="wave" preserveAspectRatio="none" style="width: 100%; height: 50px;">
-      <path fill="#ffffff" fill-opacity="1" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
-    </svg>
-  </div>
-</div>
-
-<%# 特徴セクション - アイコンと視覚的要素を追加 %>
-<div class="container">
-  <div class="text-center mb-5">
-    <h2 class="h2 mb-3">
-      <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>の特徴</h2>
-    <p class="lead text-muted">お気に入りのラーメンを記録に残したい！そんなラーメン好きの要望を叶えるサービスです</p>
-  </div>
-  
-  <div class="row g-4 mb-5">
-    <!-- 特徴1 -->
-    <div class="col-md-4">
-      <div class="card h-100 border-0 shadow-sm hover-card">
-        <div class="card-body text-center p-4">
-          <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-            <i class="bi bi-trophy fs-1"></i>
-          </div>
-          <h4 class="card-title mb-3">あなただけのランキング</h4>
-          <p class="card-text">お気に入りのラーメンを好きな順番でランキング付け。あなただけの「ラーメンランキング」を作れます。ジャンル別のランキングも自由自在！</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 特徴2 -->
-    <div class="col-md-4">
-      <div class="card h-100 border-0 shadow-sm hover-card">
-        <div class="card-body text-center p-4">
-          <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-            <i class="bi bi-journal-richtext fs-1"></i>
-          </div>
-          <h4 class="card-title mb-3">食べた記録を残す</h4>
-          <p class="card-text">感動した一杯を写真と共に記録。あなたのラーメン巡礼の思い出を残せます。訪問履歴はプロフィールページでいつでも振り返れます。</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- 特徴3 -->
-    <div class="col-md-4">
-      <div class="card h-100 border-0 shadow-sm hover-card">
-        <div class="card-body text-center p-4">
-          <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-            <i class="bi bi-people fs-1"></i>
-          </div>
-          <h4 class="card-title mb-3">ゆるくつながる</h4>
-          <p class="card-text">ラーメン仲間のランキングをチェックして、新たな一杯との出会いを。お気に入りの店舗を共有して、ラーメン好き同士の交流を楽しめます。</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<%# ランキングデモセクション - より分かりやすく %>
-<div class="ranking-demo-section py-5 bg-light">
-  <div class="container">
-    <div class="row mb-4">
-      <div class="col-12 text-center">
-        <h2 class="mb-3">こんなランキングが作れます</h2>
-        <p class="lead text-muted mb-4">あなたのお気に入りのラーメンをランキングにして記録・共有しましょう</p>
-      </div>
-    </div>
-
-    <!-- 二分割されたセクション -->
-    <div class="row g-4 align-items-center">
-      <!-- 左側：編集可能なランキングデモ -->
-      <div class="col-lg-5">
-        <div class="card shadow border-0 rounded-3 p-3">
-          <h4 class="text-center mb-3 text-orange"><i class="bi bi-pencil-square me-2"></i>ドラッグ＆ドロップで編集</h4>
-          <div class="alert alert-light border mb-3 small">
-            <i class="bi bi-info-circle me-1"></i>
-            各項目をドラッグして順位を入れ替えたり、お好みで編集できます
-          </div>
-
-          <!-- 編集可能なランキングアイテムのデモ -->
-          <div id="sortable-ranking-items" class="ranking-items-list"
-                data-controller="ranking-sort"
-                data-ranking-sort-target="container"
-                data-ranking-sort-demo-value="true">
-            <!-- 1位のアイテム -->
-            <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-1" data-ranking-sort-target="item" data-position="1">
-              <div class="card-body p-2">
-                <div class="row align-items-center">
-                  <div class="col-1 text-center ps-2">
-                    <span class="position-number fw-bold fs-6 text-warning">1</span>
-                  </div>
-                  <div class="col-auto px-0 d-flex justify-content-start">
-                    <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
-                      <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
-                    </div>
-                  </div>
-                  <div class="col text-start px-1">
-                    <h6 class="card-title mb-0 fs-6">中華そば 青葉</h6>
-                    <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製中華そば</p>
-                    <p class="mb-0 text-truncate" style="font-size: 0.7rem;">
-                      <i class="bi bi-chat-quote-fill text-warning me-1"></i>
-                      スープの旨味が凝縮された一杯
-                    </p>
-                  </div>
-                  <div class="col-auto text-end px-1">
-                    <div class="d-flex flex-column gap-1">
-                      <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
-                        <i class="bi bi-pencil-fill me-1"></i>編集
-                      </button>
-                      <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
-                        <i class="bi bi-trash-fill me-1"></i>削除
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 2位のアイテム -->
-            <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-2" data-ranking-sort-target="item" data-position="2">
-              <div class="card-body p-2">
-                <div class="row align-items-center">
-                  <div class="col-1 text-center ps-2">
-                    <span class="position-number fw-bold fs-6 rank-badge-2nd-text">2</span>
-                  </div>
-                  <div class="col-auto px-0 d-flex justify-content-start">
-                    <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
-                      <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
-                    </div>
-                  </div>
-                  <div class="col text-start px-1">
-                    <h6 class="card-title mb-0 fs-6">麺屋 一燈</h6>
-                    <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">芳醇醤油ラーメン</p>
-                  </div>
-                  <div class="col-auto text-end px-1">
-                    <div class="d-flex flex-column gap-1">
-                      <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
-                        <i class="bi bi-pencil-fill me-1"></i>編集
-                      </button>
-                      <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
-                        <i class="bi bi-trash-fill me-1"></i>削除
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 3位のアイテム -->
-            <div class="card mb-2 border-0 shadow-sm ranking-item demo-draggable rank-3" data-ranking-sort-target="item" data-position="3">
-              <div class="card-body p-2">
-                <div class="row align-items-center">
-                  <div class="col-1 text-center ps-2">
-                    <span class="position-number fw-bold fs-6 rank-badge-3rd-text">3</span>
-                  </div>
-                  <div class="col-auto px-0 d-flex justify-content-start">
-                    <div class="img-thumbnail" style="width: 70px; height: 70px; overflow: hidden;">
-                      <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン写真">
-                    </div>
-                  </div>
-                  <div class="col text-start px-1">
-                    <h6 class="card-title mb-0 fs-6">らぁ麺 やまぐち</h6>
-                    <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製らぁ麺</p>
-                  </div>
-                  <div class="col-auto text-end px-1">
-                    <div class="d-flex flex-column gap-1">
-                      <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
-                        <i class="bi bi-pencil-fill me-1"></i>編集
-                      </button>
-                      <button type="button" class="btn btn-sm btn-outline-danger" style="font-size: 0.7rem; padding: 0.15rem 0.3rem;">
-                        <i class="bi bi-trash-fill me-1"></i>削除
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- ラーメン追加ボタン（デモ） -->
-          <div class="text-center mt-3">
-            <button class="btn btn-orange rounded-pill px-4 shadow-sm">
-              <i class="bi bi-plus-circle-fill me-2"></i> ラーメン追加
-            </button>
-          </div>
+          <h2 class="mb-3 fw-bold"><span class="highlight-text py-1 px-2">自分だけの</span><br>ラーメンランキングを作ろう！</h2>
+          <p class="mb-4 mx-auto" style="max-width: 90%">お気に入りの一杯を記録し、<strong>「好き」を大切にする</strong>ラーメン好きのためのサービスです。</p>
+          <%= link_to new_user_registration_path, class: 'btn btn-light btn-lg rounded-pill px-4 py-2 shadow fw-bold text-orange d-flex align-items-center justify-content-center mx-auto', style: 'max-width: 80%;' do %>
+            <i class="bi bi-person-plus-fill me-2"></i> 無料で始める
+          <% end %>
         </div>
       </div>
       
-      <!-- 右側：完成したランキングの表示 -->
-      <div class="col-lg-7">
-        <div class="demo-ranking shadow rounded-3 border-0 p-4 bg-white">
-          <!-- ランキングのタイトル -->
-          <div class="d-flex justify-content-between align-items-center">
+      <%# 波形の区切り %>
+      <div class="position-absolute bottom-0 start-0 w-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" style="width: 100%; height: 40px;">
+          <path fill="#ffffff" fill-opacity="1" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
+        </svg>
+      </div>
+    </div>
+
+    <%# ランキングプレビューセクション %>
+    <div class="container px-3 py-4">
+      <div class="mobile-ranking-card bg-white rounded-4 shadow-sm py-4 px-3 mb-4 position-relative" style="margin-top: -30px;">
+        <div class="section-badge position-absolute top-0 start-50 translate-middle bg-orange text-white px-3 py-1 rounded-pill shadow-sm">
+          <i class="bi bi-trophy-fill me-1"></i> ランキング作成
+        </div>
+        
+        <h4 class="text-center mt-3 mb-4 fw-bold">あなた好みのランキングを作成</h4>
+
+        <%# スマホ用ランキングデモ %>
+        <%= render "shared/ranking/ranking_demo" %>
+
+        <div class="text-center mt-4">
+          <a href="#how-it-works" class="btn btn-sm btn-outline-dark rounded-pill px-3 d-inline-flex align-items-center">
+            <i class="bi bi-info-circle me-1"></i> 使い方を見る <i class="bi bi-arrow-down-short ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# PC専用ウェルカムセクション %>
+  <div class="hero-section position-relative overflow-hidden py-5 mb-5">
+    <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, rgba(253,126,20,0.9) 0%, rgba(253,126,20,0.7) 100%), url('<%= asset_path('ramen-hero-bg.jpg', skip_pipeline: true) || 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80' %>') no-repeat center center; background-size: cover; top: 0; left: 0; z-index: -1; opacity: 0.9;"></div>
+
+    <div class="container">
+      <div class="row py-2 align-items-center">
+        <div class="col-lg-7 text-white">
+          <div class="mb-3">
             <div class="logo-container text-center p-0 my-1">
-              <h3 class="logo-text text-center">
-                <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
-              </h3>
+              <h1 class="logo-text text-center">
+                <span class="logo-my text-white">My</span>
+                <span class="logo-fav text-white">Fav</span>
+                <span class="logo-ramen text-white">らぁめん</span>
+              </h1>
             </div>
           </div>
-          
-          <div class="row g-3">
-            <!-- 1位のカード（左側） -->
-            <div class="col-12 col-md-5">
-              <div class="card mb-3 border-0 shadow rank-1 rounded-3 overflow-hidden">
-                <div class="position-relative">
-                  <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-5 rounded-end fw-bold d-flex align-items-center" style="z-index: 10;"><i class="bi bi-trophy-fill me-1"></i>1st</span>
-                  <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
-                    <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" class="card-img-top" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン1位">
-                  </div>
-                </div>
-                <div class="card-body py-3 text-center">
-                  <h5 class="card-title mb-2 fs-5">中華そば 青葉 <span class="mx-1">/</span> <span class="text-muted small fs-6">特製中華そば</span></h5>
-                  <div class="comment-box bg-light p-2 rounded border mt-2">
-                    <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>スープの旨味が凝縮された一杯。何度食べても感動します！</p>
-                  </div>
-                </div>
+          <h3 class="mb-4"><strong>自分だけのラーメンランキング</strong>を作ろう！</h3>
+          <p class="lead mb-4">お気に入りの一杯を記録し、自分だけのランキングを作成！評価ではなく<strong>「好き」を大切にする</strong>、ポジティブなラーメン好きのためのサービスです。</p>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-light btn-lg rounded-pill px-4 shadow-sm text-orange fw-bold' %>
+            <a href="#how-it-works" class="btn btn-outline-light btn-lg rounded-pill px-4">使い方を見る</a>
+          </div>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block">
+          <div class="demo-device shadow-lg rounded-4 bg-white p-3 mx-auto" style="max-width: 400px; transform: rotate(3deg);">
+            <div class="device-header text-center p-1 mb-2">
+              <div class="logo-container text-center p-0 my-1">
+                <h3 class="logo-text text-center">
+                  <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>
+                </h3>
               </div>
             </div>
-
-            <!-- 2位以降のランキングアイテム（右側） -->
-            <div class="col-12 col-md-7">
-              <!-- 2位と3位のカード -->
-              <div class="row g-3 mb-3">
+            <div class="demo-ranking">
+              <!-- TOP3のラーメン表示 -->
+              <div class="top-3-container mb-3">
                 <!-- 2位 -->
-                <div class="col-6">
-                  <div class="card h-100 border-0 shadow rank-2 rounded-3 overflow-hidden">
-                    <div class="position-relative">
-                      <span class="position-absolute top-0 start-0 bg-secondary text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;">2nd</span>
-                      <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン2位">
-                      </div>
-                    </div>
-                    <div class="card-body py-2 text-center">
-                      <h6 class="card-title mb-0">麺屋 一燈</h6>
-                      <p class="card-text text-muted fs-6 mb-0">芳醇醤油ラーメン</p>
-                    </div>
+                <div class="rank-item rank-2 shadow-sm rounded" style="position: absolute; width: 35%; left: 0; top: 20%; z-index: 1; transform: rotate(-5deg);">
+                  <span class="position-absolute top-0 start-0 bg-secondary text-white px-2 py-1 rounded-end fw-bold fs-6">2</span>
+                  <img src="https://images.unsplash.com/photo-1591814468924-caf88d1232e1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" class="card-img-top" alt="ラーメン2位">
+                  <div class="p-1 bg-white text-center">
+                    <h6 class="mb-0 fs-6">特製醤油ラーメン</h6>
                   </div>
                 </div>
-                
+
+                <!-- 1位（中央・大きめ） -->
+                <div class="rank-item rank-1 shadow rounded" style="position: relative; width: 65%; margin: 0 auto; z-index: 2;">
+                  <span class="position-absolute top-0 start-0 bg-warning text-white px-2 py-1 rounded-end fw-bold d-flex align-items-center"><i class="bi bi-trophy-fill me-1"></i>1</span>
+                  <img src="https://images.unsplash.com/photo-1614563637806-1d0e645e0940?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1073&q=80" class="card-img-top" alt="ラーメン1位">
+                  <div class="p-2 bg-white text-center">
+                    <h5 class="mb-1 fs-6">特製とんこつラーメン</h5>
+                    <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i>感動の一杯</p>
+                  </div>
+                </div>
+
                 <!-- 3位 -->
-                <div class="col-6">
-                  <div class="card h-100 border-0 shadow rank-3 rounded-3 overflow-hidden">
-                    <div class="position-relative">
-                      <span class="position-absolute top-0 start-0 bg-danger text-white p-1 fs-6 rounded-end fw-bold" style="z-index: 10;">3rd</span>
-                      <div class="square-image-container" style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;" alt="ラーメン3位">
-                      </div>
-                    </div>
-                    <div class="card-body py-2 text-center">
-                      <h6 class="card-title mb-0">らぁ麺 やまぐち</h6>
-                      <p class="card-text text-muted fs-6 mb-0">特製らぁ麺</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 4位以降のリスト形式 -->
-              <div class="card mb-2 border-0 shadow-sm ranking-item bg-light rounded-3">
-                <div class="card-body p-2">
-                  <div class="row align-items-center">
-                    <div class="col-1 text-center ps-2">
-                      <span class="position-number fw-bold fs-5">4</span>
-                    </div>
-                    <div class="col-auto px-0">
-                      <div class="img-thumbnail rounded-3" style="width: 70px; height: 70px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1632709810780-a7f370a40daa?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン4位">
-                      </div>
-                    </div>
-                    <div class="col text-start px-2">
-                      <h6 class="card-title mb-0 fs-6">麺処 ほん田</h6>
-                      <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">味玉入り濃厚煮干しそば</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card mb-2 border-0 shadow-sm ranking-item bg-light rounded-3">
-                <div class="card-body p-2">
-                  <div class="row align-items-center">
-                    <div class="col-1 text-center ps-2">
-                      <span class="position-number fw-bold fs-5">5</span>
-                    </div>
-                    <div class="col-auto px-0">
-                      <div class="img-thumbnail rounded-3" style="width: 70px; height: 70px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" class="w-100 h-100" style="object-fit: cover;" alt="ラーメン5位">
-                      </div>
-                    </div>
-                    <div class="col text-start px-2">
-                      <h6 class="card-title mb-0 fs-6">中華そば 向日葵</h6>
-                      <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">特製中華そば</p>
-                    </div>
+                <div class="rank-item rank-3 shadow-sm rounded" style="position: absolute; width: 35%; right: 0; top: 20%; z-index: 1; transform: rotate(5deg);">
+                  <span class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 rounded-end fw-bold fs-6">3</span>
+                  <img src="https://images.unsplash.com/photo-1623341214825-9f4f963727da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="card-img-top" alt="ラーメン3位">
+                  <div class="p-1 bg-white text-center">
+                    <h6 class="mb-0 fs-6">味噌ラーメン</h6>
                   </div>
                 </div>
               </div>
@@ -368,65 +122,138 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<%# 使い方ステップセクション - 新規追加 %>
-<div id="how-it-works" class="container py-5">
-  <div class="text-center mb-5">
-    <h2 class="mb-3">使い方は簡単3ステップ</h2>
-    <p class="lead text-muted">MyFavらぁめんでラーメン記録をもっと楽しく！</p>
+    <!-- 波形の区切り -->
+    <div class="position-absolute bottom-0 start-0 w-100">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" class="wave" preserveAspectRatio="none" style="width: 100%; height: 50px;">
+        <path fill="#ffffff" fill-opacity="1" d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,53.3C1248,53,1344,43,1392,37.3L1440,32L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
+      </svg>
+    </div>
   </div>
-  
-  <div class="row">
-    <div class="col-lg-10 mx-auto">
-      <div class="row g-4">
-        <!-- ステップ1 -->
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm hover-card step-card">
-            <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem;">1</div>
-            <div class="card-body text-center p-4 pt-5 mt-3">
-              <div class="icon-container mb-3">
-                <i class="bi bi-person-plus fs-1 text-orange"></i>
-              </div>
-              <h5 class="card-title mb-3">アカウント登録</h5>
-              <p class="card-text">簡単な情報入力でアカウントを作成。無料ですぐに始められます。</p>
+
+  <%# 特徴セクション - アイコンと視覚的要素を追加 %>
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="h2 mb-3">
+        <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen">らぁめん</span>の特徴</h2>
+      <p class="lead text-muted"><strong>お気に入りのラーメンを記録に残したい！</strong>そんなラーメン好きの要望を叶えるサービスです</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+      <!-- 特徴1 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm hover-card">
+          <div class="card-body text-center p-4">
+            <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+              <i class="bi bi-trophy fs-1"></i>
             </div>
-          </div>
-        </div>
-        
-        <!-- ステップ2 -->
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm hover-card step-card">
-            <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem;">2</div>
-            <div class="card-body text-center p-4 pt-5 mt-3">
-              <div class="icon-container mb-3">
-                <i class="bi bi-card-list fs-1 text-orange"></i>
-              </div>
-              <h5 class="card-title mb-3">ラーメンを登録</h5>
-              <p class="card-text">食べたラーメンを写真と共に記録。お店の情報も簡単に登録できます。</p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- ステップ3 -->
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm hover-card step-card">
-            <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem;">3</div>
-            <div class="card-body text-center p-4 pt-5 mt-3">
-              <div class="icon-container mb-3">
-                <i class="bi bi-trophy fs-1 text-orange"></i>
-              </div>
-              <h5 class="card-title mb-3">ランキング作成</h5>
-              <p class="card-text">ドラッグ＆ドロップで簡単にランキングを作成。友達とシェアして楽しもう！</p>
-            </div>
+            <h4 class="card-title mb-3"><strong>あなただけの</strong>ランキング</h4>
+            <p class="card-text">お気に入りのラーメンを好きな順番でランキング付け。<strong>あなただけの「ラーメンランキング」</strong>を作れます。ジャンル別のランキングも自由自在！</p>
           </div>
         </div>
       </div>
-      
-      <!-- アクションボタン -->
-      <div class="text-center mt-5">
-        <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-lg btn-orange rounded-pill px-5 py-3 shadow-sm fw-bold' %>
+
+      <!-- 特徴2 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm hover-card">
+          <div class="card-body text-center p-4">
+            <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+              <i class="bi bi-journal-richtext fs-1"></i>
+            </div>
+            <h4 class="card-title mb-3"><strong>食べた記録</strong>を残す</h4>
+            <p class="card-text"><strong>感動した一杯</strong>を写真と共に記録。あなたのラーメン巡礼の思い出を残せます。訪問履歴はプロフィールページでいつでも振り返れます。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 特徴3 -->
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm hover-card">
+          <div class="card-body text-center p-4">
+            <div class="feature-icon bg-light text-orange rounded-circle mb-3 mx-auto d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+              <i class="bi bi-people fs-1"></i>
+            </div>
+            <h4 class="card-title mb-3"><strong>ゆるく</strong>つながる</h4>
+            <p class="card-text">ラーメン仲間のランキングをチェックして、<strong>新たな一杯との出会い</strong>を。お気に入りの店舗を共有して、ラーメン好き同士の交流を楽しめます。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# ランキングデモセクション %>
+  <div class="ranking-demo-section py-5 bg-light">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-12 text-center">
+          <h2 class="mb-3"><strong>こんなランキングが作れます</strong></h2>
+          <p class="lead text-muted mb-4">あなたのお気に入りのラーメンをランキングにして<strong>記録・共有</strong>しましょう</p>
+        </div>
+      </div>
+
+      <%# ランキング表示部分 %>
+      <%= render "shared/ranking/ranking_demo" %>
+
+    </div>
+  </div>
+
+  <%# 使い方ステップセクション %>
+  <div id="how-it-works" class="container py-4 py-md-5">
+    <div class="text-center mb-4">
+      <h2 class="mb-2 mb-md-3 fs-3 fs-md-2">使い方は<strong>簡単3ステップ</strong></h2>
+      <p class="lead text-muted fs-6">MyFavらぁめんでラーメン記録をもっと楽しく！</p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        <div class="row g-3 g-md-4">
+          <!-- ステップ1 -->
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card step-card">
+              <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold; font-size: 1.2rem;">1</div>
+              <div class="card-body text-center p-3 p-md-4 pt-4 pt-md-5 mt-2 mt-md-3">
+                <div class="icon-container mb-2 mb-md-3">
+                  <i class="bi bi-person-plus fs-1 text-orange"></i>
+                </div>
+                <h5 class="card-title mb-2 fs-5"><strong>アカウント登録</strong></h5>
+                <p class="card-text small">簡単な情報入力でアカウントを作成。<strong>無料</strong>ですぐに始められます。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ステップ2 -->
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card step-card">
+              <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold; font-size: 1.2rem;">2</div>
+              <div class="card-body text-center p-3 p-md-4 pt-4 pt-md-5 mt-2 mt-md-3">
+                <div class="icon-container mb-2 mb-md-3">
+                  <i class="bi bi-card-list fs-1 text-orange"></i>
+                </div>
+                <h5 class="card-title mb-2 fs-5"><strong>ラーメンを登録</strong></h5>
+                <p class="card-text small">食べたラーメンを<strong>写真と共に記録</strong>。お店の情報も簡単に登録できます。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ステップ3 -->
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card step-card">
+              <div class="step-number bg-orange text-white rounded-circle position-absolute top-0 start-50 translate-middle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold; font-size: 1.2rem;">3</div>
+              <div class="card-body text-center p-3 p-md-4 pt-4 pt-md-5 mt-2 mt-md-3">
+                <div class="icon-container mb-2 mb-md-3">
+                  <i class="bi bi-trophy fs-1 text-orange"></i>
+                </div>
+                <h5 class="card-title mb-2 fs-5"><strong>ランキング作成</strong></h5>
+                <p class="card-text small"><strong>ドラッグ＆ドロップ</strong>で簡単にランキングを作成。友達とシェアして楽しもう！</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="text-center mt-5">
+          <%= link_to '無料で始める', new_user_registration_path, class: 'btn btn-lg btn-orange rounded-pill px-5 py-3 shadow-sm fw-bold' %>
+        </div>
       </div>
     </div>
   </div>
