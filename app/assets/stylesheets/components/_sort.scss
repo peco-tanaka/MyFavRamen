@@ -9,13 +9,31 @@
 
 /* ドラッグ中に表示されるゴースト（元の位置） */
 .sortable-ghost {
-  opacity: 0.5;
-  background-color: rgba($primary-color, 0.1);
-  border: 2px dashed #ced4da;
+  opacity: 0.5 !important;
+  background-color: rgba(255, 153, 0, 0.1) !important; /* $primary-colorを直接オレンジ色に */
+  border: 2px dashed #ced4da !important;
 }
 
 /* ドラッグしているアイテム自体 */
 .sortable-drag {
   background-color: white !important;
   transform: rotate(1deg);
+}
+
+/* フォールバックモードでのドラッグ要素 */
+.sortable-fallback {
+  opacity: 0.9;
+  transform: rotate(1deg);
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  border-radius: 4px;
+}
+
+/* スマホ向け追加スタイル */
+@media (max-width: 767px) {
+  .sortable-ghost {
+    opacity: 0.5 !important;
+    background-color: rgba(255, 153, 0, 0.15) !important; /* スマホでは少し濃い目に */
+    border: 2px dashed #ffb366 !important; /* 境界線も少し目立たせる */
+  }
 }
