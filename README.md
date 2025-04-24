@@ -49,17 +49,17 @@ https://myfavramen.onrender.com/
 - Docker / Docker Compose (開発環境)
 
 #### 主要Gem
-devise（ユーザー認証機能）
-propshaft（アセットパイプライン）
-stimulus-rails（JavaScriptフレームワーク）
-brakeman（脆弱性検知ツール）
-rubocop（コード解析ツール）
-aws-sdk-s3（画像アップロード）
+- devise（ユーザー認証機能）
+- propshaft（アセットパイプライン）
+- stimulus-rails（JavaScriptフレームワーク）
+- brakeman（脆弱性検知ツール）
+- rubocop（コード解析ツール）
+- aws-sdk-s3（画像アップロード）
 
 #### 主要JavaScriptライブラリ
-sortablejs（ドラッグ&ドロップ機能）
-esbuild（ビルドツール）
+- sortablejs（ドラッグ&ドロップ機能）
+- esbuild（ビルドツール）
 
 ## ER図
 
-## 
+##
