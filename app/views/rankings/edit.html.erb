@@ -28,8 +28,9 @@
       <% if @ranking&.persisted? %>
         <!-- ランキング編集の説明 -->
         <div class="alert alert-info mb-1 p-2 small">
-          <i class="bi bi-info-circle me-1"></i>
-          ドラッグ＆ドロップでランキング制作！
+          <div><i class="bi bi-arrow-down-up me-1"></i>ドラッグ＆ドロップでランキング順位を変更</div>
+          <div><i class="bi bi-pencil-fill me-1"></i>各項目の「編集」から写真やコメントを追加</div>
+          <div class="mt-1 text-secondary"><i class="bi bi-exclamation-circle me-1"></i>※写真は反映までに時間がかかる場合があります</div>
         </div>
 
         <!-- ランキングカード表示エリア - すべて同じサイズのカードに統一 -->
