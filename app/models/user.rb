@@ -18,5 +18,4 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   validates :nickname, presence: true
-  validates :prefecture_id, presence: true, inclusion: { in: Prefecture.all.map(&:id), message: "を選択してください" }
 end

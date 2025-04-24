@@ -19,6 +19,9 @@ export default class extends Controller {
     if (this.hasContainerTarget) {
       console.log("Initializing Sortable on:", this.containerTarget)
 
+      // タッチデバイス検出
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
       this.sortable = new Sortable(this.containerTarget, {
         animation: 150,
         delay: 150,  // 長押し後にドラッグ開始
@@ -27,6 +30,8 @@ export default class extends Controller {
         delayOnTouchOnly: true,
         touchStartThreshold: 3, // タッチ開始時の移動許容量
         chosenClass: "sortable-chosen",
+        forceFallback: isTouchDevice, // タッチデバイスではフォールバックモードを強制
+        fallbackClass: "sortable-fallback", // フォールバックモード用のクラス
         onEnd: this.onSortEnd.bind(this),  // bind(this)でonSortEndメソッドの中でもコントローラーのプロパティやメソッドでアクセス可能にする
       })
     } else {

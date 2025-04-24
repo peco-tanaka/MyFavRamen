@@ -1,26 +1,42 @@
-<h2>Log in</h2>
+<% content_for :title, "ログイン" %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<%= render 'shared/header/pc_for_top' %>
+<%= render 'shared/header/phone_for_top' %>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
+<div class="container-sm top-content d-flex align-items-center justify-content-center" style="max-width: 450px; min-height: calc(100vh - 80px);">
+  <main class="p-2 w-100">
+    <div class="card shadow-sm">
+      <div class="card-header py-2" style="background-color: #fd7e14; color: white;">
+        <h5 class="mb-0 small">ログイン</h5>
+      </div>
+      <div class="card-body p-3">
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="mb-2">
+            <%= f.label :email, "メールアドレス", class: "form-label small mb-1" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control form-control-sm" %>
+          </div>
 
-  <% if devise_mapping.rememberable? %>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
+          <div class="mb-2">
+            <%= f.label :password, "パスワード", class: "form-label small mb-1" %>
+            <%= f.password_field :password, autocomplete: "current-password", class: "form-control form-control-sm" %>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="mb-3 form-check">
+              <%= f.check_box :remember_me, class: "form-check-input" %>
+              <%= f.label :remember_me, "ログイン状態を保存", class: "form-check-label small" %>
+            </div>
+          <% end %>
+
+          <div class="text-center">
+            <%= f.submit "ログイン", class: "btn btn-primary btn-sm", style: "background-color: #fd7e14; border-color: #fd7e14;" %>
+          </div>
+        <% end %>
+
+        <div class="mt-2 text-center small">
+          <%= render "devise/shared/links" %>
+        </div>
+      </div>
     </div>
-  <% end %>
-
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+  </main>
+</div>

@@ -1,16 +1,33 @@
-<h2>Forgot your password?</h2>
+<% content_for :title, "パスワード再設定" %>
 
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<%= render 'shared/header/pc_for_top' %>
+<%= render 'shared/header/phone_for_top' %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<div class="container-sm top-content d-flex align-items-center justify-content-center" style="max-width: 450px; min-height: calc(100vh - 80px);">
+  <main class="p-2 w-100">
+    <div class="card shadow-sm">
+      <div class="card-header py-2" style="background-color: #fd7e14; color: white;">
+        <h5 class="mb-0 small">パスワード再設定</h5>
+      </div>
+      <div class="card-body p-3">
+        <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
-<% end %>
+          <div class="mb-3">
+            <%= f.label :email, "メールアドレス", class: "form-label small mb-1" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control form-control-sm" %>
+            <small class="form-text text-muted">登録したメールアドレスにパスワード再設定のご案内をお送りします</small>
+          </div>
 
-<%= render "devise/shared/links" %>
+          <div class="text-center">
+            <%= f.submit "再設定メールを送信", class: "btn btn-primary btn-sm", style: "background-color: #fd7e14; border-color: #fd7e14;" %>
+          </div>
+        <% end %>
+
+        <div class="mt-2 text-center small">
+          <%= render "devise/shared/links" %>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

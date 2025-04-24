@@ -24,7 +24,7 @@
         <% if @ranking_items.exists?(position: 1) %>
           <% first_item = @ranking_items.find_by(position: 1) %>
           <!-- 1位 - 最大サイズのカード -->
-          <div class="card mb-3 border border-light rounded-3 shadow mx-auto rank-1">
+          <div class="card mb-3 borderounded-3 shadow muto rank-1">
             <div class="position-relative">
               <span class="position-absolute top-0 start-0 bg-warning text-white p-2 fs-4 rounded-end rounded-top-3 fw-bold d-flex align-items-center" style="z-index: 10;"><i class="bi bi-trophy-fill me-1"></i>1st</span>
               <!-- 画像の表示 -->
@@ -49,8 +49,8 @@
                   <%= link_to first_item.shop.name, shop_path(first_item.shop), class: "text-decoration-none text-dark fw-bold" %> <span class="mx-1">/</span> <span class="text-muted small fs-6"><%= first_item.menu_name %></span>
                 <% end %>
               </h5>
-              <div class="comment-box bg-white p-1 rounded border mt-2">
-                <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i><%= first_item.comment.present? ? first_item.comment : "コメントはありません" %></p>
+              <div class="comment-box bg-white p-1 rounded bordert-2">
+          <p class="mb-0 small"><i class="bi bi-chat-quote-fill text-warning me-1"></i><%= first_item.comment.present? ? first_item.comment : "コメントはありません" %></p>
               </div>
             </div>
           </div>
@@ -65,7 +65,7 @@
             <% if @ranking_items.exists?(position: position) %>
               <% item = @ranking_items.find_by(position: position) %>
               <div class="col-6">
-                <div class="card h-100 border border-light rounded-3 shadow rank-<%= position %>">
+                <div class="card h-100 border rounded-3 shadow rank-<%= position %>">
                   <div class="position-relative">
                     <span class="position-absolute top-0 start-0 <%= position == 2 ? 'rank-badge-2nd' : 'rank-badge-3rd' %> text-white p-1 fs-6 rounded-end rounded-top-3 fw-bold" style="z-index: 10;"><%= position == 2 ? '2nd' : '3rd' %></span>
                     <!-- 画像の表示 -->
@@ -102,7 +102,7 @@
         <div class="mt-3">
           <!-- 4位と5位のランキングアイテム -->
           <% @ranking_items.where("position > 3 AND position <= 5").order(:position).each do |item| %>
-            <div class="card my-1 border border-light rounded-3 shadow-sm ranking-item bg-light"
+            <div class="card my-1 border rounded-3 shadow ranking-item bg-light"
                   data-ranking-sort-target="item"
                   data-id="<%= item.id %>">
               <div class="card-body p-2">
@@ -155,7 +155,7 @@
             <div class="collapse mt-2" id="moreRankings">
               <div class="border-top pt-2">
                 <% @ranking_items.where("position > 5").order(:position).each do |item| %>
-                  <div class="card my-1 border border-light rounded-3 shadow ranking-item bg-light"
+                  <div class="card my-1 border rounded-3 shadow ranking-item bg-light"
                        data-ranking-sort-target="item"
                        data-id="<%= item.id %>">
                     <div class="card-body p-2">
@@ -209,12 +209,12 @@
     <% else %>
       <!-- ランキングアイテムがない場合 -->
       <div class="col-12 col-md-10">
-        <div class="logo-container text-center p-0">
-          <div class="logo-text text-center">
+        <div class="logo-container text-center p-0 my-1">
+          <h3 class="logo-text text-center">
             <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
-          </div>
+          </h3>
         </div>
-        <div class="alert alert-info">
+        <div class="alert alert-info border-0">
           <h5>まだお店が登録されていません</h5>
           <p>ランキングを編集して、お気に入りのラーメンを登録しましょう！</p>
           <%= link_to "ランキングを編集する", edit_genre_ranking_rankings_path(@current_ranking.genre_id), class: "btn btn-orange rounded-pill" if @current_ranking %>
@@ -225,7 +225,7 @@
     <!-- ジャンル選択タブエリア（右側） -->
     <div class="col-12 col-md-2">
       <div class="genre-tabs-container sticky-top d-none d-md-block">
-        <div class="card border border-light shadow">
+        <div class="card border-0 rounded-3 shadow-sm">
           <div class="card-header bg-white">
             <h5 class="mb-0 fw-bold text-dark">ジャンル</h5>
           </div>
