@@ -1,6 +1,8 @@
 <%= render 'shared/header/pc' %>
 <%= render 'shared/navigation/edit_navigation' %>
 
+<%= render 'shared/flash' %>
+
 <div class="container-fluid main-content text-center"
       data-controller="ranking-item"
       data-ranking-item-ranking-id-value="<%= @ranking.id %>"

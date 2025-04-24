@@ -1,13 +1,8 @@
 <div class="container-fluid main-content text-center">
+  <%= render 'shared/flash' %>
 
-  <% if notice %>
-    <p class="alert alert-success"><%= notice %></p>
-  <% end %>
-  <% if alert %>
-    <p class="alert alert-danger"><%= alert %></p>
-  <% end %>
 
-  <!-- ロゴコンテナを上部に移動 -->
+  <!-- ロゴ -->
   <% if @ranking_items && @ranking_items.any? %>
     <div class="logo-container text-center p-0 my-1">
       <h3 class="logo-text text-center">
