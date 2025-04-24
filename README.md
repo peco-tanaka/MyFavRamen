@@ -12,7 +12,20 @@
 ## URL
 https://myfavramen.onrender.com/
 
+#### テスト用アカウント
+mail: 
+password: 
+
+#### Basic認証
+ID: pecopeco
+password: 1111
+
 ## 開発の経緯
+
+
+
+
+ユーザーのメリット
 
 ## アプリ概要
 - GoogleMap APIを使用して近くの店舗から検索機能などを実装
@@ -34,7 +47,7 @@ https://myfavramen.onrender.com/
 
 #### データベース
 - PostgreSQL 15.12
- 
+
 #### フロントエンド
 - Bootstrap 5.3
 - SortableJS (ドラッグ&ドロップ機能)
@@ -62,4 +75,4 @@ https://myfavramen.onrender.com/
 
 ## ER図
 
-##
+## 改善点
