@@ -197,7 +197,8 @@ class RankingItemsController < ApplicationController
       :position,     # 順位 (並び替え機能があるなら、ここでは不要かも？)
       :is_manual,           # 手動入力フラグ
       :manual_shop_name,    # 手動入力用店舗名
-      :manual_shop_address  # 手動入力用住所
+      :manual_shop_address,  # 手動入力用住所
+      :photo           # 画像 (ActiveStorage で添付)
     )
   end
 
