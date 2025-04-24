@@ -209,10 +209,10 @@
     <% else %>
       <!-- ランキングアイテムがない場合 -->
       <div class="col-12 col-md-10">
-        <div class="logo-container text-center p-0">
-          <div class="logo-text text-center">
+        <div class="logo-container text-center p-0 my-1">
+          <h3 class="logo-text text-center">
             <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
-          </div>
+          </h3>
         </div>
         <div class="alert alert-info border-0">
           <h5>まだお店が登録されていません</h5>
