@@ -26,7 +26,7 @@ gem "faraday_middleware"
 
 
 # 画像アップロード
-gem "aws-sdk-s3", "~> 1.136", require: false
+gem "aws-sdk-s3", "~> 1.185", require: false
 
 # ページネーション
 gem "kaminari", "~> 1.2"
