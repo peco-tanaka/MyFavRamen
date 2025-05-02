@@ -5,7 +5,7 @@
     <div class="row align-items-center">
       <div class="col-1 text-center ps-2">
       <!-- ランク表示 -->
-      <span class="position-number fw-bold fs-6 <%= item.position <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][item.position-1] : '' %>"><%= item.position %></span>
+      <span class="position-number fw-bold fs-6 <%= item.position <= 3 ? 'text-' + ['warning', 'secondary', 'bronze'][item.position-1] : '' %>"><%= item.position %></span>
       </div>
 
       <div class="col-auto px-0 d-flex justify-content-start">

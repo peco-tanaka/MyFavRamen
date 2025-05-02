@@ -1,0 +1,41 @@
+.ranking-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ranking-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.ranking-position {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #495057;
+  border: 2px solid #e9ecef;
+}
+
+// テキスト色
+.text-bronze {
+  color: #CD7F32 !important; // 銅色
+}
+
+.prefecture-badge {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.page-header {
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.ranking-list li:hover {
+  background-color: #f8f9fa;
+}
