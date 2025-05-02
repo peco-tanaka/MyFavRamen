@@ -1,0 +1,84 @@
+<%= render 'shared/header/pc' %>
+<%= render 'shared/navigation/rankings_navigation' %>
+
+<div class="container main-content mt-4">
+  <!-- 都道府県フィルター -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="mb-0">都道府県で絞り込む</h5>
+    </div>
+    <div class="card-body">
+      <%= form_with url: public_rankings_path, method: :get, local: true, class: "d-flex" do |f| %>
+        <div class="form-group flex-grow-1 me-2">
+          <%= f.collection_select :prefecture_id, @prefectures, :id, :name,
+                               { include_blank: "すべての都道府県" },
+                               { class: "form-control", onchange: "this.form.submit();" } %>
+        </div>
+        <button type="submit" class="btn btn-primary">絞り込む</button>
+      <% end %>
+
+      <% if @current_prefecture.present? %>
+        <div class="mt-2">
+          <span class="badge bg-info">
+            <%= @current_prefecture.name %>のランキング
+          </span>
+          <%= link_to "絞り込み解除", public_rankings_path, class: "btn btn-sm btn-outline-secondary ms-2" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- ランキング一覧 -->
+  <div class="row">
+    <% if @rankings.empty? %>
+      <div class="col-12">
+        <div class="alert alert-info">
+          公開されているランキングはありません。
+        </div>
+      </div>
+    <% else %>
+      <% @rankings.each do |ranking| %>
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="card-header d-flex align-items-center">
+              <div class="me-3">
+                <%= image_tag ranking.user.avatar.present? ? ranking.user.avatar : "default_profile.png",
+                    alt: "プロフィール画像", class: "rounded-circle img-thumbnail", style: "width: 60px; height: 60px;" %>
+              </div>
+              <h5 class="mb-0">
+                <%= link_to ranking.user.nickname, user_path(ranking.user), class: "text-decoration-none" %>さんの
+                <%= ranking.genre.name %>ランキング
+              </h5>
+            </div>
+            <div class="card-body">
+              <% if @top_items[ranking.id].empty? %>
+                <p class="text-muted">ランキングはまだ作成中です</p>
+              <% else %>
+                <ol class="list-group list-group-numbered">
+                  <% @top_items[ranking.id].each do |item| %>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold"><%= item.menu_name %></div>
+                        <%= item.shop_display_name %>
+                      </div>
+                      <% if item.photo.attached? %>
+                        <div class="ranking-thumbnail ms-2">
+                          <%= image_tag item.photo.variant(resize_to_fill: [60, 60]), class: "img-thumbnail" %>
+                        </div>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ol>
+              <% end %>
+            </div>
+            <div class="card-footer text-center">
+              <%= link_to "ランキング詳細を見る", public_ranking_path(ranking), class: "btn btn-primary btn-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<%= render "shared/footer/footer" %>
