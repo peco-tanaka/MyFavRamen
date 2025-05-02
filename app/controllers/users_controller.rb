@@ -6,6 +6,8 @@ class UsersController < ApplicationController
   end
 
   def edit
+    # ユーザーのランキングの公開状態を取得
+    @all_rankings_public = @user.rankings.all?(&:is_public)
   end
 
   def update
@@ -26,10 +28,19 @@ class UsersController < ApplicationController
     return
     end
 
+    # ランキングの公開設定を一括更新
+    # check_box_tag を使うと params[:all_rankings_public] は "true" or "0" (デフォルト) になる
+    if params.key?(:all_rankings_public)
+      is_public = params[:all_rankings_public] == "true" # "true" の場合のみ true になる
+      @user.rankings.update_all(is_public: is_public)
+    end
+
     # 画像選択する場合の更新処理
     if @user.update(user_params)
-      redirect_to @user, notice: "プロフィール画像が更新されました"
+      redirect_to @user, notice: "プロフィール情報が更新されました"
     else
+      # 編集画面で必要な変数を再設定
+      @all_rankings_public = @user.rankings.all?(&:is_public)
       render :edit
     end
   end
