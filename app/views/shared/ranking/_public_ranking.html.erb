@@ -6,7 +6,7 @@
   <% if @ranking_items && @ranking_items.any? && @current_genre.present? %>
     <div class="logo-container text-center p-0 my-1">
       <h3 class="logo-text text-center">
-        <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
+        <span class="logo-my"><%= @user.nickname %><span class="fs-6 text-muted me-2">さんの</span></span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
       </h3>
     </div>
   <% end %>
@@ -206,13 +206,12 @@
       <div class="col-12 col-md-10">
         <div class="logo-container text-center p-0 my-1">
           <h3 class="logo-text text-center">
-            <span class="logo-my">My</span><span class="logo-fav">Fav</span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
+            <span class="logo-my"><%= @user.nickname %><span class="fs-6 text-muted me-2">さんの</span></span><span class="logo-ramen"><%= @current_genre.id == 1 ? "らぁめん ランキング" : "#{@current_genre.name} ランキング" %></span>
           </h3>
         </div>
         <div class="alert alert-info border-0">
           <h5>まだお店が登録されていません</h5>
-          <p>ランキングを編集して、お気に入りのラーメンを登録しましょう！</p>
-          <%= link_to "ランキングを編集する", edit_genre_ranking_rankings_path(@current_ranking.genre_id), class: "btn btn-orange rounded-pill" if @current_ranking %>
+          <p>このユーザーはまだこのジャンルのランキングを作成していないようです。</p>
         </div>
       </div>
     <% end %>
@@ -227,7 +226,7 @@
           <div class="card-body p-2">
             <div class="d-flex flex-wrap justify-content-center gap-2" id="rankingTabs" role="tablist">
               <% @genres.each do |genre| %>
-                <%= link_to genre_rankings_path(genre_id: genre.id),
+                <%= link_to user_genre_public_rankings_path(user_id: @user.id, genre_id: genre.id),
                     class: "btn #{@current_genre&.id == genre.id ? 'btn-danger' : 'btn-outline-secondary'} px-2 py-1 rounded-pill btn-sm" do %>
                   <%= genre.name %>
                 <% end %>

@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   end
 
   # 他ユーザのランキングを閲覧するためのルート
-  resources :public_rankings, only: [ :show ] do
+  resources :public_rankings, only: [ :index, :show ] do
     collection do
       get "user/:user_id/genre/:genre_id", to: "public_rankings#show", as: "user_genre"
     end

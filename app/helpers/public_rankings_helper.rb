@@ -1,0 +1,2 @@
+module PublicRankingsHelper
+end

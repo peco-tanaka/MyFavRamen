@@ -8,8 +8,7 @@ class Ranking < ApplicationRecord
 
   validates :user_id, presence: true
   validates :genre_id, presence: true
-  # 後で実装
-  # validates :is_public, inclusion: { in: [true, false] }
+  validates :is_public, inclusion: { in: [ true, false ] }
 
   # ユーザーとジャンルの組み合わせはユニークであること
   validates :genre_id, uniqueness: { scope: :user_id }
