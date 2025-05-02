@@ -15,6 +15,9 @@
         <%= link_to rankings_path(current_user), class: "nav-link text-dark mx-3 fs-5" do %>
           <i class="bi bi-trophy" style="color: #fd7e14;"></i> Myランキング
         <% end %>
+        <%= link_to public_rankings_path, class: "nav-link text-dark mx-3 fs-5" do %>
+          <i class="bi bi-people" style="color: #fd7e14;"></i> Userランキング
+        <% end %>
         <%= link_to edit_ranking_path(current_user.id, genre_id: 1), class: "nav-link text-dark mx-3 fs-5" do %>
           <i class="bi bi-list-ol" style="color: #fd7e14;"></i> 編集
         <% end %>

@@ -5,28 +5,34 @@
 <footer class="fixed-bottom d-lg-none bg-white border-top shadow-sm">
   <div class="container-fluid">
     <div class="row text-center py-2">
-      <div class="col-3">
+      <div class="col">
+        <%= link_to public_rankings_path, class: "text-decoration-none d-flex flex-column align-items-center" do %>
+          <i class="bi bi-people" style="color: #fd7e14;"></i>
+          <span class="small text-dark" style="font-size: 0.4rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">Userランキング</span>
+        <% end %>
+      </div>
+      <div class="col">
         <%= link_to edit_ranking_path(current_user.id, genre_id: 1), class: "text-decoration-none d-flex flex-column align-items-center" do %>
           <i class="bi bi-list-ol" style="color: #fd7e14; font-size: 1.1rem;"></i>
-          <span class="small text-dark" style="font-size: 0.5rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">編集</span>
+          <span class="small text-dark" style="font-size: 0.4rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">編集</span>
         <% end %>
       </div>
-      <div class="col-3">
+      <div class="col">
         <%= link_to rankings_path(current_user), class: "text-decoration-none d-flex flex-column align-items-center" do %>
           <i class="bi bi-trophy" style="color: #fd7e14; font-size: 1.1rem;"></i>
-          <span class="small text-dark" style="font-size: 0.5rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">Myランキング</span>
+          <span class="small text-dark" style="font-size: 0.4rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">Myランキング</span>
         <% end %>
       </div>
-      <div class="col-3">
+      <div class="col">
         <%= link_to shops_path, class: "text-decoration-none d-flex flex-column align-items-center" do %>
           <i class="bi bi-search" style="color: #fd7e14; font-size: 1.1rem;"></i>
-          <span class="small text-dark" style="font-size: 0.5rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">探す</span>
+          <span class="small text-dark" style="font-size: 0.4rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">探す</span>
         <% end %>
       </div>
-      <div class="col-3">
+      <div class="col">
         <%= link_to user_path(current_user), class: "text-decoration-none d-flex flex-column align-items-center" do %>
           <i class="bi bi-person" style="color: #fd7e14; font-size: 1.1rem;"></i>
-          <span class="small text-dark" style="font-size: 0.5rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">プロフィール</span>
+          <span class="small text-dark" style="font-size: 0.4rem; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 500;">プロフィール</span>
         <% end %>
       </div>
     </div>
