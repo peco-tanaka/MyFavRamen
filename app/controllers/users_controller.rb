@@ -57,7 +57,7 @@ class UsersController < ApplicationController
       RankingItem.where(ranking_id: user.rankings.pluck(:id)).destroy_all
       user.rankings.destroy_all
       user.avatar.purge if user.avatar.attached?
-      
+
       # 未実装の関連を使わず直接削除 (コールバックは実行されない)
       User.where(id: user.id).delete_all
     end
