@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     sessions: "users/sessions"
   }
 
+  resources :users, only: [ :show, :edit, :update, :destroy ]
+
   root to: "home#index"
   post "shops/search", to: "shops#search"
 
@@ -38,8 +40,6 @@ Rails.application.routes.draw do
       get "user/:user_id/genre/:genre_id", to: "public_rankings#show", as: "user_genre"
     end
   end
-
-  resources :users, only: [ :show, :edit, :update ]
 
   # 開発環境でメール送信を行うための設定
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
