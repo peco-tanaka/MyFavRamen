@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: [ :show, :edit, :update ]
+  before_action :authenticate_user!, only: [ :show, :edit, :update, :destroy ]
   before_action :set_user, only: [ :show, :edit, :update ]
+  before_action :ensure_current_user, only: [ :destroy ]
 
   def show
   end
@@ -45,6 +46,31 @@ class UsersController < ApplicationController
     end
   end
 
+  # 退会機能（ハードデリート）
+  def destroy
+    # 現在ログインしているユーザーのみ削除可能
+    user = current_user
+
+    # トランザクションで囲み、関連データもまとめて削除する
+    ActiveRecord::Base.transaction do
+      # 実装済みの関連データのみ削除する
+      RankingItem.where(ranking_id: user.rankings.pluck(:id)).destroy_all
+      user.rankings.destroy_all
+      user.avatar.purge if user.avatar.attached?
+      
+      # 未実装の関連を使わず直接削除 (コールバックは実行されない)
+      User.where(id: user.id).delete_all
+    end
+
+    # ログアウト処理と通知メッセージの設定
+    sign_out(user)
+    redirect_to root_path, notice: "アカウントが完全に削除されました。ご利用ありがとうございました。"
+  rescue => e
+    Rails.logger.error("アカウント削除エラー: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    redirect_to edit_user_path(current_user), alert: "アカウントの削除に失敗しました。お手数ですが、再度お試しください。"
+  end
+
   private
 
   def user_params
@@ -53,5 +79,13 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  end
+
+  # 現在のユーザーが本人であることを確認
+  def ensure_current_user
+    @user = User.find(params[:id])
+    unless @user == current_user
+      redirect_to root_path, alert: "他のユーザーのアカウントは削除できません"
+    end
   end
 end

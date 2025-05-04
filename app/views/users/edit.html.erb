@@ -8,6 +8,7 @@
 
 <%# メインコンテンツ %>
 <div class="container-fluid main-content">
+  <%= render 'shared/flash' %>
   <div class="card shadow-sm">
     <div class="card-header" style="background-color: #fd7e14; color: white;">
       <h5 class="mb-0">プロフィール編集</h5>
@@ -101,15 +102,15 @@
   <%# 退会セクション - より控えめなデザイン %>
   <div class="card mt-4 mb-4">
     <div class="card-header bg-light text-secondary">
-      <h6 class="mb-0">アカウント管理（今後実装予定）</h6>
+      <h6 class="mb-0">アカウント管理</h6>
     </div>
     <div class="card-body">
       <p class="text-muted small mb-3">
         アカウントを削除すると、プロフィール情報、お気に入り、ランキングなどのすべてのデータが完全に削除され、復旧できなくなります。
       </p>
       <div class="text-end">
-        <%= link_to "#", class: "btn btn-sm btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#deleteAccountModal" } do %>
-          <i class="bi bi-trash me-1"></i>アカウント削除（未実装です）
+        <%= link_to "#", class: "btn btn-sm btn-outline-danger", data: { bs_toggle: "modal", bs_target: "#deleteAccountModal" } do %>
+          <i class="bi bi-trash me-1"></i>アカウント削除
         <% end %>
       </div>
     </div>
@@ -135,13 +136,14 @@
             <li>プロフィール情報</li>
             <li>お気に入り登録したラーメン店</li>
             <li>作成したランキング</li>
-            <li>フォロー/フォロワー関係</li>
+            <%# 機能実装後にコメントを外す %>
+            <!-- <li>フォロー/フォロワー関係</li> -->
           </ul>
           <p class="mb-0">本当に退会しますか？</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-          <%= link_to "#", class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "最終確認：アカウントを完全に削除しますか？" } do %>
+          <%= link_to user_path(current_user), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "最終確認：アカウントを完全に削除しますか？" } do %>
             アカウントを削除する
           <% end %>
         </div>
