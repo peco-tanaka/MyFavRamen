@@ -59,9 +59,9 @@ RSpec.describe RankingItem, type: :model do
         # まず1つ目を保存
         first_item = create(:ranking_item)
         # 同じランキング、同じ店舗、同じメニュー名で2つ目を作成
-        duplicate_item = build(:ranking_item, 
-                              ranking: first_item.ranking, 
-                              shop: first_item.shop, 
+        duplicate_item = build(:ranking_item,
+                              ranking: first_item.ranking,
+                              shop: first_item.shop,
                               menu_name: first_item.menu_name)
 
         duplicate_item.valid?
