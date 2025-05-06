@@ -1,48 +1,53 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  describe 'バリデーションのテスト' do
+  describe 'ユーザー登録機能' do
     let(:user) { build(:user) }
 
-    context '有効なユーザー' do
-      it 'すべての属性が有効である場合、ユーザーは有効である' do
+    context '登録できる場合' do
+      it 'すべての属性が有効である場合、登録できる' do
+        expect(user).to be_valid
+      end
+
+      it '画像が添付されている場合も登録できる' do
+        user = build(:user, :with_avatar)
         expect(user).to be_valid
       end
     end
 
-    context '無効なユーザー' do
-      it 'メールアドレスが空の場合、無効である' do
+    context '登録できない場合' do
+      it 'メールアドレスが空の場合、登録できない' do
         user.email = nil
         user.valid?
         expect(user.errors.full_messages).to include("Eメールを入力してください")
       end
 
-      it 'メールアドレスが一意でない場合、無効である' do
+      it 'メールアドレスが一意でない場合、登録できない' do
         create(:user, email: user.email)
         user.valid?
         expect(user.errors.full_messages).to include("Eメールはすでに存在します")
       end
 
-      it 'パスワードが空の場合、無効である' do
+      it 'パスワードが空の場合、登録できない' do
         user.password = nil
         user.valid?
         expect(user.errors.full_messages).to include("パスワードを入力してください")
       end
 
-      it 'ニックネームが空の場合、無効である' do
+      it 'ニックネームが空の場合、登録できない' do
         user.nickname = nil
         user.valid?
         expect(user.errors.full_messages).to include("Nicknameを入力してください")
       end
-      
-      it 'パスワードが6文字未満の場合、無効である' do
+
+      it 'パスワードが6文字未満の場合、登録できない' do
         user.password = 'short'
         user.password_confirmation = 'short'
         user.valid?
         expect(user.errors.full_messages).to include("パスワードは6文字以上で入力してください")
       end
 
-      it 'パスワード確認が一致しない場合、無効である' do
+      it 'パスワード確認が一致しない場合、登録できない' do
         user.password_confirmation = 'different_password'
         user.valid?
         expect(user.errors.full_messages).to include("パスワード（確認用）とパスワードの入力が一致しません")
@@ -50,15 +55,15 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '認証関連のテスト' do
+  describe 'ログイン機能' do
     let!(:user) { create(:user, password: 'password123') }
 
     context 'パスワード検証' do
-      it '正しいパスワードで認証できる' do
+      it '正しいパスワードでログインできる' do
         expect(user.valid_password?('password123')).to be true
       end
 
-      it '誤ったパスワードでは認証できない' do
+      it '誤ったパスワードではログインできない' do
         expect(user.valid_password?('wrong_password')).to be false
       end
     end
