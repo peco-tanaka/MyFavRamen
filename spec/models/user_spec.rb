@@ -76,4 +76,26 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe 'アソシエーションのテスト' do
+    let(:user) { build(:user) }
+
+    it 'ランキングを持つことができる' do
+      expect(User.reflect_on_association(:rankings).macro).to eq :has_many
+    end
+
+    it 'ランキングアイテムを持つことができる（ランキングを介して）' do
+      expect(User.reflect_on_association(:ranking_items).macro).to eq :has_many
+    end
+
+    it '都道府県に属する' do
+      expect(user.prefecture).to be_present
+    end
+
+    it 'ユーザーが削除された時、関連するランキングも削除される' do
+      user = create(:user)
+      ranking = create(:ranking, user: user)
+      expect { user.destroy }.to change { Ranking.count }.by(-1)
+    end
+  end
 end
