@@ -80,11 +80,11 @@ RSpec.describe User, type: :model do
   describe 'アソシエーションのテスト' do
     let(:user) { build(:user) }
 
-    it 'ランキングを持つことができる' do
+    it '複数のランキングを持つ' do
       expect(User.reflect_on_association(:rankings).macro).to eq :has_many
     end
 
-    it 'ランキングアイテムを持つことができる（ランキングを介して）' do
+    it 'ランキングを通して複数のランキングアイテムを持つ' do
       expect(User.reflect_on_association(:ranking_items).macro).to eq :has_many
     end
 
