@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :ranking_item do
     association :ranking
-    association :shop
+    shop      { create(:shop) }  # <- 明示的に shop を作成して関連付ける
     position  { Faker::Number.between(from: 1, to: 10) }
     menu_name { "#{Faker::Food.dish}ラーメン" }
     comment   { Faker::Lorem.sentence }
@@ -11,7 +11,7 @@ FactoryBot.define do
     trait :with_photo do
       after(:build) do |item|
         # ファイルが存在することを確認してから添付
-        file_path = Rails.root.join('spec', 'fixtures', 'files', 'test_image.jpg')
+        file_path = Rails.root.join('spec', 'fixtures', 'files', 'test_image.png')
         if File.exist?(file_path)
           item.photo.attach(
             io: File.open(file_path),
