@@ -3,6 +3,8 @@ import * as bootstrap from "bootstrap"
 import { MapsHelper } from "../utilities/maps_helper"
 import { hide } from "@popperjs/core"
 import Results_controller from "./results_controller"
+import { ShopSearchHelper } from "../utilities/shop_search_helper"
+import { RankingItemHelper } from "../utilities/ranking_item_helper"
 
 // Connects to data-controller="ranking-item"
 export default class extends Controller {
@@ -13,6 +15,7 @@ export default class extends Controller {
     "manualShopName",    // 手動入力の店舗名
     "manualShopAddress", // 手動入力の住所
     "menuNameInput",     // メニュー名入力フィールド
+    "menuPhotoInput",    // メニュー写真入力フィールド（追加）
     "searchResults",     // 検索結果表示領域
     "newItemsContainer",  // 新しいアイテムを追加する場所
     "searchInput"        // 検索入力フィールド
@@ -30,9 +33,14 @@ export default class extends Controller {
   selectedShop = null
   searchResult = []
 
+  // ヘルパーモジュールの参照
+  shopSearchHelper = null
+  rankingItemHelper = null
+
   connect() {
     console.log("Ranking item controller connected")
-    // targetsが取得できているか確認
+    
+    // ターゲットの確認
     console.log("Controller targets:", {
       shopSearchModal: this.hasShopSearchModalTarget,
       searchInput: this.hasSearchInputTarget,
@@ -47,14 +55,40 @@ export default class extends Controller {
     this.resultsController = new Results_controller();
     this.resultsController.initialize(this.selectMapShop.bind(this), true); // 簡易モードで初期化
 
-    // 必要なターゲット要素を設定（二つのコントローラー間で同じDOM要素に対して操作を行う）
+    // 結果表示用のDOMを設定
     if (this.hasSearchResultsTarget) {
       this.resultsController.searchResultsTarget = this.searchResultsTarget;
       this.resultsController.hasSearchResultsTarget = true;
     }
 
+    // ShopSearchHelperの初期化（オブジェクトリテラル形式に対応）
+    this.shopSearchHelper = Object.create(ShopSearchHelper);
+    this.shopSearchHelper.initialize({
+      onSearchStart: this.showSearchingState.bind(this),
+      onSearchComplete: (results) => {
+        this.resultsController.displayResults(results);
+      },
+      onSearchError: () => this.displaySearchError(),
+    });
+
+    // RankingItemHelperの初期化（オブジェクトリテラル形式に対応）
+    this.rankingItemHelper = Object.create(RankingItemHelper);
+    this.rankingItemHelper.initialize({
+      onSaveStart: () => this.showSavingIndicator("ランキングに保存中..."),
+      onSaveSuccess: (result) => this.handleSaveSuccess(result),
+      onSaveError: (error) => this.handleSaveError(error),
+      onUpdateStart: () => this.showSavingIndicator(),
+      onUpdateSuccess: (result) => this.handleEditSuccess(result),
+      onUpdateError: (error) => this.handleEditError(error)
+    });
+
     // 既存の編集ボタンにイベントリスナーを追加
     this.setupEditButtons()
+
+    // 画像プレビュー機能の設定
+    if (this.hasMenuPhotoInputTarget) {
+      this.menuPhotoInputTarget.addEventListener('change', this.handlePhotoInputChange.bind(this));
+    }
 
     // モーダルが閉じる前のイベントハンドラを追加
     this.shopSearchModalTarget.addEventListener('hide.bs.modal', this.handleModalHide.bind(this))
@@ -64,39 +98,34 @@ export default class extends Controller {
 
   // モーダルが閉じる前にフォーカスを移動するメソッド
   handleModalHide(event) {
-    // フォーカスをモーダル外の要素に移動（例: ページのbody要素）
+    // フォーカスをモーダル外の要素に移動
     document.body.focus()
     // または何も選択されていない状態にする
     document.activeElement.blur()
   }
 
   // 「ラーメンを追加」ボタンクリック時にモーダルを表示
-  // data-action="click->ranking-item#openShopSearchModal"で呼び出される
   openShopSearchModal() {
     this.shopSearchModal.show()
   }
 
   // 手動登録フォームの表示切り替え
-  // data-action="click->ranking-item#toggleManualForm"で呼び出される
   toggleManualForm(event) {
     event.preventDefault()
 
-    // フォームの現在の表示状態を取得 (切り替えを行う前にチェック)
+    // フォームの現在の表示状態を取得
     const isCurrentlyVisible = this.manualFormTarget.style.display !== 'none';
 
-    // フォームを現在表示されているなら非表示に、非表示なら表示にする
+    // フォームの表示状態を切り替え
     this.manualFormTarget.style.display = isCurrentlyVisible ? 'none' : 'block';
 
     // 手動フォームの表示状態に応じて「選択して次へ」ボタンの状態を更新
     this.updateSelectButtonState();
 
-    // もしフォームが（切り替え操作の後に）表示されているならば...
-    // (切り替え前に非表示 isCurrentlyVisible === false だった場合)
+    // フォームが表示されたらマップ検索の選択状態をリセット
     if (!isCurrentlyVisible) {
       console.log("手動フォームが表示されました。");
-      // 地図検索結果リストのハイライトを解除する処理
       this.clearMapSelectionVisuals();
-      // 地図検索で選択されていた可能性のある情報をリセット
       this.selectedShop = null;
       console.log("地図検索の選択状態と選択情報をリセットしました。");
     } else {
@@ -105,53 +134,47 @@ export default class extends Controller {
   }
 
   // 店舗選択ボタンをクリックしたときの処理
-  // data-action="click->ranking-item#selectShop"で呼び出し
   selectShop() {
-    // 1. 選択された店舗情報を取得（手動入力なので is_manual: true が含まれる）
+    // 1. 選択された店舗情報を取得
     const manualData = this.getSelectedShopData();
 
     // 店舗名が入力されているかチェック
     if (!manualData || !manualData.name) {
       alert("店舗名を入力してください");
-      return; // 処理を中断
+      return;
     }
 
-    // 2. ★ サーバー通信は行わず、this.selectedShop に情報を格納 ★
+    // 2. 手動入力データを格納
     this.selectedShop = {
       id: null,                  // Google Place ID はない
       name: manualData.name,
       address: manualData.address,
-      is_manual: true,           // ★ 手動入力なので true ★
-      dbId: null                   // ★ DB ID はないので null ★
+      is_manual: true,           // 手動入力フラグ
+      dbId: null                 // DB ID はない
     };
 
     console.log("手動入力店舗選択完了:", this.selectedShop);
 
     // 3. モーダル遷移 & UI調整
-    this.manualFormTarget.style.display = 'none'; // 手動フォーム自体を隠す
+    this.manualFormTarget.style.display = 'none';
     this.menuInputModal.show();
     this.shopSearchModal.hide()
     this.menuNameInputTarget.focus();
-    this.updateSelectButtonState(); // ボタン状態を更新
+    this.updateSelectButtonState();
   }
 
   // 「選択して次へ」ボタンの状態を更新するメソッド
   updateSelectButtonState() {
-    // ボタン要素を取得 (IDで取得)
     const selectShopButton = document.getElementById('select-shop-btn');
-    // manualForm ターゲットの存在も確認
     if (selectShopButton && this.hasManualFormTarget) {
-      // 手動入力フォームが表示されている場合のみボタンを有効化 (disabled = false)
       selectShopButton.disabled = this.manualFormTarget.style.display === 'none';
     } else if (selectShopButton) {
-        // 手動フォームターゲットがない場合は常に無効化
-        selectShopButton.disabled = true;
+      selectShopButton.disabled = true;
     }
   }
 
   // 手動入力からの店舗データを取得
   getSelectedShopData() {
-    // 手動入力フォームが表示されている場合
     if (this.hasManualFormTarget && this.manualFormTarget.style.display !== 'none') {
       const shopName = this.hasManualShopNameTarget ? this.manualShopNameTarget.value.trim() : null;
       const shopAddress = this.hasManualShopAddressTarget ? this.manualShopAddressTarget.value.trim() : '';
@@ -160,15 +183,12 @@ export default class extends Controller {
         return null;
       }
 
-      // 手動入力データのみを返す
       return {
         name: shopName,
-        address: shopAddress || '',  // 住所が空の場合は空文字を設定
+        address: shopAddress || '',
         is_manual: true
       }
     }
-
-    // 手動入力フォームが表示されていない場合はnullを返す
     return null;
   }
 
@@ -181,44 +201,19 @@ export default class extends Controller {
       return
     }
 
-    // 検索中の表示などがあれば表示
-    this.showSearchingState()
-
     try {
-      // Places APIを読み込んで検索実行
-      const { Place } = await MapsHelper.loadMapsLibrary("places")
-
-      // テキスト検索オプション
-      const textSearchOptions = {
-        textQuery: `${keyword} ラーメン`,
-        fields: ["displayName", "location", "formattedAddress",
-                "rating", "userRatingCount", "photos", "id"],
-        maxResultCount: 15,
-        language: "ja"
-      }
-
-      const { places } = await Place.searchByText(textSearchOptions)
-      console.log("検索結果:", places)
-
-      // 検索結果をプロパティに保存
-      this.searchResults = places || []
-
-      // resultsControllerを使って検索結果を表示
-      this.resultsController.displayResults(this.searchResults)
-      } catch (error) {
-        console.error("店舗検索中にエラーが発生しました", error)
-        this.displaySearchError()
-      } finally {
-        this.hideSearchingState()
-      }
+      // ShopSearchHelperを使用して検索
+      await this.shopSearchHelper.searchShops(keyword);
+    } catch (error) {
+      console.error("店舗検索中にエラーが発生しました", error);
+      this.displaySearchError();
+    }
   }
 
   // 検索結果から店舗を選択
   async selectMapShop(event) {
     event.preventDefault()
-    const selectedButton = event.currentTarget // クリックされた要素を保存
-
-    // ★ dataset から placeId を取得 (dataset.shopId ではなく placeId に変更)
+    const selectedButton = event.currentTarget
     const placeId = selectedButton.dataset.placeId;
 
     if (!placeId) {
@@ -230,256 +225,113 @@ export default class extends Controller {
     // 手動入力フォームが表示されていれば隠す
     if (this.hasManualFormTarget && this.manualFormTarget.style.display !== 'none') {
       this.manualFormTarget.style.display = 'none'
-      this.updateSelectButtonStatus();  // ボタン状態を更新
+      this.updateSelectButtonState();
     }
 
-    // 視覚的な選択状態表示 (変更なし)
+    // 視覚的な選択状態表示
     this.searchResultsTarget.querySelectorAll('.list-group-item').forEach(item => item.classList.remove('active'));
     selectedButton.classList.add('active');
 
-    this.showSavingIndicator("店舗情報を登録中...");  // 保存中インジケーターを流用
+    this.showSavingIndicator("店舗情報を登録中...");
 
     try {
-      // 1.Places APIを読み込んで選択した店舗の詳細情報を取得
-      console.log(`Place ID: ${placeId} の詳細情報を取得します...`);
-      const { Place } = await MapsHelper.loadMapsLibrary("places")
-      const placeDetails = new Place({ id: placeId, requestedLanguage: "ja" });
-
-      // ShopController#search に必要なフィールドを最低限指定
-      await placeDetails.fetchFields({
-        fields: ["displayName", "formattedAddress", "photos", "location"]
-      });
-      console.log("Google Place 詳細取得成功", placeDetails);
-
-      // 2.バックエンド（/shop/search）に情報を送信して、Shop IDを取得
-      console.log("サーバーに店舗情報を送信し、Shop IDを取得します...");
-      const csrfToken = this.getCSRFToken() // CSRFトークンを取得
+      // 1. 店舗詳細情報を取得
+      const placeDetails = await this.shopSearchHelper.getShopDetails(placeId);
+      
+      // 2. サーバーに店舗情報を送信してShop IDを取得
+      const csrfToken = this.getCSRFToken();
       if (!csrfToken) {
-        throw new Error("CSRFトークンが取得できませんでした。ページをリロードしてください。")
+        throw new Error("CSRFトークンが取得できませんでした。ページをリロードしてください。");
       }
+      
+      const shopInfo = await this.shopSearchHelper.registerShopToServer(placeDetails, placeId, csrfToken);
 
-      const response = await fetch('/shops/search', {   //POSTリクエスト
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // リクエスト: JSON形式
-          'Accept': 'application/json',       // レスポンス: JSON形式
-          'X-CSRF-Token': csrfToken           // CSRFトークンをヘッダーに追加
-        },
-        // 送信するデータ (place_id, name, address は ShopController が期待するキー)
-        body: JSON.stringify({
-          place_id: placeId,
-          name: placeDetails.displayName,
-          address: placeDetails.formattedAddress
-        })
-      });
-
-      // レスポンスをJSONとして解析
-      const result = await response.json();
-      console.log("サーバーからの応答:", result);
-
-      // ★ レスポンスをチェック
-      // response.ok は HTTPステータスが 200-299 かどうか
-      // result.status は Rails側で設定した 'success' かどうか
-      // result.shop_id が存在するかどうか
-      if (!response.ok || result.status !== 'success' || !result.shop_id) {
-        // エラーメッセージを組み立てて例外をスロー
-        const errorDetail = result.message || result.errors?.join(', ') || `サーバーエラー (${response.status})`;
-        throw new Error(`店舗情報の登録に失敗しました: ${errorDetail}`);
-      }
-
-      // 3.成功した場合、this.selectedShopに必要な情報を格納
+      // 3. 店舗情報を保存
       this.selectedShop = {
-        id: placeId,          // Google Place ID（placeId）
-        name: placeDetails.displayName,
-        address: placeDetails.formattedAddress,
-        is_manual: false,    // 地図からの選択なので false
-        dbId: result.shop_id // ★★★ 取得したDB上のShop IDを設定 ★★★
+        id: placeId,           // Google Place ID
+        name: shopInfo.name,
+        address: shopInfo.address,
+        is_manual: false,      // 地図からの選択
+        dbId: shopInfo.dbId    // DB上のShop ID
       }
       console.log("店舗選択とDB登録/検索が完了:", this.selectedShop);
 
-      // 4.店舗検索モーダルを閉じてメニュー入力モーダルを開いて入力欄にフォーカスを当てる
+      // 4. モーダル遷移
       this.shopSearchModal.hide()
       this.menuInputModal.show()
       this.menuNameInputTarget.focus();
 
     } catch (error) {
       console.error("店舗情報の取得中にエラーが発生しました", error)
-      alert(`エラーが発生しました: ${error.message}`); // ユーザーにエラーを通知
-      // エラーが起きたら選択状態を解除する
+      alert(`エラーが発生しました: ${error.message}`);
       selectedButton.classList.remove('active');
-      this.selectedShop = null; // 選択情報もリセット
+      this.selectedShop = null;
     } finally {
-      // ★ ローディング表示を非表示にする
       this.hideSavingIndicator();
     }
   }
 
+  // メニュー写真が選択されたときの処理
+  handlePhotoInputChange(event) {
+    const fileInput = event.target;
+    const previewContainer = document.getElementById('photo-preview');
+    const previewImg = document.getElementById('photo-preview-img');
+
+    if (fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        previewContainer.style.display = 'block';
+      };
+      
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      previewContainer.style.display = 'none';
+    }
+  }
+
   // メニュー追加処理
-  // data-action="click->ranking-item#addMenu"で呼び出される
   addMenu() {
     // メニュー名を取得
     const menuName = this.menuNameInputTarget.value.trim()
     if (!menuName) { alert("メニュー名を入力してください。"); return; }
-    if (!this.selectedShop) { alert("店舗が選択されていません。"); return; } // selectedShop 自体の存在をチェック
+    if (!this.selectedShop) { alert("店舗が選択されていません。"); return; }
 
-    // ★ is_manual フラグを見て送信データを構築 ★
-    let rankingItemData = {}; // 送信データを格納するオブジェクト
-
+    // FormDataオブジェクトを作成して送信データを構築
+    const formData = new FormData();
+    
     if (this.selectedShop.is_manual) {
-      // --- 手動入力の場合 ---
-      // 店舗名が設定されているか確認 (getSelectedShopDataでチェック済みのはずだが念のため)
+      // 手動入力の場合
       if (!this.selectedShop.name) { alert("手動入力の店舗名が設定されていません。"); return; }
-      rankingItemData = {
-        menu_name: menuName,
-        is_manual: true,                 // ★ 手動フラグを送信 ★
-        manual_shop_name: this.selectedShop.name, // ★ 手動店舗名を送信 ★
-        manual_shop_address: this.selectedShop.address || '' // ★ 手動住所を送信 ★
-        // shop_id は含めない
-        // comment, photo など他の共通属性は必要なら追加
-      };
+      formData.append('ranking_item[menu_name]', menuName);
+      formData.append('ranking_item[is_manual]', 'true');
+      formData.append('ranking_item[manual_shop_name]', this.selectedShop.name);
+      formData.append('ranking_item[manual_shop_address]', this.selectedShop.address || '');
     } else {
-      // --- 地図検索の場合 ---
-      // dbId が存在するか (サーバー通信が成功したか) 確認
+      // 地図検索の場合
       if (!this.selectedShop.dbId) { alert("店舗IDが取得できていません。店舗を選択し直してください。"); return; }
-      rankingItemData = {
-        shop_id: this.selectedShop.dbId, // ★ DBのShop IDを送信 ★
-        menu_name: menuName,
-        is_manual: false                // ★ false を送信 (または省略可) ★
-        // comment, photo など他の共通属性は必要なら追加
-      };
+      formData.append('ranking_item[shop_id]', this.selectedShop.dbId);
+      formData.append('ranking_item[menu_name]', menuName);
+      formData.append('ranking_item[is_manual]', 'false');
+    }
+    
+    // 写真がアップロードされていれば追加
+    if (this.hasMenuPhotoInputTarget && this.menuPhotoInputTarget.files && this.menuPhotoInputTarget.files[0]) {
+      formData.append('ranking_item[photo]', this.menuPhotoInputTarget.files[0]);
     }
 
-    // 最終的なデータ構造
-    const data = { ranking_item: rankingItemData };
-    console.log("ランキングアイテム保存データ:", data);
-
     // サーバーにデータを送信
-    this.saveRankingItem(data)
+    this.rankingItemHelper.saveRankingItemWithFormData(formData, this.urlValue, this.rankingIdValue);
 
-    this.menuInputModal.hide()
+    this.menuInputModal.hide();
 
     // 入力欄や選択状態をクリア
     this.menuNameInputTarget.value = '';
-  }
-
-  // サーバーにデータを送信するメソッド
-  async saveRankingItem(data) {
-    this.showSavingIndicator("ランキングに保存中...");
-    try {
-      // 保存中の表示
-      this.showSavingIndicator()
-
-      // ランキングIDと保存先URLを取得
-      const rankingId = this.rankingIdValue
-      const baseUrl = this.urlValue
-
-      // ★★★ リクエストURLの末尾に ".json" を追加 ★★★
-      const url = baseUrl.endsWith('/') ? `${baseUrl.slice(0, -1)}.json` : `${baseUrl}.json`;
-      // もしくは単純に: const url = `${this.urlValue}.json`; でも通常はOK
-
-      console.log("Requesting URL:", url); // デバッグ用にURLを確認
-
-      // フェッチAPIを使ってPOSTリクエストを送信
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': this.getCSRFToken()
-        },
-        body: JSON.stringify(data)
-      })
-
-      // baseUrlだとJSONレスポンスが返ってこないので、.jsonをつける必要があった
-      if (!response.ok) {
-        throw new Error(`サーバーエラー： ${response.status}`)
-      }
-
-      const result = await response.json()
-
-      // 保存成功時の処理
-      this.handleSaveSuccess(result)
-    } catch (error) {
-      console.error("保存中にエラーが発生しました", error)
-      // 保存エラー時の処理
-      this.handleSaveError(error)
-    } finally {
-      // 保存中の表示を非表示
-      this.hideSavingIndicator()
+    if (this.hasMenuPhotoInputTarget) {
+      this.menuPhotoInputTarget.value = '';
     }
-  }
-
-  // ランキングアイテムをDOMに追加するメソッド
-  addNewItemToDom(item) {
-    // 新しいランキングアイテム要素を作成
-    const newItem = document.createElement('div')
-    newItem.className = 'card mb-2 border-0 shadow-sm ranking-item'
-    newItem.dataset.id = item.id
-    newItem.dataset.rankingSortTarget = 'item'
-
-    // 現在の最後の順位を取得して新しいアイテムの順位を設定
-    const currentItems = document.querySelectorAll('[data-ranking-sort-target="item"]')
-    const newPosition = currentItems.length + 1
-
-    // ランキングアイテムの内容を構築
-    newItem.innerHTML = `
-      <div class="card-body p-2">
-        <div class="row align-items-center">
-          <div class="col-1 text-center ps-2">
-            <!-- ランク表示 -->
-            <span class="position-number fw-bold fs-6 ${newPosition <= 3 ? 'text-' + ['warning', 'secondary', 'danger'][newPosition-1] : ''}">
-              ${newPosition}
-            </span>
-          </div>
-
-          <div class="col-auto px-0">
-            <!-- 画像プレビュー -->
-            <div class="placeholder-img img-thumbnail d-flex align-items-center justify-content-center"
-                style="width: 70px; height: 70px; background-color: #f8f9fa; border-radius: 0.25rem;">
-              <i class="bi bi-image text-muted"></i>
-            </div>
-          </div>
-
-          <div class="col text-start px-1">
-            <!-- 店舗・メニュー情報 -->
-            <h6 class="card-title mb-0 fs-6">
-              ${item.shop_name}
-              ${item.is_manual ? '<span class="badge bg-secondary ms-1" style="font-size: 0.5em;">手動登録</span>' : ''}
-            </h6>
-            <p class="card-text small text-muted mb-0" style="font-size: 0.7rem;">${item.menu_name}</p>
-          </div>
-
-          <div class="col-1 text-end d-flex flex-column align-items-end px-1">
-            <!-- 操作ボタン -->
-            <button type="button" class="btn btn-sm btn-outline-primary edit-item-btn mb-2" data-id="${item.id}" 
-                style="font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;">
-              <i class="bi bi-pencil-fill"></i>
-              <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">編集</span>
-            </button>
-            <a href="/rankings/${this.rankingIdValue}/ranking_items/${item.id}" 
-              data-turbo-method="delete"
-              data-turbo-confirm="このラーメン店をランキングから削除してもよろしいですか？"
-              class="btn btn-sm btn-outline-danger"
-              style="font-size: 0.7rem; padding: 0.15rem 0.3rem; width: 100%; height: auto; display: flex; flex-direction: column; align-items: center;">
-              <i class="bi bi-trash-fill"></i>
-              <span class="d-none d-md-block" style="font-size: 0.65rem; margin-top: 2px;">削除</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    `
-
-    // 新しいアイテムを追加する前にからのランキングメッセージがあれば削除
-    const emptyMessage = document.querySelector('.empty-ranking-message')
-    if (emptyMessage) {
-      emptyMessage.remove()
-    }
-
-    // ランキングアイテムリストに新しいアイテムを追加
-    const rankingList = document.querySelector('[data-ranking-sort-target="container"]')
-    rankingList.appendChild(newItem)
-
-    // 編集ボタンにイベントリスナーを追加
-    this.attachEditButtonEvent(newItem.querySelector('.edit-item-btn'))
+    document.getElementById('photo-preview').style.display = 'none';
   }
 
   // 編集ボタンにイベントリスナーを追加するメソッド
@@ -488,7 +340,6 @@ export default class extends Controller {
 
     button.addEventListener('click', (event) => {
       const itemId = event.currentTarget.dataset.id
-      // 編集モーダルを開く
       this.openEditModal(itemId)
     })
   }
@@ -504,20 +355,8 @@ export default class extends Controller {
     console.log(`アイテムID: ${itemId} の編集モーダルを開きます`)
 
     try {
-      // 編集用フォームサーバーから取得
-      const response = await fetch(`/rankings/${this.rankingIdValue}/ranking_items/${itemId}/edit`, {
-        headers: {
-          'Accept': 'text/html',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      })
-
-      if (!response.ok) {
-        throw new Error(`サーバーエラー： ${response.status}`)
-      }
-
-      // レスポンスからHTMLを取得
-      const html = await response.text()
+      // 編集用フォームをRankingItemHelperから取得
+      const html = await this.rankingItemHelper.fetchEditForm(this.rankingIdValue, itemId);
 
       // 編集フォームコンテナにHTMLを挿入
       document.getElementById('edit-item-form-container').innerHTML = html
@@ -556,93 +395,16 @@ export default class extends Controller {
   // 編集フォームの送信処理
   async handleEditFormSubmit(event) {
     event.preventDefault()
-
-    // フォームデータの取得
     const form = event.currentTarget
-    const formData = new FormData(form)
-
     const itemId = form.dataset.rankingItemId
-
+    
     try {
-      // 保存中の表示
-      this.showSavingIndicator()
-
-      // サーバーにデータを送信（form_withで生成されたURLを使用）
-      const response = await fetch(form.action, {
-        method: form.method,
-        headers: {
-          'X-CSRF-Token': this.getCSRFToken(),
-          'Accept': 'application/json'
-        },
-        body: formData
-      })
-
-      if (!response.ok) {
-        throw new Error(`サーバーエラー： ${response.status}`)
-      }
-
-      const result = await response.json()
-
-      // 保存成功時の処理
-      this.handleEditSuccess(result, itemId)
+      // RankingItemHelperを使用して更新処理
+      const result = await this.rankingItemHelper.updateRankingItem(form);
+      // 編集成功のハンドラーは、コールバックでRankingItemHelperから呼び出される
     } catch (error) {
-      console.error("保存中にエラーが発生しました", error)
-      // 保存エラー時の処理
-      this.handleEditError(error)
-    } finally {
-      this.hideSavingIndicator()
-    }
-  }
-
-  // DOM上のアイテム情報を更新するメソッド
-  updateItemInDom(item, itemId) {
-    // 更新対象の要素を取得
-    const itemElement = document.querySelector(`[data-id="${itemId}"]`)
-
-    if (!itemElement) {
-      console.error(`ID: ${itemId} もアイテムが見つかりません`)
-      return
-    }
-
-    // 店舗名とメニュー名を更新
-    const shopNameElement = itemElement.querySelector('.card-title')
-    const menuNameElement = itemElement.querySelector('.card-text')
-
-    if (shopNameElement) shopNameElement.textContent = item.shop_name
-    if (menuNameElement) menuNameElement.textContent = item.menu_name
-
-    // 画像があれば更新
-    if (item.photo_url) {
-      const imgContainer = itemElement.querySelector('.col-2')
-      if (imgContainer) {
-        imgContainer.innerHTML = `
-        <img src="${item.photo_url}" class="img-thumbnail"
-          style="width: 70px; height: 70px; object-fit: cover;">
-      `
-      }
-    }
-
-    // 1位のコメントがあれば更新
-    if (item.position === 1 && item.comment) {
-      const commentContainer = itemElement.querySelector('.col-5 p:last-child')
-
-      // コメントがまだなければ新規追加
-      if (!commentContainer || !commentContainer.querySelector('.bi-chat-quote-fill')) {
-        const textContainer = itemElement.querySelector('.col-5')
-        if (textContainer) {
-          const commentEl = document.createElement('p')
-          commentEl.className = 'small mb-0 text-truncate'
-          commentEl.innerHTML = `
-            <i class="bi bi-chat-quote-fill text-warning me-1"></i>
-            ${item.comment.length > 30 ? item.comment.substring(0, 27) + '...' : item.comment}
-          `
-          textContainer.appendChild(commentEl)
-        }
-      } else if (commentContainer) {
-        // コメント要素があれば内容だけ更新
-        const commentText = commentContainer.lastChild
-        commentText.textContent = item.comment.length > 30 ? item.comment.substring(0, 27) + '...' : item.comment
-      }
+      // エラーハンドラーはコールバックで処理される
+      console.error("更新処理に失敗しました", error);
     }
   }
 
@@ -659,7 +421,7 @@ export default class extends Controller {
 
   // 検索中の状態を非表示
   hideSearchingState() {
-    // 何もしない（displaySearchResultsが結果を上書きするため）
+    // resultsControllerが結果を表示するため何もしない
   }
 
   // 検索エラーを表示
@@ -668,10 +430,10 @@ export default class extends Controller {
     container.innerHTML = '<div class="alert alert-danger">検索中にエラーが発生しました。時間をおいて再度お試しください。</div>'
   }
 
-    // 保存中の表示
-  showSavingIndicator() {
-    // 保存中を示すインジケーターなどを表示（オプション）
-    console.log("保存中...")
+  // 保存中の表示
+  showSavingIndicator(message = "保存中...") {
+    console.log(message)
+    // 必要に応じてUIにインジケーターを表示
   }
 
   // 保存中表示を非表示
@@ -681,11 +443,8 @@ export default class extends Controller {
 
   // 地図検索結果の視覚的な選択状態（ハイライト）を解除するメソッド
   clearMapSelectionVisuals() {
-    // searchResultsTarget (検索結果を表示するコンテナ) が存在するか確認
     if (this.hasSearchResultsTarget) {
-      // コンテナ内の .active クラスを持つ要素（選択されている項目）を探す
       const activeItem = this.searchResultsTarget.querySelector('.list-group-item.active, .list-group-item-action.active');
-      // もし選択されている項目があれば、active クラスを削除する
       if (activeItem) {
         activeItem.classList.remove('active');
         console.log("地図検索結果のハイライトを解除しました。");
@@ -697,50 +456,58 @@ export default class extends Controller {
 
   // 保存成功時の処理
   handleSaveSuccess(result) {
-    // 画面にアイテムを追加
-    this.addNewItemToDom(result)
+    // ヘルパーを使ってDOMにアイテムを追加
+    const newItem = this.rankingItemHelper.addItemToDom(result, this.rankingIdValue);
+    
+    if (newItem) {
+      // 編集ボタンにイベントリスナーを追加
+      this.attachEditButtonEvent(newItem.querySelector('.edit-item-btn'));
+    }
 
     // 入力フィールドをクリア
-    this.menuNameInputTarget.value = ''
-    this.searchInputTarget.value = ''
+    this.menuNameInputTarget.value = '';
+    this.searchInputTarget.value = '';
+    if (this.hasMenuPhotoInputTarget) {
+      this.menuPhotoInputTarget.value = '';
+      document.getElementById('photo-preview').style.display = 'none';
+    }
 
     // 選択された店舗情報をリセット
-    this.selectedShop = null
+    this.selectedShop = null;
   }
 
   // 保存エラー時の処理
   handleSaveError(error) {
     // エラーメッセージを表示
-    const errorMessage = document.createElement('div')
-    errorMessage.className = 'alert alert-danger alert-dismissible fade show'
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'alert alert-danger alert-dismissible fade show';
     errorMessage.innerHTML = `
       <strong>エラー!</strong> 保存中に問題が発生しました。もう一度お試しください。
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
-    document.querySelector('.main-content').prepend(errorMessage)
+    `;
+    document.querySelector('.main-content').prepend(errorMessage);
   }
 
   // 編集成功時の処理
-  handleEditSuccess(result, itemId) {
+  handleEditSuccess(result) {
     // モーダルを閉じる
-    this.editItemModal.hide()
+    this.editItemModal.hide();
 
     // 画面上のアイテム情報を更新
-    this.updateItemInDom(result, itemId)
+    this.rankingItemHelper.updateItemInDom(result, result.id);
   }
 
   // 編集エラー時の処理
   handleEditError(error) {
     // エラーメッセージを表示
-    const errorMessage = document.createElement('div')
-    errorMessage.className = 'alert alert-danger alert-dismissible fade show'
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'alert alert-danger alert-dismissible fade show';
     errorMessage.innerHTML = `
       <strong>エラー!</strong> 更新中に問題が発生しました。もう一度お試しください。
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    `
-    document.querySelector('.main-content').prepend(errorMessage)
+    `;
+    document.querySelector('.main-content').prepend(errorMessage);
 
     // モーダルは閉じない（ユーザーが再試行できるようにする）
   }
-
 }

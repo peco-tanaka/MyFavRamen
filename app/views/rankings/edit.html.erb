@@ -1,19 +1,12 @@
 <%= render 'shared/header/pc' %>
 <%= render 'shared/navigation/edit_navigation' %>
 
-<%= render 'shared/flash' %>
-
 <div class="container-fluid main-content text-center"
       data-controller="ranking-item"
       data-ranking-item-ranking-id-value="<%= @ranking.id %>"
       data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>">  <!-- ランキングアイテムを保存する為のidとURLをranking_item.jsコントローラーに渡す -->
 
-  <% if notice %>
-    <p class="alert alert-success"><%= notice %></p>
-  <% end %>
-  <% if alert %>
-    <p class="alert alert-danger"><%= alert %></p>
-  <% end %>
+  <%= render 'shared/flash' %>
 
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
@@ -218,13 +211,25 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">メニュー名を入力</h5>
+          <h5 class="modal-title">メニュー名と写真を入力</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
             <label for="menu-name-input" class="form-label">メニュー名 <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="menu-name-input" data-ranking-item-target="menuNameInput" placeholder="例：特製醤油ラーメン" required>
+          </div>
+
+          <!-- 画像アップロードフィールド -->
+          <div class="mb-3">
+            <label for="menu-photo-input" class="form-label">ラーメン写真</label>
+            <input type="file" class="form-control" id="menu-photo-input" data-ranking-item-target="menuPhotoInput" accept="image/*">
+            <div class="form-text">ラーメンの写真があれば選択してください</div>
+
+            <!-- 画像プレビュー表示 -->
+            <div id="photo-preview" class="mt-2" style="display: none;">
+              <img id="photo-preview-img" class="img-thumbnail" style="max-height: 150px;">
+            </div>
           </div>
         </div>
         <div class="modal-footer">
