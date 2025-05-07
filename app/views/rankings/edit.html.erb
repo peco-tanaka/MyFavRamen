@@ -1,19 +1,12 @@
 <%= render 'shared/header/pc' %>
 <%= render 'shared/navigation/edit_navigation' %>
 
-<%= render 'shared/flash' %>
-
 <div class="container-fluid main-content text-center"
       data-controller="ranking-item"
       data-ranking-item-ranking-id-value="<%= @ranking.id %>"
       data-ranking-item-url-value="<%= ranking_ranking_items_path(@ranking) %>">  <!-- ランキングアイテムを保存する為のidとURLをranking_item.jsコントローラーに渡す -->
 
-  <% if notice %>
-    <p class="alert alert-success"><%= notice %></p>
-  <% end %>
-  <% if alert %>
-    <p class="alert alert-danger"><%= alert %></p>
-  <% end %>
+  <%= render 'shared/flash' %>
 
   <div class="row">
     <!-- メインのランキングコンテンツエリア（左側） -->
